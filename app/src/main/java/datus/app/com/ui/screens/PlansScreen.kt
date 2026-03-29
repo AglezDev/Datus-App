@@ -293,7 +293,7 @@ fun PriceTag(price: String, modifier: Modifier = Modifier) {
 fun shareApp(context: Context) {
     val sendIntent: Intent = Intent().apply {
         action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, "¡Descarga Datus, la mejor app para gestionar tus servicios de ETECSA! [Link de la App]")
+        putExtra(Intent.EXTRA_TEXT, "¡Descarga Datus, la mejor app para gestionar tus servicios de ETECSA!\n\nhttps://github.com/ADNova-Design/Datus-App/releases/latest/download/Datus-v2.1.2.apk")
         type = "text/plain"
     }
     val shareIntent = Intent.createChooser(sendIntent, null)

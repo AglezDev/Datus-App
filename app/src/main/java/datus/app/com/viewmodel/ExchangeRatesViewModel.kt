@@ -131,24 +131,34 @@ class ExchangeRatesViewModel @Inject constructor(
         Log.d("ExchangeRatesViewModel", "loadInitialData: START")
         viewModelScope.launch {
             _loading.value = true
+            _error.value = null // Clear error on initial load
             try {
                 val cachedData = dataStoreManager.loadExchangeRates()
                 Log.d(
                     "ExchangeRatesViewModel",
                     "loadInitialData: cachedData is ${if (cachedData == null) "null" else "not null"}"
                 )
-                if (cachedData != null) {
+                if (cachedData != null && isValidRates(cachedData)) {
                     _exchangeRates.value = cachedData
                     _lastUpdateTimestamp.value = dataStoreManager.getLastUpdateTimestamp()
+                    _error.value = null // Clear error if cached data is valid
                     Log.d(
                         "ExchangeRatesViewModel",
                         "loadInitialData: Calculating trends for cached data..."
                     )
-                    _currencyTrends.value = calculateTrends(cachedData)
+                    // Calculate trends comparing with previous rates
+                    _currencyTrends.value = calculateTrendsWithPrevious(cachedData)
                     Log.d(
                         "ExchangeRatesViewModel",
                         "loadInitialData: Trends calculated for cached data."
                     )
+                } else if (cachedData != null) {
+                    // Cached data is invalid (1=1), try fallback but don't show error
+                    val fallbackRates = createFallbackRates()
+                    _exchangeRates.value = fallbackRates
+                    _lastUpdateTimestamp.value = System.currentTimeMillis()
+                    _currencyTrends.value = calculateTrendsWithPrevious(fallbackRates)
+                    dataStoreManager.savePreviousExchangeRates(fallbackRates)
                 }
             } catch (e: Exception) {
                 Log.e(
@@ -174,17 +184,26 @@ class ExchangeRatesViewModel @Inject constructor(
             Log.d("ExchangeRatesViewModel", "Update blocked: No internet connection detected")
             viewModelScope.launch {
                 _loading.value = true
-                _error.value = "No se detectó conexión a internet"
+                // No mostrar error al usuario, cargar desde cache silenciosamente
                 
                 // Try to load cached data
                 try {
                     val cachedData = dataStoreManager.loadExchangeRates()
-                    if (cachedData != null) {
+                    if (cachedData != null && isValidRates(cachedData)) {
                         _exchangeRates.value = cachedData
-                        _currencyTrends.value = calculateTrends(cachedData)
+                        _currencyTrends.value = calculateTrendsWithPrevious(cachedData)
+                    } else {
+                        // Si no hay cache válida, usar fallback
+                        val fallbackRates = createFallbackRates()
+                        _exchangeRates.value = fallbackRates
+                        _currencyTrends.value = calculateTrendsWithPrevious(fallbackRates)
                     }
                 } catch (e: Exception) {
                     Log.e("ExchangeRatesViewModel", "Error loading cached data: ${e.message}")
+                    // Usar fallback en caso de error
+                    val fallbackRates = createFallbackRates()
+                    _exchangeRates.value = fallbackRates
+                    _currencyTrends.value = calculateTrendsWithPrevious(fallbackRates)
                 }
                 _loading.value = false
             }
@@ -193,13 +212,18 @@ class ExchangeRatesViewModel @Inject constructor(
 
         viewModelScope.launch {
             _loading.value = true
-            _error.value = null
 
             // Try scraping first
             val scrapedData = scrapeExchangeRates()
             
-            if (scrapedData != null) {
-                Log.d("ExchangeRatesViewModel", "loadExchangeRates: Scraped data successfully: $scrapedData")
+            // Check if scraped data is valid (not 1=1)
+            val hasInvalidRates = scrapedData != null && !isValidRates(scrapedData)
+            
+            // Only use scraped data if it's valid
+            if (scrapedData != null && isValidRates(scrapedData)) {
+                // Clear error if data is valid
+                _error.value = null
+                Log.d("ExchangeRatesViewModel", "loadExchangeRates: Scraped data is valid: $scrapedData")
                 
                 // Send notification if enabled
                 if (settingsRepository.isNotifyOnUpdate()) {
@@ -207,44 +231,41 @@ class ExchangeRatesViewModel @Inject constructor(
                     LocalNotificationHelper.showRatesUpdatedNotification(context, usdRate)
                 }
 
-                val previousRates = _exchangeRates.value
+                // Calculate trends by comparing with previous rates
+                val trends = calculateTrendsWithPrevious(scrapedData)
+                _currencyTrends.value = trends
 
                 _exchangeRates.value = scrapedData
                 dataStoreManager.saveExchangeRates(scrapedData)
                 _lastUpdateTimestamp.value = System.currentTimeMillis()
                 Log.d("ExchangeRatesViewModel", "loadExchangeRates: Saved scraped rates to DataStore.")
 
-                if (previousRates != null) {
-                    dataStoreManager.savePreviousExchangeRates(previousRates)
-                }
+                // Save current rates as previous for next comparison
+                dataStoreManager.savePreviousExchangeRates(scrapedData)
                 
                 _loading.value = false
                 return@launch
             }
 
-            // If scraping fails, try cached data first, then fallback
-            Log.d("ExchangeRatesViewModel", "Scraping failed, trying cached data...")
-            var hasData = false
-            try {
-                val cachedData = dataStoreManager.loadExchangeRates()
-                if (cachedData != null) {
-                    _exchangeRates.value = cachedData
-                    val trends = calculateTrends(cachedData)
-                    _currencyTrends.value = trends
-                    hasData = true
-                    Log.d("ExchangeRatesViewModel", "Loaded cached data successfully")
-                }
-            } catch (e: Exception) {
-                Log.e("ExchangeRatesViewModel", "Error loading cached data: ${e.message}")
-            }
-
-            // If no cached data, use fallback rates
-            if (!hasData) {
-                Log.d("ExchangeRatesViewModel", "Using fallback rates from eltoque.com")
+            // If scraping fails or returns invalid data, try to use cached data first
+            Log.d("ExchangeRatesViewModel", "Scraping failed or returned invalid data, trying cached data")
+            val cachedData = dataStoreManager.loadExchangeRates()
+            
+            if (cachedData != null && isValidRates(cachedData)) {
+                // Use cached data if available and valid
+                Log.d("ExchangeRatesViewModel", "Using cached exchange rates")
+                _exchangeRates.value = cachedData
+                _currencyTrends.value = calculateTrendsWithPrevious(cachedData)
+                _lastUpdateTimestamp.value = System.currentTimeMillis()
+                _error.value = null
+            } else {
+                // Only use fallback if no valid cache exists
+                Log.d("ExchangeRatesViewModel", "No valid cache, using fallback rates")
                 val fallbackRates = createFallbackRates()
                 _exchangeRates.value = fallbackRates
-                _currencyTrends.value = calculateTrends(fallbackRates)
+                _currencyTrends.value = calculateTrendsWithPrevious(fallbackRates)
                 _lastUpdateTimestamp.value = System.currentTimeMillis()
+                dataStoreManager.savePreviousExchangeRates(fallbackRates)
             }
 
             _loading.value = false
@@ -295,6 +316,76 @@ class ExchangeRatesViewModel @Inject constructor(
         }
         Log.d("ExchangeRatesViewModel", "calculateTrends: FINISHED")
         return trends
+    }
+
+    // Calculate trends by comparing current rates with previous saved rates
+    private suspend fun calculateTrendsWithPrevious(current: ElToqueResponse): Map<String, Trend> {
+        val trends = mutableMapOf<String, Trend>()
+        
+        try {
+            // Load previous rates from DataStore
+            val previousRates = dataStoreManager.loadPreviousExchangeRates()
+            
+            if (previousRates != null) {
+                Log.d("ExchangeRatesViewModel", "calculateTrendsWithPrevious: Comparing with previous rates")
+                
+                current.tasas.forEach { (currency, currentValue) ->
+                    val previousValue = previousRates.tasas[currency]
+                    
+                    if (previousValue != null) {
+                        val difference = currentValue - previousValue
+                        val percentChange = if (previousValue != 0.0) (difference / previousValue) * 100 else 0.0
+                        
+                        trends[currency] = when {
+                            percentChange > 0.5 -> Trend.UP    // More than 0.5% increase
+                            percentChange < -0.5 -> Trend.DOWN  // More than 0.5% decrease
+                            else -> Trend.SAME
+                        }
+                        Log.d("ExchangeRatesViewModel", "Trend for $currency: $currentValue vs $previousValue = ${percentChange}%")
+                    } else {
+                        trends[currency] = Trend.NONE  // No previous data
+                    }
+                }
+            } else {
+                // No previous data, mark all as NONE
+                current.tasas.keys.forEach { currency ->
+                    trends[currency] = Trend.NONE
+                }
+                Log.d("ExchangeRatesViewModel", "calculateTrendsWithPrevious: No previous rates found")
+            }
+        } catch (e: Exception) {
+            Log.e("ExchangeRatesViewModel", "Error calculating trends with previous: ${e.message}")
+            // If error, return NONE for all
+            current.tasas.keys.forEach { currency ->
+                trends[currency] = Trend.NONE
+            }
+        }
+        
+        return trends
+    }
+
+    // Validate that rates are reasonable (all > 1 to avoid 1=1 issue)
+    private fun isValidRates(rates: ElToqueResponse?): Boolean {
+        if (rates == null) return false
+        val tasas = rates.tasas
+        if (tasas.isEmpty()) return false
+        
+        // Check if USD rate is valid (should be > 100 for CUP)
+        val usdRate = tasas["USD"] ?: return false
+        if (usdRate <= 1 || usdRate < 100) {
+            Log.w("ExchangeRatesViewModel", "Invalid USD rate: $usdRate (likely 1=1)")
+            return false
+        }
+        
+        // Check for any rate that is suspiciously low
+        tasas.values.forEach { value ->
+            if (value <= 1) {
+                Log.w("ExchangeRatesViewModel", "Invalid rate detected: $value (likely 1=1)")
+                return false
+            }
+        }
+        
+        return true
     }
 
     private fun createFallbackRates(): ElToqueResponse {
