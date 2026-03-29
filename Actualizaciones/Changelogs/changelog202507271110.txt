@@ -1,0 +1,4 @@
+Cambios aplicados: 27 de julio de 2025, 11:10
+
+- Se corrigió el error de 'Missing }' en `app/src/main/java/datus/app/com/MainActivity.kt`.
+- Se añadió la llave de cierre faltante para el `Box` y el `setContent` en el método `onCreate` de `MainActivity`.

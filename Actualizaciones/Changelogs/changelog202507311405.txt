@@ -1,0 +1,3 @@
+Cambios aplicados:
+- Se añadió una tarjeta con un Switch en SettingsScreen.kt para activar/desactivar las notificaciones al inicio de la aplicación.
+- Se añadieron las importaciones necesarias en SettingsScreen.kt para el Switch y el icono de notificaciones.

@@ -1,0 +1,2 @@
+Cambios aplicados:
+- Se corrigió el error "Unresolved reference: io" en app/build.gradle.kts reinsertando la importación de 'java.io.FileInputStream'.

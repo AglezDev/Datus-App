@@ -1,0 +1,9 @@
+Fecha: 2025-10-04 12:40
+
+Cambios aplicados:
+- Rediseño completo de las tarjetas de promoción (`PromotionItem`) en la pantalla de `Consultas` para una UI/UX más profesional y armoniosa.
+- La tarjeta ahora utiliza un diseño de dos paneles: un panel izquierdo para la imagen y un panel derecho para la información.
+- La imagen se muestra en un formato vertical, ocupando una porción de la tarjeta para dar impacto visual sin dominar el espacio.
+- El panel de información utiliza `Arrangement.SpaceBetween` para distribuir el texto (arriba) y el botón (abajo), solucionando permanentemente el problema de compresión del botón.
+- Se han ajustado los tamaños de fuente y el número de líneas para optimizar la legibilidad del título y la descripción.
+- El botón de acción ahora ocupa todo el ancho del panel de información para un CTA (Call To Action) más claro y accesible.

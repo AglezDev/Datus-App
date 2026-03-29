@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-10-08 00:47
+
+Cambios aplicados:
+- Se corrigió un error de compilación en `MainActivity.kt` (`Unresolved reference: unreadCount`).
+- El error fue un efecto secundario de la refactorización del estado de las notificaciones.
+- Se actualizó la forma en que `MainScreen` obtiene el `unreadCount`, haciendo que lo consuma desde el `StateFlow` reactivo del `NotificationsViewModel`, en lugar de un campo obsoleto.
+- Esta corrección, junto con los cambios anteriores en el Repositorio, ViewModel y TopAppBar, completa la solución para el bug del indicador de notificaciones.

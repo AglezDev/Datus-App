@@ -1,0 +1,2 @@
+Cambios aplicados:
+- Se corrigió un error de sintaxis en NotificationsScreen.kt añadiendo una llave de cierre faltante.

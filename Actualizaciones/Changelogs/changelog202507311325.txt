@@ -1,0 +1,3 @@
+Cambios aplicados:
+- Se añadió una nueva tarjeta 'Soporte por WhatsApp' en la pantalla de Configuraciones (`SettingsScreen.kt`), debajo de 'Actualizaciones'.
+- Al hacer clic en esta tarjeta, se abrirá un chat de WhatsApp con el número `+18632541732` y el mensaje predefinido 'Hola, necesito ayuda con la app Datus.'.

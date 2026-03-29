@@ -1,0 +1,5 @@
+Fecha: 2025-10-05 11:40
+Cambios aplicados:
+- Se ha creado la nueva pantalla de Mercado.
+- La pantalla de Mercado muestra las tasas de cambio actuales y un historial con filtros (Hoy, Semana, Mes).
+- Se ha actualizado la barra de navegación para incluir el nuevo icono y la ruta a la pantalla de Mercado, reemplazando la anterior de Promociones.

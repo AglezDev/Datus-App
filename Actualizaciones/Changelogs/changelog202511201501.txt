@@ -1,0 +1,9 @@
+Fecha: 2025-11-20
+Hora: 03:01 PM
+
+Cambios aplicados:
+- Se ha actualizado el icono de la aplicación por una nueva versión.
+- Se han reemplazado los iconos existentes en todas las densidades de pantalla (mipmap-hdpi, mipmap-mdpi, mipmap-xhdpi, mipmap-xxhdpi, mipmap-xxxhdpi).
+- Se han actualizado los archivos de iconos adaptativos (`ic_launcher.xml` y `ic_launcher_round.xml`) para usar el nuevo icono.
+- Se ha actualizado el fondo del icono a un color blanco plano.
+- Se ha eliminado el archivo vectorial de primer plano del icono anterior (`ic_launcher_foreground.xml`).

@@ -1,0 +1,35 @@
+Cambios aplicados:
+Fecha: domingo, 27 de julio de 2025
+- Se han añadido las importaciones necesarias en `MainActivity.kt` para `AlertDialog`, `TextButton`, `Intent` y `Uri`.
+- Se ha refactorizado el `AlertDialog` de notificaciones en una función `@Composable` separada (`NotificationAlertDialog`) en `MainActivity.kt`.
+- Se ha corregido la observación de `latestUnreadNotification` en `MainActivity.kt`.
+- Se ha asegurado que `notificationsViewModel` se pase correctamente a `MainScreen` en `MainActivity.kt`.
+- Se ha verificado que `navController` se pasa correctamente a `PromotionsScreen` en `AppNavigationGraph`.
+- Se ha confirmado que `NotificationsScreen.kt` ya incluye el título y el botón de retroceso.
+- Se ha confirmado que `NotificationCard.kt` ya muestra las notificaciones como tarjetas y los enlaces como un botón 'Detalles'.
+- Se ha confirmado que la lógica para mostrar la última notificación sin leer al abrir la app y el indicador en la campanita ya están implementados en `MainActivity.kt`.
+- Se ha corregido la importación de la clase `Notification` en `MainActivity.kt` a `datus.app.com.data.remote.Notification`.
+- Se ha corregido el error 'Property delegate must have a \'getValue(Nothing?, KProperty0<*>)\' method' en `MainActivity.kt` al observar `unreadCount`.
+- Se ha corregido el error 'Unresolved reference \'uiState\'' en `MainActivity.kt` asegurando que `uiState` se declare y observe correctamente dentro de `MainScreen`.
+- Se ha corregido la declaración duplicada de `uiState` en `MainActivity.kt`.
+- Se ha pasado `navController` a `NotificationsScreen` en `AppNavigationGraph` en `MainActivity.kt`.
+- Se ha pasado `notificationsViewModel` a `MainScreen` en `DefaultPreview` en `MainActivity.kt`.
+- Se ha añadido la importación explícita para `Icon` en `NotificationsScreen.kt`.
+- Se han añadido las importaciones necesarias para `Color`, `sp`, `offset` y `CircleShape` en `SharedUI.kt`.
+- Se ha reintroducido la `TopAppBar` global en `MainScreen` de `MainActivity.kt` utilizando `DatusTopAppBar` para mostrar el título, la campanita con el indicador de notificaciones sin leer y el botón de menú.
+- Se ha implementado la recarga periódica de notificaciones cada minuto en `MainScreen` de `MainActivity.kt`, solo si el usuario no está en la pantalla de notificaciones.
+- Se ha calificado completamente el tipo `Notification` en la firma de la función `NotificationAlertDialog` en `MainActivity.kt` para resolver la referencia no resuelta.
+- Se ha eliminado la `TopAppBar` global de `MainScreen` en `MainActivity.kt` para evitar la duplicación con las `TopAppBar` de las pantallas individuales.
+- Se ha confirmado que el indicador de notificaciones sin leer ya está implementado en la campanita de `DatusTopAppBar` en `SharedUI.kt`.
+- Se ha ajustado el tamaño del título en `DatusTopAppBar` en `SharedUI.kt` y en `NotificationsScreen.kt`.
+- Se ha añadido un `Log.d` en `DatusTopAppBar` en `SharedUI.kt` para depurar el valor de `unreadCount`.
+- Se ha reemplazado el `AlertDialog` por un `Toast` para mostrar las notificaciones emergentes en `MainActivity.kt`.
+- Se ha movido la `sealed class BottomNavItem` fuera del bloque `setContent` en `MainActivity.kt` para corregir errores de sintaxis.
+- Se ha añadido la importación de `Toast` en `MainActivity.kt`.
+- Se ha reemplazado la lógica de `Toast` por `CustomNotificationDisplay` en `MainActivity.kt` para mostrar notificaciones emergentes de forma no invasiva.
+- Se ha añadido la importación de `CustomNotificationDisplay` en `MainActivity.kt`.
+- Se ha corregido el error 'invocations can only happen from the context of a @Composable function' en `MainActivity.kt` llamando a `CustomNotificationDisplay` directamente dentro del bloque `setContent`.
+- Se ha añadido la llave de cierre faltante para el método `onCreate` en `MainActivity.kt`.
+- Se ha corregido el error 'invocations can only happen from the context of a @Composable function' en `MainActivity.kt` envolviendo la llamada a `CustomNotificationDisplay` en un `Box` composable.
+- Se ha añadido la importación de `fillMaxSize` en `MainActivity.kt`.
+- Se ha corregido el error 'invocations can only happen from the context of a @Composable function' en `MainActivity.kt` asegurando que `CustomNotificationDisplay` se posicione correctamente dentro del `Box` y eliminando una llave de cierre extra.

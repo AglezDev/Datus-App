@@ -1,0 +1,4 @@
+Fecha y Hora: 2025-07-31 12:05
+
+Cambios aplicados:
+- Se actualizaron los iconos de Telegram y Facebook en el diálogo de contacto de la pantalla de Configuraciones para usar los iconos de Material Design (Icons.Filled.Telegram y Icons.Filled.Facebook).

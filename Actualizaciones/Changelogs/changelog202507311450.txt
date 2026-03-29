@@ -1,0 +1,2 @@
+Cambios aplicados:
+- Se corrigieron los errores "Unresolved reference: localProperties" y "Unresolved reference: io" en app/build.gradle.kts declarando 'localProperties' y 'keystoreProperties' al inicio del archivo.

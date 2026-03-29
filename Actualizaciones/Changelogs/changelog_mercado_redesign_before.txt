@@ -1,0 +1,2 @@
+Cambios aplicados el 25 de noviembre de 2025 a las 11:00:
+- Estado del proyecto guardado antes de implementar el rediseño de la pantalla de Mercado.

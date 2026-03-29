@@ -1,0 +1,9 @@
+Fecha y Hora: 2025-10-06 04:32
+
+Cambios aplicados:
+- Se modificó `ExchangeRatesViewModel.kt` para cambiar la lógica de comparación de tasas de cambio.
+- La comparación para determinar si una divisa ha aumentado o disminuido su valor ahora se realiza contra el registro histórico más reciente que tenga más de 24 horas de antigüedad.
+- Se eliminó el uso de `savePreviousExchangeRates` y `loadPreviousExchangeRates` del `DataStoreManager`, ya que la nueva lógica se basa en el historial de tasas (`historicalRates`).
+- La función `calculateTrends` fue actualizada para buscar en el historial de tasas y encontrar un valor de comparación adecuado (más de 24h de antigüedad).
+- Este cambio asegura que la tendencia (alza/baja) refleje un cambio real día a día, evitando comparaciones con datos demasiado recientes que no mostrarían ninguna variación.
+- La actualización de los datos para el widget y la pantalla principal no se ve afectada, ya que siguen recibiendo los datos más recientes de la API.

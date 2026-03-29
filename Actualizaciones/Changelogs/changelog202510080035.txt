@@ -1,0 +1,9 @@
+Fecha y Hora: 2025-10-08 00:35
+
+Cambios aplicados:
+- Se corrigió un bug por el cual el indicador de notificaciones no leídas no desaparecía después de leer las notificaciones.
+- Se refactorizó la gestión del estado de las notificaciones para usar un flujo reactivo (`StateFlow`).
+- Se centralizó la lógica para calcular el número de notificaciones no leídas en el `NotificationRepository`.
+- El `NotificationsViewModel` ahora expone este flujo reactivo.
+- El `DatusTopAppBar` ahora consume este flujo, asegurando que el indicador (Badge) se actualice automáticamente en toda la aplicación cuando una notificación se marca como leída.
+- Se simplificó el `NotificationUiState` para eliminar el conteo de no leídos, que ahora se maneja de forma central.

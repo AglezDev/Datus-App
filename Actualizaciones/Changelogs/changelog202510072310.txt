@@ -1,0 +1,9 @@
+Fecha y Hora: 2025-10-07 23:10
+
+Cambios aplicados:
+- Se realizó un rediseño completo de la UI/UX de la pantalla de Mercado (`MercadoScreen.kt`).
+- Se eliminó el diseño de dos columnas en favor de una sola columna para mejorar la legibilidad.
+- Se rediseñó la `ExchangeRateCard` para ser más grande y unificar toda la información de la divisa en un solo lugar.
+- Cada tarjeta ahora muestra el valor de referencia, la tendencia (alza/baja) y los valores de Compra y Venta.
+- Se eliminó la sección separada de "Compra y Venta", ya que su información fue integrada en las tarjetas principales.
+- Se actualizó el esqueleto de carga (`Skeleton`) para que coincida con el nuevo diseño de tarjetas grandes en una sola columna.

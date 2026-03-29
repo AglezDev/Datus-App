@@ -1,0 +1,8 @@
+Fecha y Hora: 2025-10-06 13:05
+
+Cambios aplicados:
+- Se revirtió la lógica de comparación de tasas en `ExchangeRatesViewModel.kt` a un modelo de comparación directa "actual vs. anterior".
+- Se eliminó la lógica de comparación basada en el historial de 24 horas.
+- La función `loadExchangeRates` fue reestructurada para asegurar que, en cada recarga, el dato que estaba en pantalla se guarde como "anterior" y se compare con el nuevo dato recién obtenido de la API.
+- Este método garantiza que el widget siempre muestre el valor más reciente y que la tendencia (alza/baja) refleje el cambio entre la última recarga y la actual.
+- Se restauró la función `calculateTrends` a su versión simple que compara dos objetos `ElToqueResponse`.

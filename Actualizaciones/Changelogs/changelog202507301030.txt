@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-07-30 10:30
+
+Cambios aplicados:
+- Modificado `NotificationService.kt` para que la consulta a la base de datos ordene las notificaciones por fecha de creación de forma ascendente.
+- Modificado `NotificationsViewModel.kt` para que:
+    - La notificación inicial que se muestra al abrir la app sea la más antigua no leída.
+    - La lista de notificaciones en la pantalla de notificaciones se muestre en orden descendente (de más nueva a más antigua).

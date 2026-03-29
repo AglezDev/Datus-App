@@ -1,0 +1,8 @@
+Cambios aplicados: 27 de julio de 2025, 11:35
+
+- Se implementó el indicador de notificaciones no leídas en la barra de navegación inferior.
+- Se añadió `BottomNavItem.Notifications` a la clase sellada `BottomNavItem`.
+- Se modificó la firma de `AppBottomNavigation` para aceptar `unreadCount`.
+- Se pasó `unreadCount` a `AppBottomNavigation` desde `MainScreen`.
+- Se añadieron los imports necesarios para `BadgedBox` y `Badge`.
+- Se modificó el `NavigationBarItem` para `BottomNavItem.Notifications` para mostrar el `unreadCount` como una insignia utilizando `BadgedBox` y `Badge`.

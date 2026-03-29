@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-07-29 11:20
+
+Cambios aplicados:
+
+- Añadido un texto de privacidad en la pantalla de Configuraciones.
+- El foco se quita de los campos de texto al hacer clic en "Guardar".
+- Se permite guardar el número de teléfono o el número de tarjeta de forma independiente.

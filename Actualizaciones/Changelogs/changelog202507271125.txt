@@ -1,0 +1,4 @@
+Cambios aplicados: 27 de julio de 2025, 11:25
+
+- Se corrigió el error de invocación `@Composable` en `app/src/main/java/datus/app/com/MainActivity.kt` en la línea 163.
+- Se añadió explícitamente la anotación `@Composable` al lambda del parámetro `bottomBar` de `Scaffold` para ayudar al compilador a resolver el contexto.

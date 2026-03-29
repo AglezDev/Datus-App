@@ -1,0 +1,2 @@
+Cambios aplicados:
+- Se analizó el archivo app/build.gradle.kts para verificar el applicationId, versionCode y versionName en relación con el conflicto de paquetes al instalar la APK firmada. Se proporcionaron posibles causas y soluciones al usuario.

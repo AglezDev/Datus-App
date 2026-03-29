@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-10-07 13:12
+
+Cambios aplicados:
+- Se corrigió un error de compilación en `ExchangeRatesViewModel.kt`.
+- El error "imports are only allowed in the beginning of file" fue causado por sentencias de importación mal ubicadas.
+- Se movieron las sentencias `import` a la parte superior del archivo, solucionando el error de sintaxis.
+- No se introdujo ninguna nueva lógica, solo se corrigió la estructura del archivo para que compile correctamente.

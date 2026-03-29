@@ -1,0 +1,2 @@
+Cambios aplicados:
+- Se agregó el texto "> Versión 0.0.2" en la parte inferior de la pantalla de Configuraciones (SettingsScreen.kt) con un estilo de texto pequeño y alineado a la derecha.

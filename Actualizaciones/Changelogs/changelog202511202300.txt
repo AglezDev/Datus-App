@@ -1,0 +1,1 @@
+Fecha: 2025-11-20 23:00:04`n`nCambios aplicados:`n- Se corrigió un error de compilación (`Unresolved reference`) en `SettingsScreen.kt` para el icono `ArrowBack`.`n- Se actualizó la importación y el uso del icono para que apunte a la versión `AutoMirrored` correcta, que gestiona automáticamente la dirección en diseños de derecha a izquierda (RTL).

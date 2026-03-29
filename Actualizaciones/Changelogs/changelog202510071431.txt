@@ -1,0 +1,6 @@
+Fecha y Hora: 2025-10-07 14:31
+
+Cambios aplicados:
+- Se corrigió un error de compilación (`Unresolved reference: animateFloat`) en `MercadoScreen.kt`.
+- El error se solucionó añadiendo la importación necesaria (`androidx.compose.animation.core.animateFloat`) para la función de animación.
+- Este cambio permite que la animación de brillo del nuevo esqueleto de carga (skeleton loader) funcione correctamente.

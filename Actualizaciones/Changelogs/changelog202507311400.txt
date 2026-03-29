@@ -1,0 +1,2 @@
+Cambios aplicados:
+- Se verificó la lógica de actualización del contador de notificaciones no leídas en MainActivity.kt y NotificationsViewModel.kt. La implementación actual debería actualizar el indicador de notificaciones al marcar una notificación como leída.

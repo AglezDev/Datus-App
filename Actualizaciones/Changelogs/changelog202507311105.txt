@@ -1,0 +1,5 @@
+Fecha y Hora: 2025-07-31 11:05
+
+Cambios aplicados:
+- Se revirtieron los cambios en los títulos de las alertas a "Enviar Saldo" y "Recibir Saldo".
+- Se modificaron las tarjetas de la pantalla de Útiles para que muestren el icono y el texto uno al lado del otro.

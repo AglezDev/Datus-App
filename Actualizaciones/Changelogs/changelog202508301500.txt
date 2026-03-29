@@ -1,0 +1,7 @@
+Changelog - 30 de agosto de 2025 15:00
+
+Cambios aplicados:
+- Se añadió una LazyColumn debajo de la LazyVerticalGrid en TarjetaScreen.kt para contener las nuevas tarjetas de saldo.
+- Se crearon tres nuevas tarjetas de saldo ("360 CUP de Saldo", "240 CUP de Saldo", "120 CUP de Saldo") con el estilo de PlanCard de PlansScreen.kt.
+- Se añadió el composable PriceTag a TarjetaScreen.kt para dar estilo a los precios de las tarjetas de saldo.
+- Se actualizaron las importaciones en TarjetaScreen.kt para incluir los nuevos composables y modificadores.

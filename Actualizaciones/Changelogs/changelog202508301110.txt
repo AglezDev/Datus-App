@@ -1,0 +1,5 @@
+Fecha: 30 de agosto de 2025, 11:10
+
+Cambios aplicados:
+- Se actualizó la versión de la aplicación a 1.2.25.
+- Se incrementó el `versionCode` a 3.

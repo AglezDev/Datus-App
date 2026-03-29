@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-07-29 11:45
+
+Cambios aplicados:
+
+- Se ha añadido la funcionalidad de desplazamiento a la pantalla de Configuraciones para asegurar que todos los elementos sean visibles.
+- Se han importado `rememberScrollState` y `verticalScroll`.
+- Se ha aplicado el modificador `verticalScroll` a la `Column` principal de `SettingsScreen.kt`.

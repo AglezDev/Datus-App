@@ -1,0 +1,5 @@
+
+Fecha y Hora: 27 de julio de 2025, 12:45
+
+Cambios aplicados:
+- Se ha añadido la funcionalidad de "deslizar para recargar" en la pantalla de notificaciones.

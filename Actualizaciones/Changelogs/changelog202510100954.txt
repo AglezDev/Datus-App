@@ -1,0 +1,6 @@
+Fecha y Hora: 2025-10-10 09:54
+
+Cambios aplicados:
+- Se corrigió la posición de los indicadores de tendencia (puntos de color) en el widget de tasas de cambio.
+- Se modificó el archivo de diseño `exchange_rates_widget.xml` para que el valor de la tasa y el punto indicador aparezcan en la misma línea horizontal, en lugar de uno debajo del otro.
+- Se reestructuró el layout anidando los componentes correspondientes en un `LinearLayout` horizontal para lograr la alineación correcta.

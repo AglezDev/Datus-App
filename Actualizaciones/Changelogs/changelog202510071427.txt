@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-10-07 14:27
+
+Cambios aplicados:
+- Se reemplazó el indicador de carga circular (Spinner) en la pantalla de Mercado por un preloader de tipo esqueleto (skeleton).
+- Se crearon nuevos componentes de UI (`ExchangeRatesSectionSkeleton`, `ExchangeRateCardSkeleton`) para mostrar una versión "fantasma" de la interfaz mientras se cargan los datos.
+- Se implementó un efecto de brillo animado (`ShimmerBrush`) para mejorar la apariencia del esqueleto de carga.
+- La lógica de `ExchangeRatesSection` fue actualizada para mostrar este nuevo esqueleto únicamente durante la carga inicial, mejorando la experiencia de usuario.

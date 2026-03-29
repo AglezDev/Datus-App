@@ -1,0 +1,4 @@
+Cambios aplicados: 27 de julio de 2025, 11:00
+
+- Se corrigió el error en `app/src/main/java/datus/app/com/ui/notifications/components/CustomNotificationDisplay.kt` donde una invocación `@Composable` se realizaba desde un contexto no `@Composable`.
+- Se modificó la firma de la función `onActionClick` en `CustomNotificationDisplay` de `@Composable (String) -> Unit` a `(String) -> Unit` para resolver el problema.

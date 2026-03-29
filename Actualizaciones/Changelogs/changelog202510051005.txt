@@ -1,0 +1,4 @@
+Fecha y Hora: 2025-10-05 10:05
+
+Cambios aplicados:
+- Se añadió una llave de cierre '}' al final del archivo `ExchangeRatesViewModel.kt` para cerrar correctamente la clase `ExchangeRatesViewModel`, resolviendo el error de compilación "Missing '}'".

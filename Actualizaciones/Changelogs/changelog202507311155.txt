@@ -1,0 +1,4 @@
+Fecha y Hora: 2025-07-31 11:55
+
+Cambios aplicados:
+- Se agregó el texto "Esta operación descontara saldo de su línea movil." a los diálogos de confirmación en la pantalla de Planes.

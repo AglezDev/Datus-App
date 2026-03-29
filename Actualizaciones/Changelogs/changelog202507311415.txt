@@ -1,0 +1,2 @@
+Cambios aplicados:
+- Se actualizó la versión de la aplicación en app/build.gradle.kts: versionName a "0.0.2" y versionCode a 2.

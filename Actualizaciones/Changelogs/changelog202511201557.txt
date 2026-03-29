@@ -1,0 +1,1 @@
+Fecha: 2025-11-20 15:57:25`n`nCambios aplicados:`n- Se han actualizado los iconos de las tarjetas de consulta al estilo `Outlined` para un aspecto más moderno.`n- Se ha añadido un margen superior a la primera fila de tarjetas de consulta para mejorar el espaciado visual.

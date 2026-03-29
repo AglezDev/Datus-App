@@ -1,0 +1,1 @@
+Fecha: 2025-11-20 15:37:53`n`nCambios aplicados:`n- Se corrigió el error de recursos duplicados al eliminar los archivos `ic_launcher_foreground.webp` redundantes de todas las carpetas `mipmap-*`. Esto permite que la aplicación use correctamente la versión PNG con fondo transparente para el icono adaptativo.

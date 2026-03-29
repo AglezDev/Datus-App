@@ -1,0 +1,16 @@
+Fecha y Hora: 2025-10-07 13:10
+
+Cambios aplicados:
+
+Tarea 1: Lógica de Tendencia Híbrida
+- Se implementó una nueva lógica de comparación de dos niveles en `ExchangeRatesViewModel.kt`.
+- La tendencia de una divisa ahora se calcula primero comparando el valor actual con el anterior. Si son iguales, se compara el valor actual con el mínimo registrado en las últimas 24 horas.
+- Se reintrodujo el manejo del historial de tasas (`historicalRates`) para esta funcionalidad.
+
+Tarea 2: Comportamiento de Actualización del Widget
+- Se modificó `ExchangeRatesWidgetProvider.kt` para que el botón de recarga inicie una actualización en segundo plano sin abrir la aplicación.
+- Al pulsar recargar, el widget ahora muestra un estado de carga y envía un broadcast para iniciar la actualización.
+- Se creó un nuevo `DataRefreshReceiver.kt` para recibir esta señal y ejecutar la lógica de actualización de datos del `ViewModel`.
+- Se registró el nuevo `DataRefreshReceiver` en `AndroidManifest.xml`.
+- El `ExchangeRatesViewModel` fue modificado para inyectar el `Context` y enviar un broadcast de "actualización completada" al widget al finalizar la carga de datos.
+- Se actualizó el `AndroidManifest.xml` para que el `ExchangeRatesWidgetProvider` escuche la nueva acción de "datos actualizados".

@@ -1,0 +1,20 @@
+Resumen de Notificaciones y Interacción del Usuario
+
+Flujo de Notificaciones:
+1.  **Registro en el Cliente (Aplicación React Native):**
+    *   La función `registerForPushNotificationsAsync` en `notificationService.js` se encarga de este proceso.
+    *   La aplicación solicita permisos al usuario para enviar notificaciones push.
+    *   Si el usuario concede los permisos, se obtiene un `expo_push_token` único para el dispositivo.
+    *   Este token se guarda en el perfil del usuario dentro de la base de datos de Supabase.
+
+2.  **Envío desde el Servidor (Función Edge de Supabase):**
+    *   Cuando se necesita enviar una notificación, se realiza una solicitud a la función Edge de Supabase `send-fcm-notification`.
+    *   Esta función obtiene las credenciales necesarias de la cuenta de servicio de FCM.
+    *   Genera un token de acceso para autenticarse con la API de FCM de Google.
+    *   Recibe una lista de `expo_push_token`s, un `title` (título) y un `body` (cuerpo) para la notificación.
+    *   Para cada token, construye una carga útil de mensaje FCM y la envía a la API de FCM V1.
+
+Interacción del Usuario con las Notificaciones:
+1.  **Solicitud de Permisos:** La interacción principal del usuario ocurre cuando la aplicación solicita permiso para enviar notificaciones push. El usuario debe conceder explícitamente este permiso para poder recibir notificaciones.
+2.  **Recepción de Notificaciones:** Una vez que se otorgan los permisos y se registra un token, el usuario recibe las notificaciones en su dispositivo. El contenido (título y cuerpo) es determinado por quien envía la notificación.
+3.  **Canal de Notificaciones (Android):** En dispositivos Android, la aplicación configura un canal de notificaciones llamado "default". Esto permite a los usuarios controlar la configuración de las notificaciones (por ejemplo, sonido, vibración, importancia) para este canal específico a través de la configuración del sistema de su dispositivo.

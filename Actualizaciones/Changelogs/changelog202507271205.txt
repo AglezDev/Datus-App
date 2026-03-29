@@ -1,0 +1,6 @@
+Cambios aplicados: 27 de julio de 2025, 12:05
+
+- Se modificó la ventana emergente de notificación (`CustomNotificationDisplay.kt`) para incluir un icono de notificación, un botón 'Marcar como leída' y un botón 'Detalles' con el enlace URL.
+- Se actualizó la llamada a `CustomNotificationDisplay` en `MainActivity.kt` para pasar los nuevos parámetros.
+- Se añadió una `Card` con icono y texto para cuando no hay notificaciones en `NotificationsScreen.kt`.
+- Se agregó el texto 'Toca una notificación para marcar como leída.' al final de la lista de notificaciones en `NotificationsScreen.kt`.

@@ -1,0 +1,5 @@
+Fecha y Hora: 2025-07-31 12:10
+
+Cambios aplicados:
+- Se corrigió el error 'Unresolved reference 'Telegram'' revirtiendo el icono de Telegram a 'painterResource(id = R.drawable.telegram_24px)' en el diálogo de contacto de la pantalla de Configuraciones.
+- Se corrigió el error 'Unresolved reference 'showContactDialog'' moviendo la declaración de la variable 'showContactDialog' a un ámbito superior dentro de la función 'SettingsScreen'.

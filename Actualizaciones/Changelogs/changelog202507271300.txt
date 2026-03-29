@@ -1,0 +1,5 @@
+
+Fecha y Hora: 27 de julio de 2025, 13:00
+
+Cambios aplicados:
+- Se ha añadido un diálogo de confirmación antes de ejecutar los códigos USSD en la pantalla de "Planes".

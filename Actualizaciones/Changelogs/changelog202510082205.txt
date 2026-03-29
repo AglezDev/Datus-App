@@ -1,0 +1,6 @@
+Fecha y Hora: 2025-10-08 22:05
+
+Cambios aplicados:
+- Se corrigió el color de fondo de las tarjetas en la pantalla de Mercado para que sean consistentes con el resto de la aplicación.
+- Se cambió el color del contenedor de la `ExchangeRateCard` de `surfaceVariant` a `surface`.
+- Este cambio asegura que las tarjetas respeten adecuadamente los temas claro y oscuro de la aplicación.

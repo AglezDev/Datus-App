@@ -1,0 +1,5 @@
+
+Fecha y Hora: 27 de julio de 2025, 13:05
+
+Cambios aplicados:
+- Se ha corregido un error de sintaxis en `PlansScreen.kt` que provocaba un error de compilación.

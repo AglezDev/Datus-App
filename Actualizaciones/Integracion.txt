@@ -1,0 +1,148 @@
+La forma correcta de conectar una app Android escrita en Kotlin con una base de datos en Supabase sigue estos pasos fundamentales:
+
+1. **Crear un proyecto en Supabase**  
+   - Regístrate en supabase.com y crea un nuevo proyecto.  
+   - Accede al Dashboard para crear tablas y agregar datos (puedes usar el editor SQL para definir tablas y políticas de acceso).  
+   - Obtén la URL del proyecto y la clave pública anónima (anon key) desde la configuración del proyecto, que necesitarás para la conexión desde la app[1][2].
+
+2. **Configurar tu proyecto Android en Android Studio**  
+   - Crea un nuevo proyecto Android con Kotlin.  
+   - Agrega permiso para acceso a internet en el archivo `AndroidManifest.xml`:
+     ```xml
+     
+     ```
+  
+3. **Agregar las dependencias necesarias en `build.gradle` (app)**  
+   - Incluye las librerías de Supabase para Kotlin y el cliente Ktor para llamadas HTTP:
+     ```kotlin
+     plugins {
+       id("org.jetbrains.kotlin.plugin.serialization") version "$kotlin_version"
+     }
+     
+     dependencies {
+       implementation(platform("io.github.jan-tennert.supabase:bom:$supabase_version"))
+       implementation("io.github.jan-tennert.supabase:postgrest-kt")
+       implementation("io.github.jan-tennert.supabase:auth-kt")
+       implementation("io.ktor:ktor-client-android:$ktor_version")
+     }
+     ```
+   - Reemplaza las variables `$kotlin_version`, `$supabase_version`, y `$ktor_version` con las versiones actuales recomendadas[1][7].
+
+4. **Inicializar el cliente Supabase en Kotlin**  
+   - En tu `MainActivity` o espacio global, crea el cliente así:
+     ```kotlin
+     val supabase = createSupabaseClient(
+       supabaseUrl = "https://tu-proyecto.supabase.co",
+       supabaseKey = "tu_anon_key"
+     ) {
+       install(Postgrest)
+       install(Auth) {
+         flowType = FlowType.PKCE
+         scheme = "app"
+         host = "supabase.com"
+       }
+       install(Storage)
+     }
+     ```
+   - Esto habilita acceso a la base de datos PostgREST, autenticación y almacenamiento desde la app[1][7].
+
+5. **Realizar consultas a la base de datos**  
+   - Usa las interfaces provistas para consultar tablas, insertar o actualizar datos. Ejemplo para leer datos de una tabla:
+     ```kotlin
+     val response = supabase.postgrest.from("instruments").select().execute()
+     if (response.error == null) {
+         val instruments = response.data
+         // Trabaja con los datos retornados
+     }
+     ```
+   - Puedes también usar la autenticación integrada para usuarios y manejar sesiones[1][7].
+
+6. **Opcional: Uso de inyección de dependencias (Hilt)**  
+   - Para proyectos más complejos, puedes proveer la instancia del cliente Supabase mediante un módulo Hilt para facilitar pruebas y modularidad[7].
+
+
+
+
+## 1. Credenciales y Tabla de Supabase
+
+### • URL del Proyecto
+```
+https://khkjlktemmpygwyulsia.supabase.co
+```
+
+### • Clave Pública (anon key)
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtoa2psa3RlbW1weWd3eXVsc2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5MDkwNDYsImV4cCI6MjA2NzQ4NTA0Nn0.4046zrRvHHg4VZPplNDKnCrehgPIL6wcA8xap1a5GMU
+```
+**Importante:**  
+No uses la clave de servicio (service_role) en el frontend ni la compartas públicamente.
+
+### • Nombre de la Tabla
+```
+promociones
+```
+
+### • Estructura de la Tabla
+
+| Columna       | Tipo de dato | Descripción                                 |
+|---------------|--------------|---------------------------------------------|
+| id            | integer      | Identificador único (autoincremental)       |
+| title         | text         | Título de la promoción                      |
+| description   | text         | Descripción corta de la promoción           |
+| image_url     | text         | URL de la imagen de la promoción            |
+| button_text   | text         | Texto del botón de acción                   |
+| action_url    | text         | Enlace web para la acción (opcional)        |
+| color         | text         | Color principal de la card (opcional, HEX)  |
+| active        | boolean      | Si la promoción está activa                 |
+| created_at    | timestamp    | Fecha de creación                           |
+
+**Ejemplo de registro:**
+```json
+{
+  "id": 1,
+  "title": "¡Doble de datos!",
+  "description": "Activa esta promo y recibe el doble de datos.",
+  "image_url": "https://ejemplo.com/imagen.png",
+  "button_text": "Activar",
+  "action_url": "https://promo.etecsa.cu",
+  "color": "#007bff",
+  "active": true,
+  "created_at": "2024-04-01T12:00:00Z"
+}
+```
+
+---
+
+## 2. Diseño y Comportamiento en la App
+
+### • Diseño de cada Promoción
+
+**Recomendación visual:**
+- **Imagen** a la izquierda (o arriba en móvil).
+- **Título** en negrita, grande.
+- **Descripción** corta debajo del título.
+- **Botón** con el texto de acción (por ejemplo, "Activar").
+- **Color** de fondo personalizado si lo deseas (usa el campo `color`).
+
+**Ejemplo visual:**
+
+```
++------------------------------------------------------+
+| [Imagen]  Título de la Promoción (negrita)           |
+|           Descripción corta                          |
+|           [ Botón de acción ]                        |
++------------------------------------------------------+
+```
+
+### • Interacción del Usuario
+
+- **Al tocar el botón de la promoción:**
+  - Si el campo `action_url` tiene un enlace, abre ese enlace en el navegador.
+  - Si no tiene enlace, puedes mostrar un mensaje de éxito o más detalles.
+
+- **Al tocar la card completa (opcional):**
+  - Puedes abrir una pantalla con más detalles de la promoción, o simplemente no hacer nada.
+
+---
+
+## 3. Ejemplo de consulta HTTP a Supabase (Kotlin)

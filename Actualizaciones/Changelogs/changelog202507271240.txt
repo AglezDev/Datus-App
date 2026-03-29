@@ -1,0 +1,5 @@
+
+Fecha y Hora: 27 de julio de 2025, 12:40
+
+Cambios aplicados:
+- Se ha cambiado el texto del botón "Ir al enlace" a "Detalles" en la alerta de notificación.

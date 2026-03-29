@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-10-07 14:23
+
+Cambios aplicados:
+- Se modificó la interfaz de usuario de la pantalla de Mercado (`MercadoScreen.kt`).
+- Las tarjetas de tasas de cambio ahora están separadas en dos grupos con sus respectivos títulos: "Divisas Principales" y "Criptomonedas".
+- Se corrigió un error que impedía que los indicadores de tendencia (flechas de alza/baja) se mostraran en las tarjetas.
+- La función `ExchangeRatesSection` fue refactorizada para manejar la nueva lógica de agrupación y para recibir y aplicar correctamente el estado de la tendencia a cada tarjeta.

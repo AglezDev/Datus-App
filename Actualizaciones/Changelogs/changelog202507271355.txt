@@ -1,0 +1,6 @@
+
+Fecha y Hora: 27 de julio de 2025, 13:55
+
+Cambios aplicados:
+- Se ha añadido una opción en "Configuraciones" para activar o desactivar las alertas de notificaciones.
+- La alerta de notificación solo se mostrará si la opción está activada.

@@ -1,0 +1,5 @@
+Fecha: 30 de agosto de 2025, 10:00
+
+Cambios aplicados:
+- Se revirtió el archivo `TarjetaScreen.kt` a un estado anterior para corregir un error de sintaxis.
+- Se eliminaron las tarjetas "Consultar saldo" y "Recargar Saldo Movil".

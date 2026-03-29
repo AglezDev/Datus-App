@@ -1,0 +1,5 @@
+Cambios aplicados: 27 de julio de 2025, 11:30
+
+- Se verificó el error de 'Unresolved reference 'context'' en `app/src/main/java/datus/app/com/MainActivity.kt`.
+- Se confirmó que la variable `context` ya está disponible en el ámbito de `MainScreen` y se utiliza correctamente en la lambda `onActionClick`.
+- No se requieren cambios adicionales en el código para este error específico, ya que la solución se aplicó en pasos anteriores.

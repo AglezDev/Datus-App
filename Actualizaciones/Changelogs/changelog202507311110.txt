@@ -1,0 +1,4 @@
+Fecha y Hora: 2025-07-31 11:10
+
+Cambios aplicados:
+- Se ajustaron los márgenes de las tarjetas "Enviar" y "Recibir" en la pantalla de Útiles para que se alineen con las tarjetas de abajo.

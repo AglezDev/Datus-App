@@ -1,0 +1,7 @@
+Cambios aplicados el sábado, 4 de octubre de 2025 a las 10:30
+
+Se ha rediseñado la pantalla `P2PScreen.kt` (Mercado) para mostrar las tasas de cambio de divisas de la API de elToque. Los cambios incluyen:
+- Creación de las clases de datos `ExchangeRateResponse`, `CurrencyRates` y `RateDetails` en `datus.app.com.data.remote/ExchangeRateData.kt`.
+- Creación de `ExchangeRatesViewModel.kt` en `datus.app.com.viewmodel` para manejar la lógica de obtención de datos de la API de elToque usando Ktor. Se ha incluido un placeholder `YOUR_ELTOQUE_API_KEY` que el usuario debe reemplazar con su token de autorización real.
+- Creación de `NetworkModule.kt` en `datus.app.com.di` para proveer la instancia de `HttpClient` configurada con Hilt.
+- Modificación de `P2PScreen.kt` para inyectar `ExchangeRatesViewModel`, eliminar el mensaje de 'Próximamente disponible' y diseñar una nueva UI que muestra las tasas de compra y venta para USD, EUR y MLC, la fecha de última actualización, indicadores de carga, manejo de errores con botón de reintento y funcionalidad de pull-to-refresh.

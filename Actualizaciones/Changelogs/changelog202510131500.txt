@@ -1,0 +1,6 @@
+Fecha: 2025-10-13 15:00
+
+Cambios aplicados (Mejora de UI):
+- Mejorada la visualización del Min/Max de 24 horas en las tarjetas de divisas de la pantalla "Mercado".
+- Cuando no hay datos históricos para una moneda (la primera vez que se usa la función), en lugar de mostrar "-- / --", ahora se muestra el texto "Debe esperar 24 h".
+- Este cambio proporciona una mejor retroalimentación al usuario sobre por qué no se están mostrando los datos de rango de 24 horas.

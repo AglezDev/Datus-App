@@ -1,0 +1,79 @@
+## Documentación del Proyecto Datus para IA
+
+### 1. Resumen del Proyecto
+
+Datus es una aplicación de utilidad para Android, desarrollada en Kotlin y Jetpack Compose. Su objetivo principal es facilitar a los usuarios en Cuba la gestión de los servicios de ETECSA a través de una interfaz gráfica moderna y amigable, simplificando el uso de códigos USSD para comprar planes, consultar saldos y realizar otras operaciones.
+
+La aplicación también cuenta con un sistema de notificaciones que se conecta a un backend de Supabase para mantener a los usuarios informados sobre promociones y novedades.
+
+### 2. Estructura de Directorios y Archivos Clave
+
+La estructura del proyecto sigue un patrón MVVM (Model-View-ViewModel). Los archivos más importantes se encuentran en `app/src/main/java/datus/app/com/`.
+
+- **`MainActivity.kt`**: Es el punto de entrada principal de la aplicación. Contiene el `NavHost` que gestiona la navegación entre pantallas, la barra de navegación inferior (`AppBottomNavigation`) y la lógica para mostrar la alerta de notificación inicial al abrir la app.
+
+- **`ui/screens/`**: Este paquete contiene la mayoría de las pantallas (Composable functions) de la aplicación:
+    - **`PlansScreen.kt`**: Muestra los planes de datos, voz y SMS. Contiene la lógica para mostrar el diálogo de confirmación antes de ejecutar un código USSD.
+    - **`QueriesScreen.kt`**: Contiene las opciones para realizar consultas de saldo y otros servicios USSD.
+    - **`UtilitiesScreen.kt`**: Agrupa otras utilidades y servicios USSD.
+    - **`SettingsScreen.kt`**: Permite al usuario configurar el tema de la app, guardar datos para operaciones y activar/desactivar las alertas de notificaciones.
+    - **`MenuScreen.kt`**: (No implementada como pantalla principal, sino como menú desplegable en `SharedUI.kt`).
+    - **`SharedUI.kt`**: Contiene componentes de UI reutilizables, como la barra de aplicación superior (`DatusTopAppBar`) y los diálogos (`AboutDialog`, `ConfirmationDialog`).
+
+- **`ui/notifications/`**: Paquete dedicado a la funcionalidad de notificaciones.
+    - **`NotificationsScreen.kt`**: La pantalla que muestra la lista de notificaciones, agrupadas por fecha. Implementa la funcionalidad de "deslizar para recargar".
+    - **`NotificationsViewModel.kt`**: Gestiona el estado de las notificaciones (carga, lectura, contador de no leídas, etc.).
+
+- **`repository/`**: Abstrae las fuentes de datos.
+    - **`NotificationRepository.kt`**: Gestiona la obtención de notificaciones desde el backend (Supabase) y el estado de lectura (guardado localmente).
+    - **`SettingsRepository.kt`**: Gestiona el guardado y la recuperación de las preferencias del usuario (`SharedPreferences`), como la opción de activar/desactivar alertas.
+
+- **`viewmodel/` y `ui/screens/`**: Los ViewModels (`SettingsViewModel`, `ThemeViewModel`) se encuentran en estos paquetes y se encargan de la lógica de negocio y el estado de las pantallas.
+
+- **`utils/`**: Contiene funciones de utilidad.
+    - **`SoundUtils.kt`**: Para reproducir sonidos de clic.
+    - **`UssdUtils.kt`**: Contiene la función `dialUssdCode` para ejecutar los códigos USSD.
+
+### 3. Funcionamiento de la Aplicación
+
+- **Navegación**: La navegación principal se realiza a través de una barra inferior con 5 iconos: Consultas, Promociones, Planes, Útiles y Notificaciones.
+- **Ejecución de USSD**: La mayoría de las funciones principales (planes, consultas) se basan en la ejecución de códigos USSD. La app solicita el permiso `CALL_PHONE` para esta funcionalidad.
+- **Notificaciones**: 
+    1. Al iniciar, la app carga las notificaciones desde Supabase.
+    2. Si hay una notificación no leída y las alertas están activadas en "Configuraciones", se muestra un `AlertDialog`.
+    3. La app recarga las notificaciones cada minuto en segundo plano para actualizar el contador en el icono de la barra de navegación.
+    4. En la pantalla de "Notificaciones", el usuario puede ver todas las notificaciones y marcarlas como leídas al tocarlas.
+- **Configuración**: Las preferencias del usuario (número de teléfono, tarjeta, tema y alertas) se guardan localmente usando `SharedPreferences`.
+
+### 4. Detalles de UI/UX
+
+- **Framework**: La interfaz está construida 100% con Jetpack Compose.
+- **Diseño**: Sigue los principios de Material 3, utilizando componentes como `Scaffold`, `Card`, `NavigationBar`, `AlertDialog`, etc.
+- **Experiencia de Usuario**: 
+    - Se proporcionan respuestas visuales a las interacciones (sonidos de clic, indicadores de carga).
+    - Se gestionan los estados de carga, error y vacío en las listas.
+    - Se usan diálogos de confirmación para acciones críticas (comprar planes) para evitar errores del usuario.
+    - El diseño es limpio, con un uso claro de la jerarquía visual y el espaciado.
+
+### 5. Detalles Técnicos
+
+- **Lenguaje**: Kotlin.
+- **Arquitectura**: MVVM.
+- **Inyección de Dependencias**: Hilt se utiliza para inyectar dependencias como los `Repositories` y `ViewModels`.
+- **Gestión de Estado**: Se utiliza `StateFlow` en los `ViewModels` para exponer el estado a la UI, que lo consume de forma reactiva con `collectAsState`.
+- **Backend**: Supabase se utiliza como backend para el sistema de notificaciones.
+- **Persistencia Local**: `SharedPreferences` para almacenar configuraciones simples.
+
+### 6. Guía para otra IA
+
+- **Objetivo Principal**: Tu objetivo es ayudar a mantener y mejorar una app de utilidades para Cuba. La mayoría de las tareas implicarán modificar la UI de Jetpack Compose y la lógica en los ViewModels.
+- **Flujo de Trabajo para Modificaciones**: Según el archivo `GEMINI.md`, después de cada modificación de código, debes crear un archivo de changelog en la carpeta `Actualizaciones/Changelogs/` con el formato `changelog(fechayhora).txt`. Todas tus respuestas deben ser en español.
+- **Puntos Clave a Recordar**:
+    - La lógica de navegación y la alerta de notificación principal están en `MainActivity.kt`.
+    - La lógica de estado de las notificaciones está en `NotificationsViewModel.kt`.
+    - Las preferencias del usuario se gestionan a través de `SettingsRepository.kt` y `SettingsViewModel.kt`.
+    - La mayoría de los componentes de diálogo reutilizables están en `SharedUI.kt`.
+- **Ejemplo de Tarea Común**: Si el usuario pide "añadir una nueva consulta de saldo", deberías:
+    1. Identificar que la pantalla a modificar es `QueriesScreen.kt`.
+    2. Añadir un nuevo `Card` o elemento de UI para la nueva consulta.
+    3. En el `onClick` de ese elemento, llamar a la función `dialUssdCode` del fichero `UssdUtils.kt` con el código USSD correspondiente, probablemente dentro de un diálogo de confirmación.

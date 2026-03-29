@@ -1,0 +1,7 @@
+Fecha: 2025-10-04 12:50
+
+Cambios aplicados:
+- Refactorizado el layout de `QueriesScreen` para un posicionamiento y manejo de la carga mejorados.
+- Se ha eliminado el `CircularProgressIndicator` central del carrusel de promociones para evitar duplicidad con el `PullRefreshIndicator`.
+- Se ha cambiado el layout principal a `Column` con `Spacer` de peso variable para centrar el carrusel de promociones en el espacio disponible.
+- Se ha reemplazado el `LazyVerticalGrid` de las consultas por un `Column` con `Row`s estáticas para un comportamiento de layout predecible.

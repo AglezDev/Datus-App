@@ -1,0 +1,8 @@
+Fecha: 2025-10-04 12:35
+
+Cambios aplicados:
+- Rediseñadas las tarjetas de promoción (`PromotionItem`) para un layout basado solo en texto.
+- Se han eliminado las imágenes de las tarjetas de promoción.
+- El texto del título y la descripción ahora están justificados.
+- Se ha reestructurado la tarjeta a un layout de `Column` para asegurar que el botón se alinee a la izquierda y se posicione en la parte inferior.
+- Se ha restaurado una altura fija a la tarjeta para mantener la uniformidad en el carrusel.

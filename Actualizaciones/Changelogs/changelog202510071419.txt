@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-10-07 14:19
+
+Cambios aplicados:
+- Se corrigió un error de compilación masivo de tipo "Unresolved reference" en `ExchangeRatesViewModel.kt`.
+- El error fue causado por la eliminación accidental de la clase `DataStoreManager` en un paso anterior.
+- Se restauró el contenido completo y correcto del archivo `DataStoreManager.kt`, asegurando que la clase y todos sus métodos de carga/guardado vuelvan a estar disponibles para el `ViewModel`.
+- Esta acción resuelve la cascada de errores de compilación y restaura la funcionalidad de persistencia de datos.

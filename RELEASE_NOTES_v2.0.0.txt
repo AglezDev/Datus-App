@@ -1,0 +1,14 @@
+¡Grandes Novedades en la Versión 2.0.0!
+
+¡Hemos estado trabajando sin descanso para llevar Datus al siguiente nivel! Esta actualización está llena de nuevas funcionalidades y mejoras que transformarán tu experiencia con la aplicación.
+
+🚀 Nuevas Funcionalidades
+
+Pantalla de Mercado: ¡Hemos añadido una nueva sección de Mercado! Ahora puedes explorar y comprar una variedad de productos y servicios directamente desde la aplicación.
+Widget de Tasas de Cambio: Nuevo widget para el escritorio del teléfono que muestra las tasas de cambio actuales de USD, EUR y MLC. El widget incluye un botón de actualización que te lleva directamente a la pantalla de Mercado y se adapta al modo claro/oscuro del sistema.
+✨ Mejoras y Cambios Visuales
+Botones Arreglados: Hemos corregido los botones en las tarjetas de promociones en la pantalla de Consultas para que se vean correctamente incluso cuando el usuario tiene fuentes del sistema demasiado grandes, manteniendo la legibilidad y funcionalidad.
+Visualización Mejorada en Mercado: La visualización de la divisa USDT_TRC20 ahora se muestra simplemente como USDT para mayor claridad y consistencia.
+Diseño de Pestañas Ajustado: Hemos optimizado el diseño de las pestañas en la pantalla de Planes para que ocupen un ancho más apropiado y se alineen mejor con las tarjetas debajo de ellas.
+Versión de la App: Hemos solucionado un problema que causaba que la pantalla de "Configuraciones" mostrara un número de versión incorrecto. Ahora, la versión se muestra de forma dinámica y siempre estará actualizada.
+¡Gracias por usar Datus! Esperamos que disfrutes de esta gran actualización.

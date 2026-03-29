@@ -1,0 +1,33 @@
+Changelog - 29 de agosto de 2025 14:06
+
+Cambios aplicados:
+- Se modificó la pantalla de Consultas para mostrar las opciones en una cuadrícula de 2 columnas en lugar de una lista vertical.
+- Se reemplazó LazyColumn con LazyVerticalGrid en QueriesScreen.kt.
+- Se ajustó el espaciado entre los elementos de la cuadrícula.
+- Se modificó el diseño de las tarjetas de consulta para mostrar el icono sobre el título y se eliminó la descripción.
+- Se estableció una altura fija para las tarjetas de consulta para que todas tengan el mismo tamaño.
+- Se centró el contenido de las tarjetas de consulta.
+- Se corrigió la alineación del texto y el icono en las tarjetas de consulta.
+- Se corrigió un error de sintaxis en `QueriesScreen.kt` (falta de una llave de cierre).
+- Se movió el icono de notificaciones de la barra de navegación inferior a la barra de aplicaciones superior.
+- Se agregó una nueva pantalla "Tarjeta" a la barra de navegación inferior con un icono de tarjeta de crédito.
+- Se creó un archivo `TarjetaScreen.kt` con una pantalla de marcador de posición.
+- Se corrigió un error de referencia a un recurso de imagen inexistente para el icono de la tarjeta de crédito, reemplazándolo con un icono integrado.
+- Se agregó una nueva tarjeta en la pantalla de "Configuraciones de usuario" para configurar el PIN de la tarjeta.
+- Se agregaron los estados y funciones necesarios en `ThemeViewModel.kt` para el PIN de la tarjeta y la autenticación automática.
+- Se agregaron checkboxes para seleccionar el banco en la tarjeta de PIN de la tarjeta.
+- Se agregó el estado y la lógica para manejar la selección del banco en `ThemeViewModel.kt`.
+- Se corrigió un error de sintaxis en `ThemeViewModel.kt` (falta de una llave de cierre).
+- Se aumentó el límite del PIN de la tarjeta a 5 dígitos.
+- Se redujo el tamaño de la fuente de los textos de los checkboxes y del switch de autenticación automática.
+- Se agregó una tarjeta de "Autenticarse" en la pantalla de Tarjeta que ejecuta un código USSD según el banco seleccionado.
+- Se agregó la barra de aplicaciones superior a la pantalla de Tarjeta.
+- Se corrigió un error de importación que faltaba en `TarjetaScreen.kt`.
+- Se agregó una tarjeta de "Desconectar" en la pantalla de Tarjeta que ejecuta un código USSD.
+- Se corrigió un error de sintaxis en `TarjetaScreen.kt` (llave de cierre mal colocada).
+- Se aplicó el estilo de las tarjetas de la pantalla de Planes a las tarjetas de la pantalla de Tarjeta.
+- Se cambió el diseño de la pantalla de Tarjeta a una cuadrícula de 2 columnas, similar a la pantalla de Consultas.
+- Se modificaron las tarjetas de la pantalla de Tarjeta para tener el icono encima del título y asegurar que todas tengan el mismo tamaño.
+- Se corrigió un error de importación que faltaba en `TarjetaScreen.kt` (`fillMaxSize`).
+- Se agregó una `LazyColumn` debajo de la `LazyVerticalGrid` en `TarjetaScreen.kt` para mostrar nuevas tarjetas de saldo.
+- Se agregaron tres nuevas tarjetas de saldo ("360 CUP de Saldo", "240 CUP de Saldo", "120 CUP de Saldo") con el estilo de `PlanCard`.

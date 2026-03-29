@@ -1,0 +1,6 @@
+Fecha y Hora: 2025-10-10 11:46
+
+Cambios aplicados:
+- Se ajustó el tamaño de los indicadores de tendencia (puntos de color) en el widget de tasas de cambio.
+- Se redujo el ancho y alto de los `ImageView` de los indicadores de 12dp a 6dp.
+- Este cambio hace que los puntos sean más pequeños y sutiles, mejorando la composición visual del widget.

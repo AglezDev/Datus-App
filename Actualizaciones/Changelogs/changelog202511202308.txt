@@ -1,0 +1,1 @@
+Fecha: 2025-11-20 23:08:01`n`nCambios aplicados:`n- Se corrigió el problema de visibilidad de las tarjetas de consulta en `QueriesScreen` (`Consultas`).`n- El error se debía a que el `LazyVerticalGrid` no se expandía correctamente; se solucionó añadiendo `Modifier.fillMaxSize()` a su cadena de modificadores para asegurar que ocupe todo el espacio disponible.

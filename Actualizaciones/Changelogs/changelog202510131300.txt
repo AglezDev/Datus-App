@@ -1,0 +1,12 @@
+Fecha: 2025-10-13 13:00
+
+Cambios aplicados (Corrección de Bug):
+- Corregido un error crítico en la lógica de tendencias where los valores mínimo y máximo de 24 horas se calculaban globalmente para todas las monedas en lugar de por moneda individual.
+- Modificada la entidad `TasaHistorica` de Room para incluir un campo `currency`.
+- Actualizada la versión de la base de datos a 2 y se ha configurado la migración destructiva para manejar el cambio de esquema.
+- Actualizado `TasaHistoricaDao` para que las consultas de Min/Max y de historial se puedan realizar por moneda.
+- Refactorizado `ExchangeRatesViewModel`:
+    - La lógica de inserción ahora guarda la moneda junto con la tasa.
+    - La función `calculateTrends` ahora itera sobre cada moneda, consulta al DAO por el historial individual de esa moneda y calcula la tendencia y los valores Min/Max correctamente.
+    - Los `StateFlow` para `min24h` y `max24h` ahora son mapas (`Map<String, Double?>`) para mantener los datos por moneda.
+- Actualizada la UI en `MercadoScreen.kt` para leer los valores Min/Max del mapa correspondiente a cada moneda, asegurando que cada tarjeta de divisa muestre su propio rango de 24 horas.

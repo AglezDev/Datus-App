@@ -1,0 +1,5 @@
+
+Fecha y Hora: 27 de julio de 2025, 13:40
+
+Cambios aplicados:
+- Se ha corregido un error que impedía que el indicador de notificaciones se actualizara al marcar una notificación como leída.

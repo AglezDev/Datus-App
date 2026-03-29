@@ -1,0 +1,6 @@
+
+Fecha y Hora: 27 de julio de 2025, 13:20
+
+Cambios aplicados:
+- Se ha mejorado la lógica de la notificación inicial para que solo se muestre una vez al abrir la aplicación.
+- La notificación inicial no se mostrará si el usuario ya está en la pantalla de "Notificaciones".

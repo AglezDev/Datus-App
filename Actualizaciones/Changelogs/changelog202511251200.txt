@@ -1,0 +1,5 @@
+Cambios aplicados el 25 de noviembre de 2025 a las 12:00:
+- Se añadió la importación 'RowScope' a 'app/src/main/java/datus/app/com/ui/screens/SharedUI.kt'.
+- Se corrigió la firma de 'ExchangeRatesSection' en 'app/src/main/java/datus/app/com/ui/screens/MercadoScreen.kt' para ser una función de extensión de 'LazyGridScope' y se eliminó la anotación '@Composable'.
+- Se ajustó la llamada a 'ExchangeRatesSection' en 'MercadoScreen' para que no pasara 'lazyGridScope' como parámetro.
+- Se añadió la importación 'item' de 'lazy.grid' a 'MercadoScreen.kt'.

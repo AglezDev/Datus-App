@@ -1,0 +1,5 @@
+Cambios aplicados el sábado, 4 de octubre de 2025 a las 11:50
+
+Se ha mejorado la presentación de la información en `MercadoScreen.kt`:
+- El texto "Tasas de Cambio (elTOQUE)" se ha movido al final de la lista de divisas, se ha reducido su tamaño de fuente a `bodySmall` y se ha centrado.
+- El texto de la "Última actualización" también se ha centrado.

@@ -1,0 +1,9 @@
+Fecha: 2025-10-13 16:00
+
+Cambios aplicados (Reversión de Característica):
+- Se ha eliminado por completo la funcionalidad y la visualización de "24h Min/Max" de las tarjetas de divisas en la pantalla "Mercado", según la última solicitud.
+- Eliminada la columna "24h Min/Max" del composable `ExchangeRateCard` en `MercadoScreen.kt`.
+- Eliminados los parámetros `min24h` y `max24h` de las firmas y llamadas de las funciones `ExchangeRateCard` y `ExchangeRatesSection`.
+- Eliminados los `StateFlow` para `min24h` y `max24h` del `ExchangeRatesViewModel`.
+- Simplificada la función `calculateTrends` en el ViewModel para que ya no calcule ni exponga los valores mínimo y máximo.
+- La funcionalidad de cálculo de tendencia (Subiendo, Bajando, Estable) se ha mantenido.

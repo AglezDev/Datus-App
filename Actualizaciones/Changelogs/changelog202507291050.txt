@@ -1,0 +1,5 @@
+Fecha y Hora: 2025-07-29 10:50
+
+Cambios aplicados:
+
+- Ocultado el botón "Detalles" en la `NotificationCard` si la notificación no tiene una URL.

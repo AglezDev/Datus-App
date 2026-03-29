@@ -1,0 +1,7 @@
+
+Fecha y Hora: 27 de julio de 2025, 12:30
+
+Cambios aplicados:
+- Se ha modificado la lógica de las notificaciones para evitar que la alerta de notificación se muestre repetidamente.
+- Se ha eliminado la recarga periódica de notificaciones para evitar que la alerta de bienvenida se muestre en cada recarga.
+- Se ha eliminado el componente `CustomNotificationDisplay` para evitar la duplicación de notificaciones.

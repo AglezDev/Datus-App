@@ -1,0 +1,5 @@
+Fecha: 2025-10-13 17:00
+
+Cambios aplicados (Corrección de Build):
+- Corregido un error de compilación causado por una declaración duplicada de la propiedad `currencyTrends` en `ExchangeRatesViewModel.kt`.
+- Eliminada la línea duplicada para resolver la ambigüedad de sobrecarga, lo que ha permitido que el proyecto se compile correctamente.

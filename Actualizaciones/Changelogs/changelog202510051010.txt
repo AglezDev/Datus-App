@@ -1,0 +1,4 @@
+Fecha y Hora: 2025-10-05 10:10
+
+Cambios aplicados:
+- Se corrigió la ruta de importación de la clase `HistoricalRate` en `ExchangeRatesViewModel.kt` de `datus.app.com.data.remote.HistoricalRate` a `datus.app.com.data.local.HistoricalRate` para que coincida con la ubicación real del archivo.

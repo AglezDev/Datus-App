@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-07-29 12:00
+
+Cambios aplicados:
+
+- Se ha solucionado un problema con el cursor en el campo de entrada de la tarjeta bancaria en `SettingsScreen.kt` mediante la implementación de una `BankCardVisualTransformation` personalizada. Esto asegura que la escritura siempre sea de izquierda a derecha y formatea el número con espacios para una mejor legibilidad.
+- Se ha creado el archivo `BankCardVisualTransformation.kt` para alojar la nueva lógica de transformación visual.
+- Se ha añadido un icono de papelera (eliminar) al campo de entrada del PIN de transferencia en `SettingsScreen.kt`, permitiendo a los usuarios borrar el campo fácilmente, de forma similar a los campos de número de teléfono y tarjeta.

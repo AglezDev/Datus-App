@@ -1,0 +1,15 @@
+Fecha: 2025-10-13 12:00
+
+Cambios aplicados:
+- Implementado el sistema de análisis de tendencias para las tasas de cambio en la pantalla de Mercado.
+- Se ha configurado la base de datos Room desde cero para almacenar el historial de tasas de las últimas 24 horas.
+- Creada la entidad `TasaHistorica` y su `TasaHistoricaDao` para la persistencia de datos.
+- Creado un módulo de Hilt (`DatabaseModule`) para proveer las dependencias de Room.
+- Refactorizado `ExchangeRatesViewModel` para:
+    - Inyectar y utilizar `TasaHistoricaDao`.
+    - Guardar cada nueva tasa consultada en la base de datos local.
+    - Eliminar las tasas con más de 24 horas de antigüedad.
+- Reemplazada la lógica de cálculo de tendencias anterior por el nuevo sistema de "zonas" (Alta, Media, Baja) basado en el rango de las últimas 24 horas.
+- Modificada la UI en `MercadoScreen.kt`:
+    - El icono de tendencia ahora refleja el estado de la zona (Sube, Baja, Estable).
+    - Se ha añadido una nueva sección en las tarjetas de divisas para mostrar los valores "Mín" y "Máx" de las últimas 24 horas, dando más contexto al usuario.

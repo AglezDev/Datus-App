@@ -1,0 +1,6 @@
+Fecha y Hora: 2025-10-10 11:28
+
+Cambios aplicados:
+- Se mejoró la lógica de visualización de errores en la pantalla de Mercado.
+- El icono de error de conexión ahora solo se muestra si la carga de datos falla y no hay datos cacheados para mostrar.
+- Si una actualización falla pero ya existen datos en pantalla, la aplicación continuará mostrando esos datos (stale) en lugar de un mensaje de error disruptivo, mejorando la experiencia de usuario.

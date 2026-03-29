@@ -1,0 +1,4 @@
+Fecha: 2025-10-05 11:10
+Cambios aplicados:
+- Se ha actualizado la versión de la aplicación a 2.0.0.
+- El `versionCode` se ha actualizado a 4.

@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-10-08 00:50
+
+Cambios aplicados:
+- Se corrigió un error de compilación final en `NotificationsScreen.kt` (`Unresolved reference: readStatus`).
+- El error fue el último efecto secundario de la refactorización del estado de notificaciones.
+- Se actualizó la UI de la pantalla de notificaciones para que use la propiedad `notification.isRead` para determinar el estado de lectura, en lugar de la propiedad obsoleta que fue eliminada.
+- Con este cambio, el ciclo de correcciones para el bug del indicador de notificaciones se completa.

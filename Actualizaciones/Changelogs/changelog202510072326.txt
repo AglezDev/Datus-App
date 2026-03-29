@@ -1,0 +1,6 @@
+Fecha y Hora: 2025-10-07 23:26
+
+Cambios aplicados:
+- Se ajustó el diseño de la `ExchangeRateCard` en la pantalla de Mercado.
+- El valor de la tasa, la etiqueta "CUP" y el indicador de tendencia (alza/baja) ahora se muestran en una sola línea horizontal para un diseño más limpio y compacto.
+- Se utilizó `alignByBaseline` para asegurar una alineación vertical perfecta del texto y los iconos en la nueva fila.

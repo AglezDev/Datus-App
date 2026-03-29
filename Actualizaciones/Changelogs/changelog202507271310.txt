@@ -1,0 +1,5 @@
+
+Fecha y Hora: 27 de julio de 2025, 13:10
+
+Cambios aplicados:
+- Se ha corregido un error de sobrecarga de funciones en `PlansScreen.kt`.

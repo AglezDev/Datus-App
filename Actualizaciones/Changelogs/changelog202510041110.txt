@@ -1,0 +1,13 @@
+Cambios aplicados el sábado, 4 de octubre de 2025 a las 11:10
+
+Se ha revisado la página de términos y condiciones de la API de elToque (`https://eltoque.com/api-tasas-de-eltoque-terminos-y-condiciones-de-uso`). Esta página no proporciona la información técnica específica (URL base, endpoints, estructura JSON) necesaria para la integración, solo menciona el uso de una "Clave API".
+
+Dado que la `BASE_URL` en `ExchangeRatesViewModel.kt` ya está configurada correctamente a `https://api.eltoque.com`, y el error '404 Not Found' persiste apuntando a la URL antigua (`https://eltoque.com/v1/trmi`), la causa más probable sigue siendo que la aplicación no está ejecutando la versión más reciente del código.
+
+**¿Has seguido los pasos de limpieza y reinstalación de la aplicación que te proporcioné anteriormente?** Es crucial que realices:
+1.  `File -> Invalidate Caches / Restart...` y `Invalidate and Restart`.
+2.  `Build -> Rebuild Project`.
+3.  Desinstalar completamente la aplicación del dispositivo o emulador.
+4.  Volver a instalar la aplicación.
+
+Por favor, confirma si has realizado estos pasos.

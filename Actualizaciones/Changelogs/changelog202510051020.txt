@@ -1,0 +1,4 @@
+Fecha y Hora: 2025-10-05 10:20
+
+Cambios aplicados:
+- Se reemplazó `Icons.Default.Close` con `Icons.Filled.Close` en `MercadoScreen.kt` para intentar resolver el error de referencia no resuelta 'Close'.

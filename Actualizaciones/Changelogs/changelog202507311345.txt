@@ -1,0 +1,2 @@
+Cambios aplicados:
+- Se eliminó el menú de 3 puntos de la pantalla de Configuración de Usuario (UserSettingsScreen.kt) estableciendo showMenuIcon en false en la llamada a DatusTopAppBar.

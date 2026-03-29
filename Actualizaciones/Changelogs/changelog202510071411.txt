@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-10-07 14:11
+
+Cambios aplicados:
+- Se corrigió una excepción de tipo `kotlinx.serialization.SerializationException` que causaba el "Error de conexión".
+- El error se solucionó añadiendo la anotación `@Serializable` a la clase de datos `HistoricalRate` en el archivo `DataStoreManager.kt`.
+- También se añadió la importación necesaria para `@Serializable`.
+- Este cambio permite que el historial de tasas se guarde correctamente en la memoria del dispositivo, eliminando el error que ocurría al intentar actualizar los datos desde la red.

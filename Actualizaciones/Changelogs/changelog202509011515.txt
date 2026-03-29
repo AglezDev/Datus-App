@@ -1,0 +1,19 @@
+Fecha: 2025-09-01 15:15
+
+Cambios aplicados:
+- Se ha añadido un widget a la aplicación para la función "Saldo Principal".
+- El widget permite a los usuarios ejecutar la consulta de saldo principal con un solo toque desde la pantalla de inicio.
+- Se ha mejorado la experiencia del widget para que se sienta como un acceso directo, evitando que la aplicación principal se abra.
+- Se ha corregido el código USSD utilizado por el widget a *222#.
+- Se ha cambiado el icono del widget al de "Consultar Vigencia" (`ic_data_usage.xml`) y se ha coloreado de azul.
+- Se ha eliminado el texto del widget.
+- Se ha corregido la acción de click del widget para que ejecute el código USSD de forma fiable utilizando una actividad transparente.
+- Se ha corregido un error de compilación en `WidgetClickActivity` (`Unresolved reference: registerForActivityResult`) cambiando la clase base a `ComponentActivity`.
+- Se ha ajustado el tamaño del widget a una cuadrícula (1x1).
+- Se ha mejorado el estilo del texto del widget para que se adapte al tema del dispositivo.
+- Se ha creado un nuevo layout para el widget (`widget_consultar_saldo.xml`).
+- Se ha añadido un icono de "billetera" para el widget (`ic_account_balance_wallet.xml`).
+- Se ha corregido un error en el icono del widget que impedía la compilación (error de `colorControlNormal`).
+- Se ha implementado la lógica del widget en `ConsultarSaldoWidgetProvider.kt`.
+- Se ha creado un `BroadcastReceiver` (`ConsultarSaldoReceiver.kt`) para manejar la acción del widget.
+- Se han actualizado los archivos `AndroidManifest.xml` y `build.gradle.kts` para incluir el widget.

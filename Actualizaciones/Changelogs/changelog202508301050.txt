@@ -1,0 +1,6 @@
+Fecha: 30 de agosto de 2025, 10:50
+
+Cambios aplicados:
+- Se solucionó un problema de recorte de las tarjetas en modo claro en `TarjetaScreen.kt`.
+- Se añadieron bordes a las tarjetas para mejorar la visibilidad.
+- Se ajustó el padding del `LazyVerticalGrid` para usar `contentPadding`.

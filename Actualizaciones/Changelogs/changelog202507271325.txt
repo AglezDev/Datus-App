@@ -1,0 +1,5 @@
+
+Fecha y Hora: 27 de julio de 2025, 13:25
+
+Cambios aplicados:
+- Se ha reintroducido la recarga periódica de notificaciones para asegurar que el indicador de notificaciones se actualice en tiempo real.

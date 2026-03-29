@@ -1,0 +1,3 @@
+Cambios aplicados el sábado, 4 de octubre de 2025 a las 12:10
+
+Se ha modificado la visualización de la divisa "USDT_TRC20" en `MercadoScreen.kt` para mostrarla como "USDT (TRC20)", donde "(TRC20)" aparece en letras más pequeñas al lado del nombre principal de la divisa. Esto mejora la legibilidad y el aprovechamiento del espacio en la tarjeta.

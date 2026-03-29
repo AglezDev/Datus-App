@@ -1,0 +1,3 @@
+Cambios aplicados:
+- Se eliminó la opción 'Donar' del menú de 3 puntos en `MenuScreen.kt`.
+- Se eliminaron las variables de estado (`showDonateOptions`, `showDonateTransfer`, `showDonateBank`, `donatePin`, `donateAmount`) y los diálogos (`AlertDialog`) relacionados con la funcionalidad de donación.

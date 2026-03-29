@@ -1,0 +1,6 @@
+Fecha y Hora: 2025-10-07 23:14
+
+Cambios aplicados:
+- Se corrigió un error de compilación (`Unresolved reference: Toast`) en `MercadoScreen.kt`.
+- El error se solucionó añadiendo la importación necesaria (`import android.widget.Toast`) que se había omitido durante la refactorización de la UI.
+- Este cambio permite que la notificación al copiar los datos de la tarjeta funcione correctamente.

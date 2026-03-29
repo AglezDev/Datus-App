@@ -1,0 +1,8 @@
+Fecha y Hora: 2025-07-31 11:25
+
+Cambios aplicados:
+- Se corrigió la pantalla "Configuraciones de Usuario" para que reciba el `themeViewModel`.
+- Se agregaron las importaciones que faltaban en `UserSettingsScreen.kt`.
+- Se eliminaron las tarjetas de "Datos para operaciones" y "Pin de Transferencias De Saldo" de `SettingsScreen.kt`.
+- Se agregó la importación del icono `Person` en `SettingsScreen.kt`.
+- Se corrigió la llamada a `UserSettingsScreen` en `MainActivity.kt` para pasar el `themeViewModel`.

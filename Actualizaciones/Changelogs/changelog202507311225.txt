@@ -1,0 +1,4 @@
+Cambios aplicados:
+- Se añadieron las tarjetas de 'Actualización' y 'Contáctanos' a la pantalla de Configuraciones (`SettingsScreen.kt`).
+- La tarjeta de 'Actualización' muestra un Toast al hacer clic.
+- La tarjeta de 'Contáctanos' activa el diálogo `ContactDialog` al hacer clic.

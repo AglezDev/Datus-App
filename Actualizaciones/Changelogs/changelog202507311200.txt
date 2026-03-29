@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-07-31 12:00
+
+Cambios aplicados:
+- En la pantalla de Útiles, se ajustó el espaciado entre las tarjetas 'Enviar' y 'Recibir' para que sea uniforme y se centró el contenido dentro de estas tarjetas.
+- En la pantalla de Configuraciones, se añadió una nueva tarjeta 'Actualizar' que dirige al usuario a un enlace de descarga.
+- En la pantalla de Configuraciones, se añadió una nueva tarjeta 'Contactarnos' que abre un diálogo con opciones para contactar vía Telegram (funcional) y Facebook (deshabilitado).
+- Se movió el texto 'Tus datos se guardan de forma segura solo en tu dispositivo' fuera de la primera tarjeta en la pantalla de Configuraciones de Usuario.

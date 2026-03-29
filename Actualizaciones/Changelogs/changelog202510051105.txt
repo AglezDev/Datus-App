@@ -1,0 +1,5 @@
+Fecha: 2025-10-05 11:05
+Cambios aplicados:
+- Se han actualizado los detalles de los planes en la pestaña "Otros" de la pantalla de Planes.
+- Bolsa Diaria: 200 MB de Datos, 25 CUP, *133*1*3*1#
+- Plan ToDus: 200 MB de datos Nacionales, 25 CUP, *133*1*2*1#

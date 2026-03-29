@@ -1,0 +1,8 @@
+Fecha y Hora: 2025-10-07 22:47
+
+Cambios aplicados:
+- Se corrigió un error crítico de compilación de KSP (`IncompatibleClassChangeError`).
+- El error fue causado por un conflicto de versiones binarias entre el plugin de Kotlin y el plugin de KSP.
+- Se solucionó alineando las versiones: se redujo la versión de Kotlin del proyecto de `2.0.21` a `2.0.0` en `libs.versions.toml`.
+- Se actualizó también la versión del plugin de serialización a `2.0.0` en `app/build.gradle.kts` para mantener la consistencia.
+- Esta alineación de versiones asegura la compatibilidad entre las herramientas de compilación y resuelve el error.

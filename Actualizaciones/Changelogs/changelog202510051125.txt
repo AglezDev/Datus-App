@@ -1,0 +1,3 @@
+Fecha: 2025-10-05 11:25
+Cambios aplicados:
+- Se ha añadido el nombre "Consultar Saldo" al widget de la aplicación.

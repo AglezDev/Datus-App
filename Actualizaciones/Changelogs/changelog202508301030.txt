@@ -1,0 +1,4 @@
+Fecha: 30 de agosto de 2025, 10:30
+
+Cambios aplicados:
+- Se añadió un texto descriptivo en el diálogo de selección de banco en `TarjetaScreen.kt`.

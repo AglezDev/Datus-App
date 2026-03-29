@@ -1,0 +1,2 @@
+Cambios aplicados el 25 de noviembre de 2025 a las 11:45:
+- Se corrigió un error de sintaxis en 'app/src/main/java/datus/app/com/ui/screens/MercadoScreen.kt' eliminando dos llaves de cierre adicionales que causaban un error de compilación.

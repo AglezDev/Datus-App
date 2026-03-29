@@ -1,0 +1,6 @@
+Fecha y Hora: 2025-10-07 13:14
+
+Cambios aplicados:
+- Se corrigió un error de compilación en `DataRefreshReceiver.kt`.
+- El error "Argument type mismatch" se solucionó al corregir el orden y la cantidad de los argumentos pasados al constructor de `ExchangeRatesViewModel`.
+- Se ajustó la llamada para pasar `context`, `httpClient` y `dataStoreManager` en el orden correcto, resolviendo el fallo de compilación.

@@ -1,0 +1,6 @@
+Fecha y Hora: 2025-07-29 11:35
+
+Cambios aplicados:
+
+- Corregido un error de compilación en `SettingsScreen.kt` debido a una importación faltante de `clickable`.
+- Corregido un error de compilación en `SettingsScreen.kt` debido a una referencia no resuelta de `ArrowForwardIos`.

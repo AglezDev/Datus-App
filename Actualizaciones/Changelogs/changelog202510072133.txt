@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-10-07 21:33
+
+Cambios aplicados:
+- Se solucionó un problema de interfaz de usuario en la pantalla de Consultas (`QueriesScreen.kt`) que ocurría en dispositivos con tamaños de fuente grandes.
+- Se añadió un scroll vertical a toda la pantalla, envolviendo el contenido principal en un modificador `verticalScroll`.
+- Esto previene que los elementos, como los botones de las tarjetas de promociones, se distorsionen o se corten cuando el contenido excede la altura de la pantalla.
+- Se eliminaron los `Spacer` con pesos para permitir un layout más flexible y adaptable.

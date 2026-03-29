@@ -1,0 +1,8 @@
+Fecha y Hora: 2025-10-08 00:03
+
+Cambios aplicados:
+- Se mejoró el indicador de carga del widget de tasas de cambio.
+- Se reemplazó el texto "..." por una barra de progreso horizontal indeterminada, que es más visual y profesional.
+- Se modificó el archivo de diseño `exchange_rates_widget.xml` para añadir la ProgressBar y un ID al contenedor de las tasas.
+- Se actualizó `ExchangeRatesWidgetProvider.kt` para gestionar la visibilidad de la barra de progreso y los textos durante el ciclo de actualización (ocultar textos y mostrar barra al cargar, y viceversa al finalizar).
+- La animación de la barra de progreso se muestra de izquierda a derecha como fue acordado.

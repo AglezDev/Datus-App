@@ -1,0 +1,4 @@
+Cambios aplicados: 27 de julio de 2025, 11:50
+
+- Se eliminó el icono de la campana de notificaciones de la barra superior de forma permanente, eliminando el código que lo renderizaba en `SharedUI.kt` dentro de la función `DatusTopAppBar`.
+- Se eliminaron los parámetros `showNotificationsIcon` y `unreadCount` de la firma de `DatusTopAppBar` ya que ya no son necesarios.

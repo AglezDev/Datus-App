@@ -1,0 +1,5 @@
+Cambios aplicados: 27 de julio de 2025, 11:20
+
+- Se corrigió el error de declaración duplicada de `uiState` en `app/src/main/java/datus/app/com/MainActivity.kt`.
+- Se eliminó la segunda declaración de `uiState` en la función `MainScreen`.
+- Se asume que el error de invocación `@Composable` en la línea 164 se resolvió como consecuencia de la corrección de la declaración duplicada.

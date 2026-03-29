@@ -1,0 +1,22 @@
+Changelog - 30 de agosto de 2025 16:40
+
+Cambios aplicados:
+- Se añadió una LazyColumn debajo de la LazyVerticalGrid en TarjetaScreen.kt para contener las nuevas tarjetas de saldo.
+- Se crearon tres nuevas tarjetas de saldo ("360 CUP de Saldo", "240 CUP de Saldo", "120 CUP de Saldo") con el estilo de PlanCard de PlansScreen.kt.
+- Se añadió el composable PriceTag a TarjetaScreen.kt para dar estilo a los precios de las tarjetas de saldo.
+- Se actualizaron las importaciones en TarjetaScreen.kt para incluir los nuevos composables y modificadores.
+- Se corrigieron errores de sintaxis en TarjetaScreen.kt eliminando comillas dobles extra en las definiciones de códigos USSD.
+- Se corrigieron errores de referencia no resuelta ('Box', 'AttachMoney', 'size') añadiendo las importaciones correspondientes en TarjetaScreen.kt.
+- Se resolvió la ambigüedad de sobrecarga de PriceTag eliminando la definición duplicada de este composable en TarjetaScreen.kt.
+- Se intentó resolver el error "Unresolved reference 'size'" eliminando y re-añadiendo la importación de androidx.compose.ui.Modifier en TarjetaScreen.kt.
+- Se corrigió el error "Unresolved reference 'size'" eliminando la importación incorrecta import androidx.compose.foundation.layout.size en TarjetaScreen.kt.
+- Se corrigieron los errores "Unresolved reference 'verticalScroll'" y "Unresolved reference 'rememberScrollState'" añadiendo las importaciones correspondientes en TarjetaScreen.kt.
+- Se corrigió el error "Unresolved reference 'size'" reemplazando Modifier.size(32.dp) con Modifier.width(32.dp).height(32.dp) en TarjetaScreen.kt.
+- Se corrigió el error IllegalStateException de "Vertically scrollable component was measured with an infinity maximum height constraints" en TarjetaScreen.kt reestructurando el diseño. Ahora, LazyVerticalGrid y las tres tarjetas de saldo están dentro de un único Column con verticalScroll, eliminando la LazyColumn anidada para las tarjetas de saldo.
+- Se eliminó la importación de androidx.compose.foundation.lazy.LazyColumn ya que ya no se utiliza.
+- Se corrigió el error de cierre de la aplicación al acceder a la pantalla de Tarjeta, re-añadiendo la definición del composable PriceTag en TarjetaScreen.kt, ya que no estaba definido ni importado en el proyecto.
+- Se resolvió la ambigüedad de sobrecarga de PriceTag renombrando el composable a MyPriceTag en TarjetaScreen.kt para evitar conflictos.
+- Se eliminaron las tres tarjetas de saldo ("360 CUP de Saldo", "240 CUP de Saldo", "120 CUP de Saldo") de TarjetaScreen.kt a petición del usuario.
+- Se eliminó la definición del composable MyPriceTag de TarjetaScreen.kt ya que ya no se utiliza.
+- Se revirtió la pantalla de Tarjeta a su estado original, mostrando solo las tarjetas de "Autenticarse" y "Desconectar" en dos columnas.
+- Se eliminaron las importaciones innecesarias relacionadas con las tarjetas de saldo y el composable MyPriceTag.

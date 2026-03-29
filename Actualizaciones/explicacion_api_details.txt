@@ -1,0 +1,20 @@
+Para obtener el **Endpoint de la API (URL)** y la **Estructura de la respuesta JSON**, puedes seguir estos pasos:
+
+**1. Documentación de la API:**
+   *   La forma más común y sencilla es consultar la documentación oficial de la API. Los desarrolladores suelen proporcionar una guía detallada que incluye los endpoints disponibles, los parámetros que aceptan y ejemplos de las respuestas que devuelven.
+   *   Busca secciones como 'Endpoints', 'Referencia de API', 'Guía de Integración' o 'Ejemplos'.
+
+**2. Herramientas de Desarrollo del Navegador (para APIs web):**
+   *   Si la API ya está siendo utilizada en alguna aplicación web o si puedes acceder a ella a través de un navegador, puedes usar las herramientas de desarrollo (F12 en la mayoría de los navegadores).
+   *   Ve a la pestaña 'Red' (o 'Network').
+   *   Recarga la página o realiza la acción que dispara la llamada a la API.
+   *   Busca la solicitud que se hizo a la API (generalmente un tipo 'XHR' o 'Fetch').
+   *   En los detalles de esa solicitud, encontrarás la 'URL de la solicitud' (ese es el endpoint) y en la pestaña 'Respuesta' (o 'Response') verás la estructura JSON.
+
+**3. Herramientas como Postman o Insomnia:**
+   *   Si tienes el endpoint pero no la documentación, puedes usar estas herramientas para hacer una solicitud GET al endpoint y ver la respuesta JSON directamente.
+
+**4. Contactar al proveedor de la API o al desarrollador:**
+   *   Si es una API interna o no encuentras la documentación, la mejor opción es contactar a la persona o equipo que la desarrolló para que te proporcionen esta información.
+
+Una vez que tengas el **Endpoint (URL)** y un **ejemplo de la respuesta JSON**, por favor, compártelos conmigo para que pueda continuar con el diseño de la pantalla de Mercado.

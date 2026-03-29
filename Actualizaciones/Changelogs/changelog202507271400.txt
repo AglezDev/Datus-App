@@ -1,0 +1,6 @@
+
+Fecha y Hora: 27 de julio de 2025, 14:00
+
+Cambios aplicados:
+- Se ha corregido un problema de formato de texto en la pantalla "Acerca de" que provocaba que se mostrara un `\n` literal.
+

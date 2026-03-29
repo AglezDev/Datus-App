@@ -1,0 +1,5 @@
+Cambios aplicados:
+- Se eliminó el `DropdownMenuItem` de 'Donar' del `DropdownMenu` en `DatusTopAppBar` en `SharedUI.kt`.
+- Se eliminó la variable de estado `showTransfermovilDonateDialog` en `DatusTopAppBar`.
+- Se eliminó la llamada condicional a `TransfermovilDonateDialog` en `DatusTopAppBar`.
+- Se eliminó la función `TransfermovilDonateDialog` completa.

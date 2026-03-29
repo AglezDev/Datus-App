@@ -1,0 +1,5 @@
+Fecha y Hora: 2025-07-29 11:05
+
+Cambios aplicados:
+
+- Modificado el tipo de teclado para el campo "Monto" en la tarjeta "Transferir Saldo" a un teclado numérico.

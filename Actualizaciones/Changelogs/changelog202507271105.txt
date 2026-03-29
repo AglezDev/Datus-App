@@ -1,0 +1,6 @@
+Cambios aplicados: 27 de julio de 2025, 11:05
+
+- Se corrigió el error en `app/src/main/java/datus/app/com/MainActivity.kt` donde una invocación `@Composable` se realizaba desde un contexto no `@Composable`.
+- Se movió la inicialización de `notificationsViewModel` y la recolección de `uiState` de `MainActivity.onCreate` a la función `@Composable` `MainScreen`.
+- Se reubicó la llamada a `CustomNotificationDisplay` dentro de `MainScreen`.
+- Se actualizó `DefaultPreview` para que llame a `MainScreen()` sin el parámetro `notificationsViewModel`.

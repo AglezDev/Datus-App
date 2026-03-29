@@ -1,0 +1,7 @@
+Fecha y Hora: 2025-07-29 11:25
+
+Cambios aplicados:
+
+- Reemplazado el icono de WhatsApp por una tarjeta de "Soporte y Ayuda" en la pantalla de Configuraciones.
+- Añadida una nueva tarjeta para definir un PIN de transferencia en la pantalla de Configuraciones.
+- El campo del PIN en la pantalla de Útiles ahora se rellena automáticamente con el PIN guardado.

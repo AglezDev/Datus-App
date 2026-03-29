@@ -1,0 +1,2 @@
+Cambios aplicados:
+- Se corrigió el error "Conflicting import, imported name 'Properties' is ambiguous" en app/build.gradle.kts eliminando la importación duplicada de 'java.util.Properties'.
