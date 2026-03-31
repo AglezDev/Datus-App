@@ -13,5 +13,6 @@ object NavRoutes {
     const val USER_SETTINGS = "user_settings?focusPhoneNumber={focusPhoneNumber}"
     const val CARD = "card"
     const val CURRENCY_HISTORY = "currency_history/{currency}"
+    const val NAUTA_LOGIN = "nauta_login"
     
 }

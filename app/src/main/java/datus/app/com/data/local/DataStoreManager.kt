@@ -24,6 +24,9 @@ class DataStoreManager @Inject constructor(private val context: Context) {
     private val HISTORICAL_RATES_KEY = stringPreferencesKey("historical_rates")
     private val CURRENCY_TRENDS_KEY = stringPreferencesKey("currency_trends")
     private val LAST_UPDATE_KEY = longPreferencesKey("last_update_timestamp")
+    
+    private val NAUTA_USERNAME_KEY = stringPreferencesKey("nauta_username")
+    private val NAUTA_REMEMBER_ME_KEY = stringPreferencesKey("nauta_remember_me")
 
     suspend fun saveExchangeRates(response: ElToqueResponse) {
         context.dataStore.edit { preferences ->
@@ -77,5 +80,34 @@ class DataStoreManager @Inject constructor(private val context: Context) {
         val preferences = context.dataStore.data.first()
         val jsonString = preferences[CURRENCY_TRENDS_KEY]
         return jsonString?.let { Json.decodeFromString<Map<String, Trend>>(it) }
+    }
+    
+    suspend fun saveNautaUsername(username: String) {
+        context.dataStore.edit { preferences ->
+            preferences[NAUTA_USERNAME_KEY] = username
+        }
+    }
+    
+    suspend fun loadNautaUsername(): String? {
+        val preferences = context.dataStore.data.first()
+        return preferences[NAUTA_USERNAME_KEY]
+    }
+    
+    suspend fun saveNautaRememberMe(remember: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[NAUTA_REMEMBER_ME_KEY] = remember.toString()
+        }
+    }
+    
+    suspend fun loadNautaRememberMe(): Boolean {
+        val preferences = context.dataStore.data.first()
+        return preferences[NAUTA_REMEMBER_ME_KEY]?.toBoolean() ?: false
+    }
+    
+    suspend fun clearNautaCredentials() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(NAUTA_USERNAME_KEY)
+            preferences.remove(NAUTA_REMEMBER_ME_KEY)
+        }
     }
 }

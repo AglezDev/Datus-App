@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import datus.app.com.data.db.AppDatabase
 import datus.app.com.data.db.TasaHistoricaDao
+import datus.app.com.data.local.DataStoreManager
 import javax.inject.Singleton
 
 @Module
@@ -29,5 +30,11 @@ object DatabaseModule {
     @Provides
     fun provideTasaHistoricaDao(appDatabase: AppDatabase): TasaHistoricaDao {
         return appDatabase.tasaHistoricaDao()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideDataStoreManager(@ApplicationContext context: Context): DataStoreManager {
+        return DataStoreManager(context)
     }
 }

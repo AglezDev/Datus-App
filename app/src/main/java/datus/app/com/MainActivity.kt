@@ -179,6 +179,7 @@ import datus.app.com.ui.screens.UserSettingsScreen
 import datus.app.com.ui.screens.TarjetaScreen
 import datus.app.com.ui.screens.CurrencyHistoryScreen
 import datus.app.com.ui.screens.NotificationsSettingsScreen
+import datus.app.com.ui.screens.NautaLoginScreen
 import androidx.navigation.NavType
 import kotlinx.coroutines.delay
 
@@ -215,6 +216,12 @@ sealed class BottomNavItem(
     object Plans : BottomNavItem(NavRoutes.PLANS, "Planes", 
         selectedIcon = Icons.Filled.CollectionsBookmark, 
         unselectedIcon = Icons.Filled.CollectionsBookmark)
+    object Nauta : BottomNavItem(NavRoutes.NAUTA_LOGIN, "Nauta", 
+        selectedIcon = Icons.Filled.Wifi, 
+        unselectedIcon = Icons.Filled.Wifi)
+    object Utilities : BottomNavItem(NavRoutes.UTILITIES, "Útiles", 
+        selectedIcon = Icons.Filled.Widgets, 
+        unselectedIcon = Icons.Filled.Widgets)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -243,7 +250,7 @@ fun MainScreen(
             }
         }
     }
-    val bottomNavItems = listOf(BottomNavItem.Queries, BottomNavItem.Promotions, BottomNavItem.Plans, BottomNavItem.Utilities)
+    val bottomNavItems = listOf(BottomNavItem.Queries, BottomNavItem.Promotions, BottomNavItem.Plans, BottomNavItem.Nauta, BottomNavItem.Utilities)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val showBottomBar = currentRoute in bottomNavItems.map { it.route }
@@ -419,6 +426,7 @@ fun AppNavigationGraph(
                 CurrencyHistoryScreen(currency = currency, navController = navController)
             }
         }
+        composable(NavRoutes.NAUTA_LOGIN) { NautaLoginScreen(navController = navController, themeViewModel = themeViewModel) }
     }
 }
 

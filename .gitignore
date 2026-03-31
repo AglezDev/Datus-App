@@ -91,3 +91,4 @@ temp_*
 nul
 services/
 LogsError/
+!services/NautaAuthService.kt
