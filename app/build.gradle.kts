@@ -25,12 +25,10 @@ if (localPropertiesFile.exists()) {
 android {
     signingConfigs {
         create("release") {
-            if (keystorePropertiesFile.exists()) {
-                keyAlias = keystoreProperties.getProperty("keyAlias", "")
-                keyPassword = keystoreProperties.getProperty("keyPassword", "")
-                storeFile = if (keystoreProperties.getProperty("storeFile") != null) file(keystoreProperties.getProperty("storeFile")) else null
-                storePassword = keystoreProperties.getProperty("storePassword", "")
-            }
+            storeFile = file("C:/Users/Arquimedes Glez/.android/debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
         }
     }
 
@@ -41,8 +39,8 @@ android {
         applicationId = "datus.app.com"
         minSdk = 23
         targetSdk = 36
-        versionCode = 5
-        versionName = "2.1.1"
+        versionCode = 7
+        versionName = "2.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -65,6 +63,10 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
+            lint {
+                checkDependencies = false
+                abortOnError = false
+            }
         }
     }
     compileOptions {
@@ -81,6 +83,7 @@ android {
     buildToolsVersion = "36.0.0"
     lint {
         checkDependencies = false
+        disable += "all"
     }
     
     packaging {

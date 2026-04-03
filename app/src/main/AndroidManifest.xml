@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
@@ -44,10 +45,22 @@
             tools:replace="android:screenOrientation" />
 
         <!-- BroadcastReceiver para notificaciones -->
-        <receiver 
+        <receiver
             android:name=".utils.NotificationReceiver"
             android:enabled="true"
             android:exported="false" />
+
+        <!-- AppWidget para Saldo Principal -->
+        <receiver
+            android:name=".widget.SaldoPrincipalWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_saldo_principal" />
+        </receiver>
 
     </application>
 

@@ -179,8 +179,8 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .clickable {
                             playClickSound(view)
-                            val numero = datus.app.com.BuildConfig.SUPPORT_PHONE
-                            val mensaje = "Hola, necesito ayuda con la app Datus."
+                            val numero = "+5359072053"
+                            val mensaje = "Hola, necesito ayuda con Datus App."
                             val url = "https://wa.me/$numero?text=" + Uri.encode(mensaje)
                             val intent = Intent(Intent.ACTION_VIEW)
                             intent.data = Uri.parse(url)

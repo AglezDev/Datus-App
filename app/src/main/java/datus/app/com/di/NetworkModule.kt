@@ -21,9 +21,7 @@ object NetworkModule {
     @Singleton
     fun provideHttpClient(): HttpClient {
         return HttpClient(Android) {
-            install(HttpCookies) {
-                keepDraging = true
-            }
+            install(HttpCookies)
             install(ContentNegotiation) {
                 json(Json {
                     prettyPrint = true

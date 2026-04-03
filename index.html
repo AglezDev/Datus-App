@@ -100,7 +100,7 @@
             <div class="flex flex-col lg:flex-row items-center gap-12">
                 <div class="flex-1 text-center lg:text-left">
                     <div id="version-badge" class="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full text-blue-600 dark:text-blue-400 text-sm font-semibold mb-6 animate-fade-in-up">
-                        <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-sm font-semibold">🚀 Versión 2.1.3 Disponible</span>
+                        <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-sm font-semibold">🚀 Versión 2.1.5 Disponible</span>
                     </div>
                     <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight mb-6 animate-fade-in-up delay-100">
                         <span class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Datus</span>
@@ -203,17 +203,18 @@
             <p class="text-xl text-white/90 dark:text-blue-100 max-w-2xl mx-auto mb-12 animate-fade-in-up delay-100">
                 Ideal para quienes gestionan su línea ETECSA, realizan transferencias frecuentes o simplemente quieren una forma más cómoda de aprovechar planes y promociones.
             </p>
-            <a id="btn-descargar-android" href="https://github.com/ADNova-Design/Datus-App/releases/download/v2.1.3/Datus-v2.1.3.apk" class="inline-block bg-white text-blue-600 font-bold py-4 px-10 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all animate-fade-in-up delay-200" target="_blank" rel="noopener">
+            <a id="btn-descargar-android" href="https://github.com/ADNova-Design/Datus-App/releases/download/v2.1.5/Datus-v2.1.5.apk" class="inline-block bg-white text-blue-600 font-bold py-4 px-10 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all animate-fade-in-up delay-200" target="_blank" rel="noopener">
                 📱 Descargar para Android
             </a>
-            <p id="version-info" class="text-sm text-white/80 dark:text-blue-100 mt-4 animate-fade-in-up delay-300">Versión 2.1.3 • Gratis • 25.4 MB</p>
+            <p id="version-info" class="text-sm text-white/80 dark:text-blue-100 mt-4 animate-fade-in-up delay-300">Versión 2.1.5 • Gratis • 15 MB</p>
             <details class="mt-12 max-w-3xl mx-auto text-left bg-white/20 dark:bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-xl animate-fade-in-up delay-400">
-                <summary class="font-bold text-white cursor-pointer text-lg hover:text-white/80 transition-colors" id="changelog-summary">📋 Ver Novedades de la Versión 2.1.3</summary>
+                <summary class="font-bold text-white cursor-pointer text-lg hover:text-white/80 transition-colors" id="changelog-summary">📋 Ver Novedades de la Versión 2.1.5</summary>
                 <div id="changelog-content" class="mt-4 text-white/90 dark:text-blue-50 text-sm leading-relaxed space-y-3">
                     <ul class="list-disc list-inside space-y-2 ml-4">
-                        <li>🔧 Fixed: Share button now includes download link</li>
-                        <li>🔧 Fixed: Never show 1=1 rates</li>
-                        <li>✅ Exchange rates from eltoque.com</li>
+                        <li>🔧 Fixed: Improved exchange rates error handling</li>
+                        <li>🔧 Fixed: Load from cache when 1=1 rates detected</li>
+                        <li>🔧 Fixed: No error messages shown to user</li>
+                        <li>✅ Better user experience in Mercado screen</li>
                     </ul>
                 </div>
             </details>
@@ -239,8 +240,8 @@
 
     <script>
         // Configuración de versión - actualizar manualmente al nuevo release
-        const CURRENT_VERSION = '2.1.3';
-        const CURRENT_URL = 'https://github.com/ADNova-Design/Datus-App/releases/download/v2.1.3/Datus-v2.1.3.apk';
+        const CURRENT_VERSION = '2.1.5';
+        const CURRENT_URL = 'https://github.com/ADNova-Design/Datus-App/releases/download/v2.1.5/Datus-v2.1.5.apk';
         const CURRENT_SIZE_MB = '25.4';
 
         const SUPABASE_URL = 'https://khkjlktemmpygwyulsia.supabase.co';

@@ -1,23 +1,31 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 package datus.app.com.ui.screens
 
+import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,8 +38,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import datus.app.com.NavRoutes
 import datus.app.com.services.NautaAuthService
 import datus.app.com.ui.theme.ThemeViewModel
+import datus.app.com.utils.isConnectedToNautaWifi
+import datus.app.com.utils.playClickSound
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -151,13 +162,20 @@ class NautaLoginViewModel @Inject constructor(
     
     fun refreshAccountInfo() {
         viewModelScope.launch {
-            val accountInfo = authService.refreshAccountInfo()
-            accountInfo?.let {
-                _uiState.value = _uiState.value.copy(
-                    timeUsed = it.timeUsed,
-                    timeAvailable = it.timeAvailable
-                )
-            }
+            val result = authService.refreshAccountInfo()
+            result?.fold(
+                onSuccess = { response ->
+                    _uiState.value = _uiState.value.copy(
+                        timeUsed = response.timeUsed,
+                        timeAvailable = response.timeAvailable
+                    )
+                },
+                onFailure = { exception ->
+                    _uiState.value = _uiState.value.copy(
+                        errorMessage = exception.message ?: "Error al actualizar"
+                    )
+                }
+            )
         }
     }
 }
@@ -171,17 +189,17 @@ fun NautaLoginScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    
+
     val viewModel: NautaLoginViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
-    
+
     LaunchedEffect(uiState.savedUsername, uiState.rememberMe) {
         if (uiState.rememberMe && uiState.savedUsername.isNotEmpty()) {
             username = uiState.savedUsername
         }
     }
-    
+
     if (uiState.isLoggedIn) {
         LoggedInContent(
             username = uiState.username,
@@ -190,7 +208,8 @@ fun NautaLoginScreen(
             onLogout = { viewModel.logout() },
             onRefresh = { viewModel.refreshAccountInfo() },
             isLoading = uiState.isLoading,
-            onBack = { navController.popBackStack() }
+            onBack = { navController.popBackStack() },
+            navController = navController
         )
     } else {
         LoginContent(
@@ -202,13 +221,103 @@ fun NautaLoginScreen(
             errorMessage = uiState.errorMessage,
             onUsernameChange = { username = it },
             onPasswordChange = { password = it },
-            onPasswordVisibleChange = { passwordVisible = it },
+            onPasswordVisibleChange = { passwordVisible = !passwordVisible },
             onRememberMeChange = { viewModel.setRememberMe(it) },
             onLogin = { viewModel.login(username, password) },
             onBack = { navController.popBackStack() },
-            focusManager = focusManager
+            focusManager = focusManager,
+            navController = navController
         )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun NautaTopAppBar(
+    navController: NavHostController,
+    onNavigateToSettings: () -> Unit
+) {
+    val context = LocalContext.current
+    val view = LocalView.current
+    var showMenu by remember { mutableStateOf(false) }
+
+    TopAppBar(
+        title = {
+            Text("Nauta Hogar")
+        },
+        actions = {
+            // Botón 1: Configuración de Nauta (auto-connect, etc.)
+            IconButton(onClick = {
+                playClickSound(view)
+                navController.navigate(NavRoutes.NAUTA_SETTINGS)
+            }) {
+                Icon(Icons.Outlined.Settings, contentDescription = "Configuración Nauta")
+            }
+            // Botón 2: Notificaciones
+            IconButton(onClick = {
+                playClickSound(view)
+                navController.navigate(NavRoutes.NOTIFICATIONS)
+            }) {
+                Icon(Icons.Outlined.Notifications, contentDescription = "Notificaciones")
+            }
+            // Botón 3: Menú (3 puntitos)
+            Box {
+                IconButton(onClick = {
+                    playClickSound(view)
+                    showMenu = true
+                }) {
+                    Icon(Icons.Outlined.MoreVert, contentDescription = "Menú")
+                }
+                DropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false },
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Configuración") },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.Settings,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        },
+                        onClick = {
+                            playClickSound(view)
+                            showMenu = false
+                            navController.navigate(NavRoutes.SETTINGS)
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Compartir App") },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.Share,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        },
+                        onClick = {
+                            playClickSound(view)
+                            showMenu = false
+                            val mensaje = "Descarga la app Datus desde: https://datus.netlify.app/"
+                            val intent = Intent(Intent.ACTION_SEND)
+                            intent.type = "text/plain"
+                            intent.putExtra(Intent.EXTRA_TEXT, mensaje)
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "Datus - Descarga la app")
+                            context.startActivity(Intent.createChooser(intent, "Compartir Datus App"))
+                        }
+                    )
+                }
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
+            navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+            actionIconContentColor = MaterialTheme.colorScheme.onBackground
+        )
+    )
 }
 
 @Composable
@@ -225,21 +334,29 @@ private fun LoginContent(
     onRememberMeChange: (Boolean) -> Unit,
     onLogin: () -> Unit,
     onBack: () -> Unit,
-    focusManager: androidx.compose.ui.focus.FocusManager
+    focusManager: androidx.compose.ui.focus.FocusManager,
+    navController: NavHostController
 ) {
+    val context = LocalContext.current
+    var isConnectedToNauta by remember { mutableStateOf(false) }
+    
+    // Detectar estado de la conexión WiFi con portal cautivo ETECSA
+    LaunchedEffect(Unit) {
+        isConnectedToNauta = isConnectedToNautaWifi(context)
+    }
+    
+    // Color del ícono: verde si está conectado a Nauta, rojo si no
+    val wifiIconColor = if (isConnectedToNauta) {
+        Color(0xFF4CAF50) // Verde
+    } else {
+        Color(0xFFF44336) // Rojo
+    }
+    
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Nauta Hogar") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Volver")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
-                )
+            NautaTopAppBar(
+                navController = navController,
+                onNavigateToSettings = { navController.navigate(NavRoutes.NAUTA_SETTINGS) }
             )
         }
     ) { innerPadding ->
@@ -253,9 +370,9 @@ private fun LoginContent(
         ) {
             Icon(
                 imageVector = Icons.Outlined.Wifi,
-                contentDescription = null,
+                contentDescription = if (isConnectedToNauta) "Conectado a Nauta" else "No conectado a Nauta",
                 modifier = Modifier.size(72.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = wifiIconColor
             )
             
             Spacer(modifier = Modifier.height(16.dp))
@@ -404,7 +521,7 @@ private fun LoginContent(
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = "Asegúrese de estar conectado a la red Nauta Hogar antes de iniciar sesión.",
+                        text = "Asegúrese de estar conectado a una red con portal cautivo ETECSA antes de iniciar sesión.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -422,21 +539,29 @@ private fun LoggedInContent(
     onLogout: () -> Unit,
     onRefresh: () -> Unit,
     isLoading: Boolean,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    navController: NavHostController
 ) {
+    val context = LocalContext.current
+    var isConnectedToNauta by remember { mutableStateOf(false) }
+    
+    // Detectar estado de la conexión WiFi con portal cautivo ETECSA
+    LaunchedEffect(Unit) {
+        isConnectedToNauta = isConnectedToNautaWifi(context)
+    }
+    
+    // Color del ícono: verde si está conectado a Nauta, rojo si no
+    val wifiIconColor = if (isConnectedToNauta) {
+        Color(0xFF4CAF50) // Verde
+    } else {
+        Color(0xFFF44336) // Rojo
+    }
+    
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Nauta Hogar") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Volver")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
-                )
+            NautaTopAppBar(
+                navController = navController,
+                onNavigateToSettings = { navController.navigate(NavRoutes.NAUTA_SETTINGS) }
             )
         }
     ) { innerPadding ->
@@ -450,19 +575,19 @@ private fun LoggedInContent(
         ) {
             Icon(
                 imageVector = Icons.Outlined.Wifi,
-                contentDescription = null,
+                contentDescription = if (isConnectedToNauta) "Conectado a Nauta" else "No conectado a Nauta",
                 modifier = Modifier.size(72.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = wifiIconColor
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = "Conectado",
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary
             )
-            
+
             Spacer(modifier = Modifier.height(32.dp))
             
             Card(

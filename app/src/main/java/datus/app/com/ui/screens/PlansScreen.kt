@@ -221,7 +221,14 @@ fun PlanCard(plan: Plan, planType: Int, onClick: () -> Unit) {
                 modifier = Modifier.padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (planType == 1) {
+                if (planType == 0) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_data_usage),
+                        contentDescription = "Plan Icon",
+                        modifier = Modifier.size(adaptiveIconSize.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                } else if (planType == 1) {
                     Icon(
                         painter = painterResource(id = R.drawable.call_24px),
                         contentDescription = "Plan Icon",

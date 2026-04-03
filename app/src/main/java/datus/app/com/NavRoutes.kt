@@ -14,5 +14,6 @@ object NavRoutes {
     const val CARD = "card"
     const val CURRENCY_HISTORY = "currency_history/{currency}"
     const val NAUTA_LOGIN = "nauta_login"
-    
+    const val NAUTA_SETTINGS = "nauta_settings"
+
 }

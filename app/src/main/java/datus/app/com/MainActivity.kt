@@ -11,17 +11,20 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DataUsage
 import androidx.compose.material.icons.filled.CollectionsBookmark
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Build
@@ -134,6 +137,9 @@ import datus.app.com.data.remote.Notification
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.fillMaxSize
@@ -180,6 +186,7 @@ import datus.app.com.ui.screens.TarjetaScreen
 import datus.app.com.ui.screens.CurrencyHistoryScreen
 import datus.app.com.ui.screens.NotificationsSettingsScreen
 import datus.app.com.ui.screens.NautaLoginScreen
+import datus.app.com.ui.screens.NautaSettingsScreen
 import androidx.navigation.NavType
 import kotlinx.coroutines.delay
 
@@ -214,14 +221,11 @@ sealed class BottomNavItem(
         selectedIcon = Icons.Filled.Widgets, 
         unselectedIcon = Icons.Filled.Widgets)
     object Plans : BottomNavItem(NavRoutes.PLANS, "Planes", 
-        selectedIcon = Icons.Filled.CollectionsBookmark, 
-        unselectedIcon = Icons.Filled.CollectionsBookmark)
+        selectedIcon = Icons.Filled.DataUsage, 
+        unselectedIcon = Icons.Filled.DataUsage)
     object Nauta : BottomNavItem(NavRoutes.NAUTA_LOGIN, "Nauta", 
         selectedIcon = Icons.Filled.Wifi, 
         unselectedIcon = Icons.Filled.Wifi)
-    object Utilities : BottomNavItem(NavRoutes.UTILITIES, "Útiles", 
-        selectedIcon = Icons.Filled.Widgets, 
-        unselectedIcon = Icons.Filled.Widgets)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -329,41 +333,79 @@ fun MainScreen(
 fun AppBottomNavigation(navController: NavHostController, items: List<BottomNavItem>, unreadCount: Int) {
     val colorScheme = MaterialTheme.colorScheme
     val view = LocalView.current
+    var selectedItemIndex by remember { mutableIntStateOf(0) }
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    // Find current selected index
+    items.forEachIndexed { index, screen ->
+        if (currentDestination?.hierarchy?.any { it.route == screen.route } == true) {
+            selectedItemIndex = index
+        }
+    }
+
     NavigationBar(
         modifier = Modifier
             .shadow(8.dp, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp), clip = false)
             .border(
                 width = 1.dp,
-                color = colorScheme.onSurface.copy(alpha = 0.10f),
+                color = colorScheme.outline.copy(alpha = 0.2f),
                 shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
             ),
         containerColor = colorScheme.surface,
         contentColor = colorScheme.onSurface
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
+        items.forEachIndexed { index, screen ->
+            val selected = selectedItemIndex == index
+            val isPlansIcon = screen.route == NavRoutes.PLANS
 
-        items.forEach { screen ->
-            val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+            // Icono ligeramente más grande para Plans
+            val iconModifier = if (isPlansIcon) {
+                Modifier.size(28.dp)
+            } else {
+                Modifier
+            }
+
+            // Colores específicos para modo claro y oscuro
+            val iconTint = if (selected) {
+                colorScheme.secondary // Icono activo = color secondary
+            } else {
+                colorScheme.onSurfaceVariant // Icono inactivo = color más suave
+            }
+
+            val labelColor = if (selected) {
+                colorScheme.secondary
+            } else {
+                colorScheme.onSurfaceVariant
+            }
+
             NavigationBarItem(
                 icon = {
                     if (screen.selectedIcon != null && screen.unselectedIcon != null) {
                         Icon(
                             imageVector = if (selected) screen.selectedIcon else screen.unselectedIcon,
-                            contentDescription = screen.title
+                            contentDescription = screen.title,
+                            modifier = iconModifier,
+                            tint = iconTint
                         )
                     } else if (screen.selectedPainterResId != null && screen.unselectedPainterResId != null) {
                         Icon(
                             painter = painterResource(id = if (selected) screen.selectedPainterResId else screen.unselectedPainterResId),
-                            contentDescription = screen.title
+                            contentDescription = screen.title,
+                            modifier = iconModifier,
+                            tint = iconTint
                         )
                     }
                 },
-                label = { Text(screen.title, softWrap = false) },
+                label = {
+                    Text(screen.title, softWrap = false, color = labelColor)
+                },
                 selected = selected,
                 alwaysShowLabel = false,
                 onClick = {
                     playClickSound(view)
+                    selectedItemIndex = index
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
@@ -373,11 +415,11 @@ fun AppBottomNavigation(navController: NavHostController, items: List<BottomNavI
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = colorScheme.surface,
-                    selectedIconColor = colorScheme.primary,
-                    selectedTextColor = colorScheme.primary,
-                    unselectedIconColor = colorScheme.onSurface,
-                    unselectedTextColor = colorScheme.onSurface
+                    indicatorColor = colorScheme.secondaryContainer.copy(alpha = 0.3f),
+                    selectedIconColor = colorScheme.secondary,
+                    selectedTextColor = colorScheme.secondary,
+                    unselectedIconColor = colorScheme.onSurfaceVariant,
+                    unselectedTextColor = colorScheme.onSurfaceVariant
                 )
             )
         }
@@ -427,6 +469,7 @@ fun AppNavigationGraph(
             }
         }
         composable(NavRoutes.NAUTA_LOGIN) { NautaLoginScreen(navController = navController, themeViewModel = themeViewModel) }
+        composable(NavRoutes.NAUTA_SETTINGS) { NautaSettingsScreen(navController = navController) }
     }
 }
 
