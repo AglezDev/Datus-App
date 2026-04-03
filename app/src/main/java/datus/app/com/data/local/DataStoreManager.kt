@@ -165,19 +165,31 @@ class DataStoreManager @Inject constructor(private val context: Context) {
     }
 
     suspend fun addNautaUser(user: NautaUser) {
-        val users = loadNautaUsers().toMutableList()
-        val existingIndex = users.indexOfFirst { it.username == user.username }
-        if (existingIndex != -1) {
-            users[existingIndex] = user
-        } else {
-            users.add(user)
+        context.dataStore.edit { preferences ->
+            val jsonString = preferences[NAUTA_USERS_KEY]
+            val users = jsonString?.let {
+                Json.decodeFromString<List<NautaUser>>(it)
+            }?.toMutableList() ?: mutableListOf()
+
+            val existingIndex = users.indexOfFirst { it.username == user.username }
+            if (existingIndex != -1) {
+                users[existingIndex] = user
+            } else {
+                users.add(user)
+            }
+            preferences[NAUTA_USERS_KEY] = Json.encodeToString(users)
         }
-        saveNautaUsers(users)
     }
 
     suspend fun removeNautaUser(username: String) {
-        val users = loadNautaUsers().filter { it.username != username }
-        saveNautaUsers(users)
+        context.dataStore.edit { preferences ->
+            val jsonString = preferences[NAUTA_USERS_KEY]
+            val users = jsonString?.let {
+                Json.decodeFromString<List<NautaUser>>(it)
+            } ?: emptyList()
+            val filtered = users.filter { it.username != username }
+            preferences[NAUTA_USERS_KEY] = Json.encodeToString(filtered)
+        }
     }
 
     suspend fun saveCurrentWifi(ssid: String) {

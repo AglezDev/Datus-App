@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,6 +53,8 @@ import coil.request.ImageRequest
 import coil.size.Size
 import kotlinx.coroutines.delay
 import kotlin.math.min
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.PointerEventPass
 
 data class Query(val title: String, val description: String, val ussdCode: String, val icon: ImageVector)
 
@@ -112,7 +115,9 @@ fun QueryCard(query: Query) {
     val context = LocalContext.current
     val view = LocalView.current
     val configuration = LocalConfiguration.current
-    val adaptiveFontSize = min(16f, configuration.screenWidthDp / 22f)
+    val adaptiveFontSize = remember(configuration.screenWidthDp) {
+        min(16f, configuration.screenWidthDp / 22f)
+    }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -179,11 +184,13 @@ fun PromotionsCarousel(modifier: Modifier = Modifier, viewModel: PromotionsViewM
     val loadingMore by viewModel.loadingMore.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
     val lazyListState = rememberLazyListState()
+    var isUserInteracting by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = promotions) {
-        if (promotions.size > 1) {
-            while (true) {
-                delay(10000) // 10 seconds
+    LaunchedEffect(promotions) {
+        if (promotions.size <= 1) return@LaunchedEffect
+        while (true) {
+            delay(10000)
+            if (!isUserInteracting && !lazyListState.isScrollInProgress) {
                 val currentScrollPosition = lazyListState.firstVisibleItemIndex
                 val nextIndex = (currentScrollPosition + 1) % promotions.size
                 lazyListState.animateScrollToItem(index = nextIndex)
@@ -212,7 +219,16 @@ fun PromotionsCarousel(modifier: Modifier = Modifier, viewModel: PromotionsViewM
         } else if (promotions.isNotEmpty()) {
             LazyRow(
                 state = lazyListState,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        awaitPointerEventScope {
+                            while (true) {
+                                val event = awaitPointerEvent(PointerEventPass.Initial)
+                                isUserInteracting = event.changes.any { it.pressed }
+                            }
+                        }
+                    },
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -253,12 +269,18 @@ fun PromotionsCarousel(modifier: Modifier = Modifier, viewModel: PromotionsViewM
 fun PromotionItem(promotion: Promotion) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.dp
-    val cardWidth = screenWidth - 32.dp 
-
-    val titleFontSize = min(16f, configuration.screenWidthDp / 22f)
-    val descriptionFontSize = min(14f, configuration.screenWidthDp / 26f)
-    val buttonFontSize = min(12f, configuration.screenWidthDp / 28f)
+    val cardWidth = remember(configuration.screenWidthDp) {
+        (configuration.screenWidthDp.dp - 32.dp)
+    }
+    val titleFontSize = remember(configuration.screenWidthDp) {
+        min(16f, configuration.screenWidthDp / 22f)
+    }
+    val descriptionFontSize = remember(configuration.screenWidthDp) {
+        min(14f, configuration.screenWidthDp / 26f)
+    }
+    val buttonFontSize = remember(configuration.screenWidthDp) {
+        min(12f, configuration.screenWidthDp / 28f)
+    }
 
     Card(
         modifier = Modifier

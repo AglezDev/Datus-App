@@ -47,6 +47,13 @@ class ExchangeRatesViewModel @Inject constructor(
         LocalNotificationHelper.createNotificationChannel(context)
     }
 
+    // Debounce para scraping: mínimo 1 minuto entre requests
+    @Volatile
+    private var lastScrapeTime = 0L
+    private val MIN_SCRAPE_INTERVAL = 60_000L // 1 minuto
+
+    private var isLoadingRates = false
+
     private fun hasInternetConnection(): Boolean {
         try {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -178,98 +185,119 @@ class ExchangeRatesViewModel @Inject constructor(
 
     fun loadExchangeRates() {
         Log.d("ExchangeRatesViewModel", "loadExchangeRates: START")
-        
+
+        // Evitar llamadas concurrentes
+        if (isLoadingRates) {
+            Log.d("ExchangeRatesViewModel", "Load already in progress, skipping")
+            return
+        }
+
+        // Debounce: verificar si se hizo scraping recientemente
+        val now = System.currentTimeMillis()
+        if (now - lastScrapeTime < MIN_SCRAPE_INTERVAL) {
+            Log.d("ExchangeRatesViewModel", "Scrape throttled, last scrape was ${now - lastScrapeTime}ms ago")
+            return
+        }
+
         // Check if we can update based on network connection
         if (!canUpdate()) {
             Log.d("ExchangeRatesViewModel", "Update blocked: No internet connection detected")
             viewModelScope.launch {
                 _loading.value = true
-                // No mostrar error al usuario, cargar desde cache silenciosamente
-                
-                // Try to load cached data
                 try {
-                    val cachedData = dataStoreManager.loadExchangeRates()
-                    if (cachedData != null && isValidRates(cachedData)) {
-                        _exchangeRates.value = cachedData
-                        _currencyTrends.value = calculateTrendsWithPrevious(cachedData)
-                    } else {
-                        // Si no hay cache válida, usar fallback
-                        val fallbackRates = createFallbackRates()
-                        _exchangeRates.value = fallbackRates
-                        _currencyTrends.value = calculateTrendsWithPrevious(fallbackRates)
-                    }
-                } catch (e: Exception) {
-                    Log.e("ExchangeRatesViewModel", "Error loading cached data: ${e.message}")
-                    // Usar fallback en caso de error
-                    val fallbackRates = createFallbackRates()
-                    _exchangeRates.value = fallbackRates
-                    _currencyTrends.value = calculateTrendsWithPrevious(fallbackRates)
+                    loadFromCacheOrFallback()
+                } finally {
+                    _loading.value = false
                 }
-                _loading.value = false
             }
             return
         }
 
-        viewModelScope.launch {
-            _loading.value = true
+        isLoadingRates = true
+        lastScrapeTime = now
 
-            // Try scraping first
-            val scrapedData = scrapeExchangeRates()
-            
-            // Check if scraped data is valid (not 1=1)
-            val hasInvalidRates = scrapedData != null && !isValidRates(scrapedData)
-            
-            // Only use scraped data if it's valid
-            if (scrapedData != null && isValidRates(scrapedData)) {
-                // Clear error if data is valid
-                _error.value = null
-                Log.d("ExchangeRatesViewModel", "loadExchangeRates: Scraped data is valid: $scrapedData")
-                
-                // Send notification if enabled
-                if (settingsRepository.isNotifyOnUpdate()) {
-                    val usdRate = scrapedData.tasas["USD"]
-                    LocalNotificationHelper.showRatesUpdatedNotification(context, usdRate)
+        viewModelScope.launch {
+            try {
+                _loading.value = true
+
+                // Try scraping first
+                val scrapedData = scrapeExchangeRates()
+
+                // Check if scraped data is valid (not 1=1)
+                val hasInvalidRates = scrapedData != null && !isValidRates(scrapedData)
+
+                // Only use scraped data if it's valid
+                if (scrapedData != null && isValidRates(scrapedData)) {
+                    // Clear error if data is valid
+                    _error.value = null
+                    Log.d("ExchangeRatesViewModel", "loadExchangeRates: Scraped data is valid: $scrapedData")
+
+                    // Send notification if enabled
+                    if (settingsRepository.isNotifyOnUpdate()) {
+                        val usdRate = scrapedData.tasas["USD"]
+                        LocalNotificationHelper.showRatesUpdatedNotification(context, usdRate)
+                    }
+
+                    // Calculate trends by comparing with previous rates
+                    val trends = calculateTrendsWithPrevious(scrapedData)
+                    _currencyTrends.value = trends
+
+                    _exchangeRates.value = scrapedData
+                    dataStoreManager.saveExchangeRates(scrapedData)
+                    _lastUpdateTimestamp.value = System.currentTimeMillis()
+                    Log.d("ExchangeRatesViewModel", "loadExchangeRates: Saved scraped rates to DataStore.")
+
+                    // Save current rates as previous for next comparison
+                    dataStoreManager.savePreviousExchangeRates(scrapedData)
+
+                    return@launch
                 }
 
-                // Calculate trends by comparing with previous rates
-                val trends = calculateTrendsWithPrevious(scrapedData)
-                _currencyTrends.value = trends
+                // If scraping fails or returns invalid data, try to use cached data first
+                Log.d("ExchangeRatesViewModel", "Scraping failed or returned invalid data, trying cached data")
+                val cachedData = dataStoreManager.loadExchangeRates()
 
-                _exchangeRates.value = scrapedData
-                dataStoreManager.saveExchangeRates(scrapedData)
-                _lastUpdateTimestamp.value = System.currentTimeMillis()
-                Log.d("ExchangeRatesViewModel", "loadExchangeRates: Saved scraped rates to DataStore.")
+                if (cachedData != null && isValidRates(cachedData)) {
+                    // Use cached data if available and valid
+                    Log.d("ExchangeRatesViewModel", "Using cached exchange rates")
+                    _exchangeRates.value = cachedData
+                    _currencyTrends.value = calculateTrendsWithPrevious(cachedData)
+                    _lastUpdateTimestamp.value = System.currentTimeMillis()
+                    _error.value = null
+                } else {
+                    // Only use fallback if no valid cache exists
+                    Log.d("ExchangeRatesViewModel", "No valid cache, using fallback rates")
+                    val fallbackRates = createFallbackRates()
+                    _exchangeRates.value = fallbackRates
+                    _currencyTrends.value = calculateTrendsWithPrevious(fallbackRates)
+                    _lastUpdateTimestamp.value = System.currentTimeMillis()
+                    dataStoreManager.savePreviousExchangeRates(fallbackRates)
+                }
 
-                // Save current rates as previous for next comparison
-                dataStoreManager.savePreviousExchangeRates(scrapedData)
-                
+                Log.d("ExchangeRatesViewModel", "loadExchangeRates: FINISHED")
+            } finally {
                 _loading.value = false
-                return@launch
+                isLoadingRates = false
             }
+        }
+    }
 
-            // If scraping fails or returns invalid data, try to use cached data first
-            Log.d("ExchangeRatesViewModel", "Scraping failed or returned invalid data, trying cached data")
+    private suspend fun loadFromCacheOrFallback() {
+        try {
             val cachedData = dataStoreManager.loadExchangeRates()
-            
             if (cachedData != null && isValidRates(cachedData)) {
-                // Use cached data if available and valid
-                Log.d("ExchangeRatesViewModel", "Using cached exchange rates")
                 _exchangeRates.value = cachedData
                 _currencyTrends.value = calculateTrendsWithPrevious(cachedData)
-                _lastUpdateTimestamp.value = System.currentTimeMillis()
-                _error.value = null
             } else {
-                // Only use fallback if no valid cache exists
-                Log.d("ExchangeRatesViewModel", "No valid cache, using fallback rates")
                 val fallbackRates = createFallbackRates()
                 _exchangeRates.value = fallbackRates
                 _currencyTrends.value = calculateTrendsWithPrevious(fallbackRates)
-                _lastUpdateTimestamp.value = System.currentTimeMillis()
-                dataStoreManager.savePreviousExchangeRates(fallbackRates)
             }
-
-            _loading.value = false
-            Log.d("ExchangeRatesViewModel", "loadExchangeRates: FINISHED")
+        } catch (e: Exception) {
+            Log.e("ExchangeRatesViewModel", "Error loading cached data: ${e.message}")
+            val fallbackRates = createFallbackRates()
+            _exchangeRates.value = fallbackRates
+            _currencyTrends.value = calculateTrendsWithPrevious(fallbackRates)
         }
     }
 

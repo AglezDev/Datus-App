@@ -33,6 +33,7 @@ class PromotionsViewModel @Inject constructor(
     private var currentPage = 0
     private val itemsPerPage = 10
     private var hasMore = true
+    private val MAX_PAGES = 50  // Límite de seguridad
 
     init {
         loadPromos()
@@ -66,20 +67,24 @@ class PromotionsViewModel @Inject constructor(
 
     fun loadMorePromos() {
         if (_loading.value || _loadingMore.value || !hasMore) return
-        
+        if (currentPage >= MAX_PAGES) {
+            hasMore = false
+            return
+        }
+
         viewModelScope.launch {
             try {
                 _loadingMore.value = true
                 Log.d(TAG, "Fetching more promotions...")
                 val from = ((currentPage + 1) * itemsPerPage).toLong()
                 val result = postgrest.from("promociones").select {
-                    filter { 
+                    filter {
                         eq("active", true)
                     }
                     range(from, from + itemsPerPage - 1)
                 }.decodeList<Promotion>().shuffled()
                 Log.d(TAG, "More promotions fetched: ${result.size}")
-                
+
                 currentPage++
                 val currentPromotions = _promotions.value.toMutableList()
                 currentPromotions.addAll(result)

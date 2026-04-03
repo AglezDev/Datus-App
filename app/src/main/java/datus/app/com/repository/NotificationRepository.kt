@@ -3,6 +3,7 @@ package datus.app.com.repository
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import dagger.hilt.android.qualifiers.ApplicationContext
 import datus.app.com.data.local.NotificationReadStatusManager
 import datus.app.com.data.remote.Notification
 import datus.app.com.data.remote.NotificationService
@@ -20,7 +21,7 @@ import javax.inject.Singleton
 class NotificationRepository @Inject constructor(
     private val notificationService: NotificationService,
     private val notificationReadStatusManager: NotificationReadStatusManager,
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) {
     private val _unreadCount = MutableStateFlow(0)
     val unreadCount: StateFlow<Int> = _unreadCount.asStateFlow()

@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import javax.inject.Inject
 
 data class NautaLoginUiState(
@@ -191,7 +192,7 @@ fun NautaLoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
 
     val viewModel: NautaLoginViewModel = hiltViewModel()
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
 
     LaunchedEffect(uiState.savedUsername, uiState.rememberMe) {

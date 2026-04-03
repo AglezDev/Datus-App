@@ -21,7 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,10 +42,10 @@ fun NotificationsSettingsScreen(
     val context = LocalContext.current
     val view = LocalView.current
     
-    val recordatorioEnabled by viewModel.recordatorioEnabled.collectAsState()
-    val recordatorioHour by viewModel.recordatorioHour.collectAsState()
-    val recordatorioMinute by viewModel.recordatorioMinute.collectAsState()
-    val notificacionesAlIniciarEnabled by viewModel.notificacionesAlIniciarEnabled.collectAsState()
+    val recordatorioEnabled by viewModel.recordatorioEnabled.collectAsStateWithLifecycle()
+    val recordatorioHour by viewModel.recordatorioHour.collectAsStateWithLifecycle()
+    val recordatorioMinute by viewModel.recordatorioMinute.collectAsStateWithLifecycle()
+    val notificacionesAlIniciarEnabled by viewModel.notificacionesAlIniciarEnabled.collectAsStateWithLifecycle()
     
     var hasNotificationPermission by remember {
         mutableStateOf(

@@ -41,6 +41,7 @@
         
         <activity
             android:name=".PortraitCaptureActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
             tools:replace="android:screenOrientation" />
 

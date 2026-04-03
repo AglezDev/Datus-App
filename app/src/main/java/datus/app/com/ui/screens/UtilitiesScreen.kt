@@ -83,13 +83,9 @@ private suspend fun generateQrBitmapAsync(text: String, size: Int = 512): Bitmap
 
 @Composable
 private fun QrBitmapState(text: String, size: Int = 512): Bitmap? {
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
-    
-    LaunchedEffect(text) {
-        bitmap = generateQrBitmapAsync(text, size)
-    }
-    
-    return bitmap
+    return produceState<Bitmap?>(initialValue = null, text, size) {
+        value = generateQrBitmapAsync(text, size)
+    }.value
 }
 
 // Enum para identificar el campo de destino del número de contacto

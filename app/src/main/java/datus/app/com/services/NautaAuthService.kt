@@ -8,6 +8,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.http.parameters
 import io.ktor.http.userAgent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -58,14 +59,14 @@ class NautaAuthService @Inject constructor(
 
     suspend fun login(username: String, password: String): Result<NautaLoginResponse> = withContext(Dispatchers.IO) {
         try {
-            val formData = listOf(
-                "username" to username,
-                "password" to password,
-                "CSRFHW" to "",
-                "wlanuserip" to "",
-                "wlanacname" to "",
-                "wlanmac" to ""
-            )
+            val formData = parameters {
+                append("username", username)
+                append("password", password)
+                append("CSRFHW", "")
+                append("wlanuserip", "")
+                append("wlanacname", "")
+                append("wlanmac", "")
+            }
 
             val response = httpClient.post(LOGIN_URL) {
                 contentType(ContentType.Application.FormUrlEncoded)
@@ -214,18 +215,18 @@ class NautaAuthService @Inject constructor(
         }
 
         try {
-            val formData = listOf(
-                "op" to "getLeftTime",
-                "ATTRIBUTE_UUID" to session.attributeUuid,
-                "CSRFHW" to session.csrfHw,
-                "wlanuserip" to session.wlanUserIp,
-                "ssid" to session.ssid,
-                "loggerId" to session.loggerId,
-                "domain" to "",
-                "username" to session.username,
-                "wlanacname" to session.wlanAcName,
-                "wlanmac" to session.wlanMac
-            )
+            val formData = parameters {
+                append("op", "getLeftTime")
+                append("ATTRIBUTE_UUID", session.attributeUuid)
+                append("CSRFHW", session.csrfHw)
+                append("wlanuserip", session.wlanUserIp)
+                append("ssid", session.ssid)
+                append("loggerId", session.loggerId)
+                append("domain", "")
+                append("username", session.username)
+                append("wlanacname", session.wlanAcName)
+                append("wlanmac", session.wlanMac)
+            }
 
             val response = httpClient.post(QUERY_URL) {
                 contentType(ContentType.Application.FormUrlEncoded)
@@ -282,18 +283,18 @@ class NautaAuthService @Inject constructor(
 
         try {
             // Intentar POST primero
-            val formData = listOf(
-                "ATTRIBUTE_UUID" to session.attributeUuid,
-                "CSRFHW" to session.csrfHw,
-                "wlanuserip" to session.wlanUserIp,
-                "ssid" to session.ssid,
-                "loggerId" to session.loggerId,
-                "domain" to "",
-                "username" to session.username,
-                "wlanacname" to "",
-                "wlanmac" to "",
-                "remove" to "1"
-            )
+            val formData = parameters {
+                append("ATTRIBUTE_UUID", session.attributeUuid)
+                append("CSRFHW", session.csrfHw)
+                append("wlanuserip", session.wlanUserIp)
+                append("ssid", session.ssid)
+                append("loggerId", session.loggerId)
+                append("domain", "")
+                append("username", session.username)
+                append("wlanacname", "")
+                append("wlanmac", "")
+                append("remove", "1")
+            }
 
             val response = httpClient.post(LOGOUT_URL) {
                 contentType(ContentType.Application.FormUrlEncoded)

@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import javax.inject.Inject
 
 data class NautaSettingsUiState(
@@ -126,7 +127,7 @@ fun NautaSettingsScreen(
     navController: NavHostController
 ) {
     val viewModel: NautaSettingsViewModel = hiltViewModel()
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val view = LocalView.current
 

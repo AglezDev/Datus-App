@@ -1,13 +1,15 @@
 package datus.app.com
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -15,111 +17,24 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DataUsage
-import androidx.compose.material.icons.filled.CollectionsBookmark
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.CurrencyExchange
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.QrCode
+import androidx.compose.material.icons.filled.DataUsage
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.CreditCard
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Store
-import androidx.compose.material.icons.filled.SwapHoriz
-import androidx.compose.material.icons.filled.Widgets
-import androidx.compose.material.icons.filled.SwapVert
-import androidx.compose.material.icons.filled.Sync
-import androidx.compose.material.icons.filled.TableChart
-import androidx.compose.material.icons.filled.Tag
-import androidx.compose.material.icons.filled.TextFields
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.filled.Timer
-import androidx.compose.material.icons.filled.Today
-import androidx.compose.material.icons.filled.Toll
-import androidx.compose.material.icons.filled.TouchApp
-import androidx.compose.material.icons.filled.TrackChanges
-import androidx.compose.material.icons.filled.Traffic
-import androidx.compose.material.icons.filled.Train
-import androidx.compose.material.icons.filled.TransferWithinAStation
-import androidx.compose.material.icons.filled.Transform
-import androidx.compose.material.icons.filled.Translate
-import androidx.compose.material.icons.filled.TrendingDown
-import androidx.compose.material.icons.filled.TrendingFlat
-import androidx.compose.material.icons.filled.TrendingUp
-import androidx.compose.material.icons.filled.Tune
-import androidx.compose.material.icons.filled.Update
-import androidx.compose.material.icons.filled.Upgrade
-import androidx.compose.material.icons.filled.Upload
-import androidx.compose.material.icons.filled.Usb
-import androidx.compose.material.icons.filled.VerifiedUser
-import androidx.compose.material.icons.filled.VerticalAlignBottom
-import androidx.compose.material.icons.filled.VerticalAlignCenter
-import androidx.compose.material.icons.filled.VerticalAlignTop
-import androidx.compose.material.icons.filled.Vibration
-import androidx.compose.material.icons.filled.VideoCall
-import androidx.compose.material.icons.filled.VideoLabel
-import androidx.compose.material.icons.filled.VideoLibrary
-import androidx.compose.material.icons.filled.ViewAgenda
-import androidx.compose.material.icons.filled.ViewArray
-import androidx.compose.material.icons.filled.ViewCarousel
-import androidx.compose.material.icons.filled.ViewColumn
-import androidx.compose.material.icons.filled.ViewComfy
-import androidx.compose.material.icons.filled.ViewCompact
-import androidx.compose.material.icons.filled.ViewDay
-import androidx.compose.material.icons.filled.ViewHeadline
-import androidx.compose.material.icons.filled.ViewList
-import androidx.compose.material.icons.filled.ViewModule
-import androidx.compose.material.icons.filled.ViewQuilt
-import androidx.compose.material.icons.filled.ViewStream
-import androidx.compose.material.icons.filled.ViewWeek
-import androidx.compose.material.icons.filled.Vignette
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.filled.VoiceChat
-import androidx.compose.material.icons.filled.VoiceOverOff
-import androidx.compose.material.icons.filled.VolumeDown
-import androidx.compose.material.icons.filled.VolumeMute
-import androidx.compose.material.icons.filled.VolumeOff
-import androidx.compose.material.icons.filled.VolumeUp
-import androidx.compose.material.icons.filled.VpnKey
-import androidx.compose.material.icons.filled.VpnLock
-import androidx.compose.material.icons.filled.Wallpaper
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.filled.Watch
-import androidx.compose.material.icons.filled.WatchLater
-import androidx.compose.material.icons.filled.Waves
-import androidx.compose.material.icons.filled.WbAuto
-import androidx.compose.material.icons.filled.WbCloudy
-import androidx.compose.material.icons.filled.WbIncandescent
-import androidx.compose.material.icons.filled.WbSunny
-import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material.icons.filled.Wifi
-import androidx.compose.material.icons.filled.WifiCalling
-import androidx.compose.material.icons.filled.WifiLock
 import androidx.compose.material.icons.filled.Widgets
-import androidx.compose.material.icons.filled.Work
-import androidx.compose.material.icons.filled.WorkOff
-import androidx.compose.material.icons.filled.Workspaces
-import androidx.compose.material.icons.filled.WrapText
-import androidx.compose.material.icons.filled.WrongLocation
-import androidx.compose.material.icons.filled.Wysiwyg
-import androidx.compose.material.icons.filled.YoutubeSearchedFor
-import androidx.compose.material.icons.filled.ZoomIn
-import androidx.compose.material.icons.filled.ZoomOut
-import androidx.compose.material.icons.filled.ZoomOutMap
-import androidx.compose.material3.AlertDialog // Added import
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -129,32 +44,29 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton // Added import
-import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.Badge
-import datus.app.com.ui.notifications.components.CustomNotificationDisplay
-import datus.app.com.data.remote.Notification
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -163,32 +75,34 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import dagger.hilt.android.AndroidEntryPoint
-import android.content.Intent // Added import
-import android.net.Uri // Added import
 import androidx.navigation.navArgument
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
 
+import datus.app.com.data.remote.Notification
+import datus.app.com.ui.notifications.NotificationsViewModel
 import datus.app.com.ui.notifications.NotificationsScreen
+import datus.app.com.ui.notifications.components.CustomNotificationDisplay
+import datus.app.com.ui.screens.CurrencyHistoryScreen
+import datus.app.com.ui.screens.DatusTopAppBar
+import datus.app.com.ui.screens.MenuScreen
+import datus.app.com.ui.screens.MercadoScreen
+import datus.app.com.ui.screens.NautaLoginScreen
+import datus.app.com.ui.screens.NautaSettingsScreen
+import datus.app.com.ui.screens.NotificationsSettingsScreen
 import datus.app.com.ui.screens.PlansScreen
 import datus.app.com.ui.screens.QueriesScreen
-import datus.app.com.ui.screens.UtilitiesScreen
-import datus.app.com.ui.screens.MenuScreen
 import datus.app.com.ui.screens.SettingsScreen
-import datus.app.com.ui.screens.MercadoScreen
-import datus.app.com.ui.theme.ThemeOption
+import datus.app.com.ui.screens.TarjetaScreen
+import datus.app.com.ui.screens.UserSettingsScreen
+import datus.app.com.ui.screens.UtilitiesScreen
 import datus.app.com.ui.theme.DatusTheme
+import datus.app.com.ui.theme.ThemeOption
 import datus.app.com.ui.theme.ThemeViewModel
 import datus.app.com.ui.theme.ThemeViewModelFactory
 import datus.app.com.utils.playClickSound
-import datus.app.com.ui.screens.DatusTopAppBar
-import datus.app.com.ui.screens.UserSettingsScreen
-import datus.app.com.ui.screens.TarjetaScreen
-import datus.app.com.ui.screens.CurrencyHistoryScreen
-import datus.app.com.ui.screens.NotificationsSettingsScreen
-import datus.app.com.ui.screens.NautaLoginScreen
-import datus.app.com.ui.screens.NautaSettingsScreen
 import androidx.navigation.NavType
-import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -293,12 +207,13 @@ fun MainScreen(
     val unreadCount by notificationsViewModel.unreadCount.collectAsStateWithLifecycle()
 
     LaunchedEffect(navController) {
-        while (true) {
-            delay(60_000L) // Recargar cada 1 minuto
-            if (navController.currentDestination?.route != NavRoutes.NOTIFICATIONS) {
-                notificationsViewModel.loadNotifications()
+        snapshotFlow { navController.currentDestination?.route }
+            .distinctUntilChanged()
+            .collect { route ->
+                if (route != NavRoutes.NOTIFICATIONS) {
+                    notificationsViewModel.loadNotifications()
+                }
             }
-        }
     }
 
     DatusTheme(
@@ -333,15 +248,15 @@ fun MainScreen(
 fun AppBottomNavigation(navController: NavHostController, items: List<BottomNavItem>, unreadCount: Int) {
     val colorScheme = MaterialTheme.colorScheme
     val view = LocalView.current
-    var selectedItemIndex by remember { mutableIntStateOf(0) }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    // Find current selected index
-    items.forEachIndexed { index, screen ->
-        if (currentDestination?.hierarchy?.any { it.route == screen.route } == true) {
-            selectedItemIndex = index
+    val selectedItemIndex by remember {
+        derivedStateOf {
+            items.indexOfFirst { screen ->
+                currentDestination?.hierarchy?.any { it.route == screen.route } == true
+            }.coerceAtLeast(0)
         }
     }
 
@@ -405,7 +320,6 @@ fun AppBottomNavigation(navController: NavHostController, items: List<BottomNavI
                 alwaysShowLabel = false,
                 onClick = {
                     playClickSound(view)
-                    selectedItemIndex = index
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true

@@ -57,16 +57,13 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
-            lint {
-                checkDependencies = false
-                abortOnError = false
-            }
         }
     }
     compileOptions {
@@ -82,8 +79,9 @@ android {
     }
     buildToolsVersion = "36.0.0"
     lint {
-        checkDependencies = false
-        disable += "all"
+        checkDependencies = true
+        abortOnError = false
+        checkReleaseBuilds = true
     }
     
     packaging {
