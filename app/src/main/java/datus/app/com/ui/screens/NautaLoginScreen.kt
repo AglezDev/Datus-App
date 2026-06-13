@@ -4,11 +4,11 @@ package datus.app.com.ui.screens
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.Person
@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,6 +41,9 @@ import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import datus.app.com.NavRoutes
 import datus.app.com.services.NautaAuthService
+import datus.app.com.ui.components.DatusCard
+import datus.app.com.ui.components.ModernIcon
+import datus.app.com.ui.theme.Dimens
 import datus.app.com.ui.theme.ThemeViewModel
 import datus.app.com.utils.isConnectedToNautaWifi
 import datus.app.com.utils.playClickSound
@@ -50,6 +54,9 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import javax.inject.Inject
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class NautaLoginUiState(
     val isLoading: Boolean = false,
     val isLoggedIn: Boolean = false,
@@ -59,7 +66,8 @@ data class NautaLoginUiState(
     val timeUsed: String = "",
     val timeAvailable: String = "",
     val rememberMe: Boolean = false,
-    val savedUsername: String = ""
+    val savedUsername: String = "",
+    val savedPassword: String = ""
 )
 
 @HiltViewModel
@@ -78,9 +86,11 @@ class NautaLoginViewModel @Inject constructor(
     private fun loadSavedCredentials() {
         viewModelScope.launch {
             val savedUsername = dataStoreManager.loadNautaUsername() ?: ""
+            val savedPassword = dataStoreManager.loadNautaPassword() ?: ""
             val rememberMe = dataStoreManager.loadNautaRememberMe()
             _uiState.value = _uiState.value.copy(
                 savedUsername = savedUsername,
+                savedPassword = savedPassword,
                 rememberMe = rememberMe
             )
         }
@@ -103,6 +113,7 @@ class NautaLoginViewModel @Inject constructor(
             
             if (_uiState.value.rememberMe) {
                 dataStoreManager.saveNautaUsername(normalizedUsername)
+                dataStoreManager.saveNautaPassword(password)
             }
             
             val result = authService.login(normalizedUsername, password)
@@ -117,6 +128,7 @@ class NautaLoginViewModel @Inject constructor(
                         timeUsed = response.timeUsed ?: "00:00:00",
                         timeAvailable = response.timeAvailable ?: "00:00:00"
                     )
+                    silentRefresh()
                 },
                 onFailure = { exception ->
                     _uiState.value = _uiState.value.copy(
@@ -163,19 +175,37 @@ class NautaLoginViewModel @Inject constructor(
     
     fun refreshAccountInfo() {
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
             val result = authService.refreshAccountInfo()
             result?.fold(
                 onSuccess = { response ->
                     _uiState.value = _uiState.value.copy(
-                        timeUsed = response.timeUsed,
-                        timeAvailable = response.timeAvailable
+                        isLoading = false,
+                        timeUsed = response.timeUsed ?: "00:00:00",
+                        timeAvailable = response.timeAvailable ?: "00:00:00"
                     )
                 },
                 onFailure = { exception ->
                     _uiState.value = _uiState.value.copy(
+                        isLoading = false,
                         errorMessage = exception.message ?: "Error al actualizar"
                     )
                 }
+            )
+        }
+    }
+
+    private fun silentRefresh() {
+        viewModelScope.launch {
+            val result = authService.refreshAccountInfo()
+            result?.fold(
+                onSuccess = { response ->
+                    _uiState.value = _uiState.value.copy(
+                        timeUsed = response.timeUsed ?: "00:00:00",
+                        timeAvailable = response.timeAvailable ?: "00:00:00"
+                    )
+                },
+                onFailure = { }
             )
         }
     }
@@ -194,10 +224,19 @@ fun NautaLoginScreen(
     val viewModel: NautaLoginViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
-    LaunchedEffect(uiState.savedUsername, uiState.rememberMe) {
-        if (uiState.rememberMe && uiState.savedUsername.isNotEmpty()) {
+    // Consolidated WiFi check - runs once at the parent level
+    var isConnectedToNauta by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        isConnectedToNauta = isConnectedToNautaWifi(context)
+    }
+    val wifiIconColor = if (isConnectedToNauta) Color(0xFF4CAF50) else Color(0xFFF44336)
+
+    LaunchedEffect(uiState.savedUsername, uiState.savedPassword, uiState.rememberMe) {
+        if (uiState.rememberMe) {
             username = uiState.savedUsername
+            password = uiState.savedPassword
         }
     }
 
@@ -210,7 +249,9 @@ fun NautaLoginScreen(
             onRefresh = { viewModel.refreshAccountInfo() },
             isLoading = uiState.isLoading,
             onBack = { navController.popBackStack() },
-            navController = navController
+            navController = navController,
+            isConnectedToNauta = isConnectedToNauta,
+            wifiIconColor = wifiIconColor
         )
     } else {
         LoginContent(
@@ -227,7 +268,9 @@ fun NautaLoginScreen(
             onLogin = { viewModel.login(username, password) },
             onBack = { navController.popBackStack() },
             focusManager = focusManager,
-            navController = navController
+            navController = navController,
+            isConnectedToNauta = isConnectedToNauta,
+            wifiIconColor = wifiIconColor
         )
     }
 }
@@ -236,88 +279,20 @@ fun NautaLoginScreen(
 @Composable
 private fun NautaTopAppBar(
     navController: NavHostController,
-    onNavigateToSettings: () -> Unit
 ) {
-    val context = LocalContext.current
     val view = LocalView.current
-    var showMenu by remember { mutableStateOf(false) }
-
-    TopAppBar(
-        title = {
-            Text("Nauta Hogar")
-        },
+    DatusTopAppBar(
+        title = "Nauta Hogar",
+        navController = navController,
+        showMenuIcon = true,
         actions = {
-            // Botón 1: Configuración de Nauta (auto-connect, etc.)
             IconButton(onClick = {
                 playClickSound(view)
                 navController.navigate(NavRoutes.NAUTA_SETTINGS)
             }) {
                 Icon(Icons.Outlined.Settings, contentDescription = "Configuración Nauta")
             }
-            // Botón 2: Notificaciones
-            IconButton(onClick = {
-                playClickSound(view)
-                navController.navigate(NavRoutes.NOTIFICATIONS)
-            }) {
-                Icon(Icons.Outlined.Notifications, contentDescription = "Notificaciones")
-            }
-            // Botón 3: Menú (3 puntitos)
-            Box {
-                IconButton(onClick = {
-                    playClickSound(view)
-                    showMenu = true
-                }) {
-                    Icon(Icons.Outlined.MoreVert, contentDescription = "Menú")
-                }
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Configuración") },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Outlined.Settings,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        },
-                        onClick = {
-                            playClickSound(view)
-                            showMenu = false
-                            navController.navigate(NavRoutes.SETTINGS)
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Compartir App") },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Outlined.Share,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        },
-                        onClick = {
-                            playClickSound(view)
-                            showMenu = false
-                            val mensaje = "Descarga la app Datus desde: https://datus.netlify.app/"
-                            val intent = Intent(Intent.ACTION_SEND)
-                            intent.type = "text/plain"
-                            intent.putExtra(Intent.EXTRA_TEXT, mensaje)
-                            intent.putExtra(Intent.EXTRA_SUBJECT, "Datus - Descarga la app")
-                            context.startActivity(Intent.createChooser(intent, "Compartir Datus App"))
-                        }
-                    )
-                }
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            titleContentColor = MaterialTheme.colorScheme.onBackground,
-            navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
-            actionIconContentColor = MaterialTheme.colorScheme.onBackground
-        )
+        }
     )
 }
 
@@ -336,29 +311,13 @@ private fun LoginContent(
     onLogin: () -> Unit,
     onBack: () -> Unit,
     focusManager: androidx.compose.ui.focus.FocusManager,
-    navController: NavHostController
+    navController: NavHostController,
+    isConnectedToNauta: Boolean,
+    wifiIconColor: Color
 ) {
-    val context = LocalContext.current
-    var isConnectedToNauta by remember { mutableStateOf(false) }
-    
-    // Detectar estado de la conexión WiFi con portal cautivo ETECSA
-    LaunchedEffect(Unit) {
-        isConnectedToNauta = isConnectedToNautaWifi(context)
-    }
-    
-    // Color del ícono: verde si está conectado a Nauta, rojo si no
-    val wifiIconColor = if (isConnectedToNauta) {
-        Color(0xFF4CAF50) // Verde
-    } else {
-        Color(0xFFF44336) // Rojo
-    }
-    
     Scaffold(
         topBar = {
-            NautaTopAppBar(
-                navController = navController,
-                onNavigateToSettings = { navController.navigate(NavRoutes.NAUTA_SETTINGS) }
-            )
+            NautaTopAppBar(navController = navController)
         }
     ) { innerPadding ->
         Column(
@@ -369,38 +328,42 @@ private fun LoginContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
+            ModernIcon(
                 imageVector = Icons.Outlined.Wifi,
                 contentDescription = if (isConnectedToNauta) "Conectado a Nauta" else "No conectado a Nauta",
-                modifier = Modifier.size(72.dp),
-                tint = wifiIconColor
+                containerSize = 80.dp,
+                iconSize = 40.dp,
+                tint = wifiIconColor,
+                containerColor = wifiIconColor.copy(alpha = 0.1f)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = "Nauta Hogar",
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = "Conecta a internet automáticamente",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
-            
+
             Spacer(modifier = Modifier.height(32.dp))
-            
+
             OutlinedTextField(
                 value = username,
                 onValueChange = { onUsernameChange(it.lowercase()) },
                 label = { Text("Usuario") },
                 placeholder = { Text("usuario@nauta.com.cu") },
                 singleLine = true,
+                shape = RoundedCornerShape(Dimens.cardCorner),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
@@ -414,17 +377,18 @@ private fun LoginContent(
                     Text("Formato: usuario@nauta.com.cu")
                 }
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             OutlinedTextField(
                 value = password,
                 onValueChange = { onPasswordChange(it) },
                 label = { Text("Contraseña") },
                 singleLine = true,
+                shape = RoundedCornerShape(Dimens.cardCorner),
                 visualTransformation = if (passwordVisible) 
-                    VisualTransformation.None 
-                else 
+                    VisualTransformation.None
+                else
                     PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
@@ -446,9 +410,9 @@ private fun LoginContent(
                 enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -463,9 +427,9 @@ private fun LoginContent(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Button(
                 onClick = {
                     if (username.isBlank() || password.isBlank()) {
@@ -476,6 +440,7 @@ private fun LoginContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
+                shape = RoundedCornerShape(Dimens.cardCorner),
                 enabled = !isLoading && username.isNotBlank() && password.isNotBlank()
             ) {
                 if (isLoading) {
@@ -490,7 +455,7 @@ private fun LoginContent(
                     Text("Conectar", style = MaterialTheme.typography.titleMedium)
                 }
             }
-            
+
             errorMessage?.let { error ->
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
@@ -501,14 +466,11 @@ private fun LoginContent(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(24.dp))
-            
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
+
+            DatusCard(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -541,190 +503,150 @@ private fun LoggedInContent(
     onRefresh: () -> Unit,
     isLoading: Boolean,
     onBack: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    isConnectedToNauta: Boolean,
+    wifiIconColor: Color
 ) {
-    val context = LocalContext.current
-    var isConnectedToNauta by remember { mutableStateOf(false) }
-    
-    // Detectar estado de la conexión WiFi con portal cautivo ETECSA
-    LaunchedEffect(Unit) {
-        isConnectedToNauta = isConnectedToNautaWifi(context)
-    }
-    
-    // Color del ícono: verde si está conectado a Nauta, rojo si no
-    val wifiIconColor = if (isConnectedToNauta) {
-        Color(0xFF4CAF50) // Verde
-    } else {
-        Color(0xFFF44336) // Rojo
-    }
-    
     Scaffold(
         topBar = {
-            NautaTopAppBar(
-                navController = navController,
-                onNavigateToSettings = { navController.navigate(NavRoutes.NAUTA_SETTINGS) }
-            )
+            NautaTopAppBar(navController = navController)
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(24.dp),
+                .padding(horizontal = Dimens.lg),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
+            ModernIcon(
                 imageVector = Icons.Outlined.Wifi,
-                contentDescription = if (isConnectedToNauta) "Conectado a Nauta" else "No conectado a Nauta",
-                modifier = Modifier.size(72.dp),
-                tint = wifiIconColor
+                contentDescription = "Conectado",
+                containerSize = 80.dp,
+                iconSize = 40.dp,
+                containerColor = if (isConnectedToNauta) Color(0xFF4CAF50).copy(alpha = 0.1f) else Color(0xFFF44336).copy(alpha = 0.1f),
+                tint = if (isConnectedToNauta) Color(0xFF4CAF50) else Color(0xFFF44336)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.md))
 
             Text(
                 text = "Conectado",
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
-            
-            Card(
+            Spacer(modifier = Modifier.height(Dimens.lg))
+
+            DatusCard(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                elevation = 1.dp
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier.padding(Dimens.md),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.sm)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Person,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column {
-                            Text(
-                                text = "Usuario",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                            )
-                            Text(
-                                text = username,
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-                    }
-                    
-                    Spacer(modifier = Modifier.height(20.dp))
-                    
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.AccessTime,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column {
-                            Text(
-                                text = "Tiempo consumido",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                            )
-                            Text(
-                                text = timeUsed,
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-                    }
-                    
-                    Spacer(modifier = Modifier.height(20.dp))
-                    
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.AccessTime,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column {
-                            Text(
-                                text = "Tiempo restante",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                            )
-                            Text(
-                                text = timeAvailable,
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
+                    TimeRow(
+                        label = "Tiempo restante",
+                        value = timeAvailable,
+                        isPrimary = true
+                    )
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                    )
+                    TimeRow(
+                        label = "Tiempo consumido",
+                        value = timeUsed,
+                        isPrimary = false
+                    )
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                    )
+                    UserRow(username = username)
                 }
             }
-            
-            Spacer(modifier = Modifier.height(32.dp))
-            
-            Button(
+
+            Spacer(modifier = Modifier.height(Dimens.xl))
+
+            OutlinedButton(
                 onClick = onRefresh,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
+                modifier = Modifier.fillMaxWidth().height(52.dp),
                 enabled = !isLoading,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                )
+                shape = RoundedCornerShape(Dimens.cardCorner)
             ) {
-                Icon(Icons.Outlined.Refresh, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Actualizar")
+                Icon(Icons.Outlined.Refresh, contentDescription = null, modifier = Modifier.size(Dimens.iconMedium))
+                Spacer(modifier = Modifier.width(Dimens.sm))
+                Text("Actualizar", fontWeight = FontWeight.Medium)
             }
-            
-            Spacer(modifier = Modifier.height(12.dp))
-            
+
+            Spacer(modifier = Modifier.height(Dimens.md))
+
             Button(
                 onClick = onLogout,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 enabled = !isLoading,
+                shape = RoundedCornerShape(Dimens.cardCorner),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.error
                 )
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(Dimens.iconMedium),
                         color = MaterialTheme.colorScheme.onError,
                         strokeWidth = 2.dp
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(Dimens.sm))
                     Text("Desconectando...")
                 } else {
-                    Icon(Icons.Outlined.Logout, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Desconectar", style = MaterialTheme.typography.titleMedium)
+                    Icon(Icons.AutoMirrored.Outlined.Logout, contentDescription = null)
+                    Spacer(modifier = Modifier.width(Dimens.sm))
+                    Text("Desconectar", fontWeight = FontWeight.SemiBold)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun TimeRow(label: String, value: String, isPrimary: Boolean) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = Dimens.sm),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = if (isPrimary) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
+private fun UserRow(username: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = Dimens.sm),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Usuario",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = username,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }

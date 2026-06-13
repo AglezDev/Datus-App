@@ -43,6 +43,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import datus.app.com.R
 import datus.app.com.ui.theme.ThemeViewModel
+import datus.app.com.ui.theme.Dimens
+import datus.app.com.ui.components.DatusCard
+import datus.app.com.ui.components.ModernIcon
 import datus.app.com.utils.playClickSound
 import kotlin.math.min
 import androidx.compose.ui.platform.LocalConfiguration
@@ -97,10 +100,10 @@ fun PlansScreen(navController: NavHostController, themeViewModel: ThemeViewModel
                     .padding(horizontal = 16.dp)
                     .clip(RoundedCornerShape(50))
             ) {
+                val configuration = LocalConfiguration.current
+                val adaptiveFontSize = remember(configuration.screenWidthDp) { min(14f, configuration.screenWidthDp / 25f) }
                 tabs.forEachIndexed { index, title ->
                     val selected = pagerState.currentPage == index
-                    val configuration = LocalConfiguration.current
-                    val adaptiveFontSize = min(14f, configuration.screenWidthDp / 25f)
                     Surface(
                         shape = RoundedCornerShape(50),
                         color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
@@ -166,13 +169,10 @@ fun PlanList(plans: List<Plan>, planType: Int) {
         ConfirmationDialog(
             onConfirm = {
                 showConfirmationDialog = false
-                when (PackageManager.PERMISSION_GRANTED) {
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) -> {
-                        selectedPlan?.let { dialUssdCode(context, it.ussdCode) }
-                    }
-                    else -> {
-                        launcher.launch(Manifest.permission.CALL_PHONE)
-                    }
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                    selectedPlan?.let { dialUssdCode(context, it.ussdCode) }
+                } else {
+                    launcher.launch(Manifest.permission.CALL_PHONE)
                 }
             },
             onDismiss = { showConfirmationDialog = false },
@@ -202,45 +202,44 @@ fun PlanCard(plan: Plan, planType: Int, onClick: () -> Unit) {
     val context = LocalContext.current
     val view = LocalView.current
     val configuration = LocalConfiguration.current
-    val adaptiveTitleSize = min(20f, configuration.screenWidthDp / 18f)
-    val adaptiveIconSize = min(32f, configuration.screenWidthDp / 11f)
+    val adaptiveTitleSize = remember(configuration.screenWidthDp) { min(20f, configuration.screenWidthDp / 18f) }
+    val adaptiveIconSize = remember(configuration.screenWidthDp) { min(32f, configuration.screenWidthDp / 11f) }
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                playClickSound(view)
-                onClick()
-            },
-        shape = RoundedCornerShape(24.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    DatusCard(
+        onClick = {
+            playClickSound(view)
+            onClick()
+        },
+        elevation = 2.dp
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             Row(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(Dimens.md),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val iconBoxSize = 48.dp
+                val iconInnerSize = 28.dp
+                
                 if (planType == 0) {
-                    Icon(
+                    ModernIcon(
                         painter = painterResource(id = R.drawable.ic_data_usage),
                         contentDescription = "Plan Icon",
-                        modifier = Modifier.size(adaptiveIconSize.dp),
-                        tint = MaterialTheme.colorScheme.primary
+                        containerSize = iconBoxSize,
+                        iconSize = iconInnerSize
                     )
                 } else if (planType == 1) {
-                    Icon(
+                    ModernIcon(
                         painter = painterResource(id = R.drawable.call_24px),
                         contentDescription = "Plan Icon",
-                        modifier = Modifier.size(adaptiveIconSize.dp),
-                        tint = MaterialTheme.colorScheme.primary
+                        containerSize = iconBoxSize,
+                        iconSize = iconInnerSize
                     )
                 } else if (planType == 2) {
-                    Icon(
+                    ModernIcon(
                         painter = painterResource(id = R.drawable.chat_bubble_24px),
                         contentDescription = "Plan Icon",
-                        modifier = Modifier.size(adaptiveIconSize.dp),
-                        tint = MaterialTheme.colorScheme.primary
+                        containerSize = iconBoxSize,
+                        iconSize = iconInnerSize
                     )
                 } else {
                     val icon = when (plan.name) {
@@ -251,14 +250,14 @@ fun PlanCard(plan: Plan, planType: Int, onClick: () -> Unit) {
                             else -> Icons.Filled.MoreHoriz
                         }
                     }
-                    Icon(
+                    ModernIcon(
                         imageVector = icon,
                         contentDescription = "Plan Icon",
-                        modifier = Modifier.size(adaptiveIconSize.dp),
-                        tint = MaterialTheme.colorScheme.primary
+                        containerSize = iconBoxSize,
+                        iconSize = iconInnerSize
                     )
                 }
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(Dimens.md))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = plan.name,
@@ -268,7 +267,7 @@ fun PlanCard(plan: Plan, planType: Int, onClick: () -> Unit) {
                     Text(
                         text = plan.description,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -281,18 +280,16 @@ fun PlanCard(plan: Plan, planType: Int, onClick: () -> Unit) {
 
 @Composable
 fun PriceTag(price: String, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .background(
-                color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(topEnd = 12.dp, bottomStart = 12.dp)
-            )
-            .padding(horizontal = 12.dp, vertical = 6.dp)
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.primary,
+        shape = RoundedCornerShape(topEnd = Dimens.cardCorner, bottomStart = Dimens.cardCorner)
     ) {
         Text(
             text = price,
             color = MaterialTheme.colorScheme.onPrimary,
-            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold)
+            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
         )
     }
 }

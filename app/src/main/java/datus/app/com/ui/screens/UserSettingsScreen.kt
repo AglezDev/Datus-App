@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import datus.app.com.ui.theme.ThemeViewModel
+import datus.app.com.ui.components.ModernIcon
 import datus.app.com.utils.playClickSound
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
@@ -76,11 +77,7 @@ fun UserSettingsScreen(navController: NavHostController, themeViewModel: ThemeVi
                 Spacer(modifier = Modifier.height(16.dp))
                 val phoneNumber by themeViewModel.phoneNumber.collectAsStateWithLifecycle()
 
-                var isPhoneValid by remember { mutableStateOf(true) }
-
-                LaunchedEffect(phoneNumber) {
-                    isPhoneValid = phoneNumber.length == 8
-                }
+                val isPhoneValid by remember { derivedStateOf { phoneNumber.length == 8 || phoneNumber.isBlank() } }
 
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -94,7 +91,7 @@ fun UserSettingsScreen(navController: NavHostController, themeViewModel: ThemeVi
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Outlined.WbSunny, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            ModernIcon(Icons.Outlined.WbSunny, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Datos para operaciones", style = MaterialTheme.typography.titleMedium.copy(fontSize = adaptiveTitleSize.sp))
                         }
@@ -145,11 +142,7 @@ fun UserSettingsScreen(navController: NavHostController, themeViewModel: ThemeVi
             }
             item {
                 val transferPin by themeViewModel.transferPin.collectAsStateWithLifecycle()
-                var isPinValid by remember { mutableStateOf(true) }
-
-                LaunchedEffect(transferPin) {
-                    isPinValid = transferPin.length == 4
-                }
+                val isPinValid by remember { derivedStateOf { transferPin.length == 4 || transferPin.isBlank() } }
 
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -163,7 +156,7 @@ fun UserSettingsScreen(navController: NavHostController, themeViewModel: ThemeVi
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Outlined.Password, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            ModernIcon(Icons.Outlined.Password, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Definir PIN de transferencia", style = MaterialTheme.typography.titleMedium.copy(fontSize = adaptiveTitleSize.sp))
                         }

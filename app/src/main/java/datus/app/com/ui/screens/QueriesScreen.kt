@@ -15,94 +15,212 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Phone
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.lerp
 import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.size.Size
 import datus.app.com.utils.dialUssdCode
-import androidx.navigation.NavHostController
-import androidx.compose.ui.platform.LocalView
+import datus.app.com.ui.theme.Dimens
 import datus.app.com.utils.playClickSound
-import androidx.lifecycle.viewmodel.compose.viewModel
 import datus.app.com.ui.theme.ThemeViewModel
-import datus.app.com.ui.theme.ThemeViewModelFactory
+import datus.app.com.ui.components.DatusCard
+import datus.app.com.ui.components.ModernIcon
 import androidx.compose.material.ExperimentalMaterialApi
 import datus.app.com.viewmodel.PromotionsViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.request.ImageRequest
-import coil.size.Size
+import androidx.navigation.NavHostController
 import kotlinx.coroutines.delay
 import kotlin.math.min
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.PointerEventPass
 
-data class Query(val title: String, val description: String, val ussdCode: String, val icon: ImageVector)
+private data class Query(val title: String, val description: String, val ussdCode: String, val icon: ImageVector)
 
-
-val queries = listOf(
-    Query("Saldo Principal", "Consulta saldo principal, voz, SMS, datos y vigencia de la línea.", "*222#", Icons.Outlined.Info),
-    Query("Consultar Límite", "Consulta tu límite de recargas mensuales.", "*222*732#", Icons.Outlined.VerifiedUser),
-    Query("Vigencia de Datos", "Consulta tu plan de datos y su vigencia.", "*222*328#", Icons.Outlined.DataUsage),
-    Query("Consultar Bonos", "Consulta tus bonos y planes en USD.", "*222*266#", Icons.Outlined.AttachMoney),
-    Query("Vigencia de Voz", "Consulta tu plan de voz y su vigencia.", "*222*869#", Icons.Outlined.Call),
-    Query("Vigencia de SMS", "Consulta tu plan de SMS y su vigencia.", "*222*767#", Icons.Outlined.Sms),
+private val queries = listOf(
+    Query("Saldo Principal", "Saldo, voz, SMS, datos y vigencia", "*222#", Icons.Outlined.Info),
+    Query("Consultar Límite", "Límite de recargas mensuales", "*222*732#", Icons.Outlined.VerifiedUser),
+    Query("Vigencia de Datos", "Plan de datos y su vigencia", "*222*328#", Icons.Outlined.DataUsage),
+    Query("Consultar Bonos", "Bonos y planes en USD", "*222*266#", Icons.Outlined.AttachMoney),
+    Query("Vigencia de Voz", "Plan de voz y su vigencia", "*222*869#", androidx.compose.material.icons.Icons.Outlined.Phone),
+    Query("Vigencia de SMS", "Plan de SMS y su vigencia", "*222*767#", androidx.compose.material.icons.Icons.Outlined.Email),
 )
 
 @Composable
-fun QueriesScreen(navController: NavHostController, themeViewModel: ThemeViewModel = viewModel(factory = ThemeViewModelFactory(LocalContext.current))) {
+fun QueriesScreen(navController: NavHostController, themeViewModel: ThemeViewModel) {
+    val promoViewModel: PromotionsViewModel = hiltViewModel()
+    val promotions by promoViewModel.promotions.collectAsStateWithLifecycle()
+    val promoLoading by promoViewModel.loading.collectAsStateWithLifecycle()
+
     Scaffold(
-        topBar = { DatusTopAppBar(title = "Consultas", navController = navController,) }
+        topBar = { DatusTopAppBar(title = "Consultas", navController = navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(Dimens.md)
         ) {
-            QueriesGrid()
-            Spacer(modifier = Modifier.weight(1f))
-            PromotionsCarousel()
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(Dimens.sm))
+            DashboardSummaryRow()
+            Text(
+                text = "Consultas rápidas",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(horizontal = Dimens.md)
+            )
+            QueriesCompactGrid()
+            if (promotions.isNotEmpty() || promoLoading) {
+                PromotionsCarousel(viewModel = promoViewModel)
+            }
+            Spacer(modifier = Modifier.height(Dimens.lg))
         }
     }
 }
 
 @Composable
-fun QueriesGrid() {
-    Column(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+private fun DashboardSummaryRow() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.md),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.sm)
     ) {
-        val chunkedQueries = queries.chunked(2)
-        for (rowItems in chunkedQueries) {
+        SummaryCard(
+            icon = Icons.Outlined.Info,
+            label = "Saldo",
+            ussdCode = "*222#",
+            gradient = listOf(Color(0xFF0061A4), Color(0xFF0099FF)),
+            modifier = Modifier.weight(1f)
+        )
+        SummaryCard(
+            icon = Icons.Outlined.DataUsage,
+            label = "Datos",
+            ussdCode = "*222*328#",
+            gradient = listOf(Color(0xFF2E7D32), Color(0xFF66BB6A)),
+            modifier = Modifier.weight(1f)
+        )
+        SummaryCard(
+            icon = Icons.Outlined.AttachMoney,
+            label = "Bono",
+            ussdCode = "*222*266#",
+            gradient = listOf(Color(0xFFE65100), Color(0xFFFF9800)),
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun SummaryCard(
+    icon: ImageVector,
+    label: String,
+    ussdCode: String,
+    gradient: List<Color>,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val view = LocalView.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) dialUssdCode(context, ussdCode)
+            else Toast.makeText(context, "Permiso denegado", Toast.LENGTH_SHORT).show()
+        }
+    )
+
+    DatusCard(
+        onClick = {
+            playClickSound(view)
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                dialUssdCode(context, ussdCode)
+            } else {
+                launcher.launch(Manifest.permission.CALL_PHONE)
+            }
+        },
+        modifier = modifier.aspectRatio(1f),
+        elevation = Dimens.cardElevatedElevation
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.linearGradient(gradient)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = label,
+                    modifier = Modifier.size(Dimens.iconLarge),
+                    tint = Color.White
+                )
+                Spacer(modifier = Modifier.height(Dimens.sm))
+                Text(
+                    text = "Ver",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Color.White.copy(alpha = 0.8f)
+                )
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun QueriesCompactGrid() {
+    Column(
+        modifier = Modifier.padding(horizontal = Dimens.md),
+        verticalArrangement = Arrangement.spacedBy(Dimens.sm)
+    ) {
+        for (rowItems in queries.chunked(3)) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.sm),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 for (query in rowItems) {
-                    Box(modifier = Modifier.weight(1f)) {
-                        QueryCard(query = query)
-                    }
+                    CompactQueryCard(
+                        query = query,
+                        modifier = Modifier.weight(1f)
+                    )
                 }
-                if (rowItems.size < 2) { // Add a spacer for the last row if it's not full
+                repeat(3 - rowItems.size) {
                     Spacer(modifier = Modifier.weight(1f))
                 }
             }
@@ -111,66 +229,57 @@ fun QueriesGrid() {
 }
 
 @Composable
-fun QueryCard(query: Query) {
+private fun CompactQueryCard(query: Query, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val view = LocalView.current
     val configuration = LocalConfiguration.current
-    val adaptiveFontSize = remember(configuration.screenWidthDp) {
-        min(16f, configuration.screenWidthDp / 22f)
+    val fontSize = remember(configuration.screenWidthDp) {
+        min(13f, configuration.screenWidthDp / 28f)
     }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted: Boolean ->
-            if (isGranted) {
-                dialUssdCode(context, query.ussdCode)
-            } else {
-                Toast.makeText(context, "Permiso para realizar llamadas denegado", Toast.LENGTH_SHORT).show()
-            }
+        onResult = { isGranted ->
+            if (isGranted) dialUssdCode(context, query.ussdCode)
+            else Toast.makeText(context, "Permiso denegado", Toast.LENGTH_SHORT).show()
         }
     )
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1.5f)
-            .clickable {
-                playClickSound(view)
-                if (query.ussdCode.startsWith("smsto:")) {
-                    val intent = Intent(Intent.ACTION_SENDTO)
-                    intent.data = Uri.parse(query.ussdCode)
-                    context.startActivity(intent)
-                } else {
-                    when (PackageManager.PERMISSION_GRANTED) {
-                        ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) -> {
-                            dialUssdCode(context, query.ussdCode)
-                        }
-                        else -> {
-                            launcher.launch(Manifest.permission.CALL_PHONE)
-                        }
-                    }
-                }
-            },
-        shape = RoundedCornerShape(24.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    DatusCard(
+        onClick = {
+            playClickSound(view)
+            if (query.ussdCode.startsWith("smsto:")) {
+                context.startActivity(Intent(Intent.ACTION_SENDTO).apply { data = Uri.parse(query.ussdCode) })
+            } else if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                dialUssdCode(context, query.ussdCode)
+            } else {
+                launcher.launch(Manifest.permission.CALL_PHONE)
+            }
+        },
+        modifier = modifier,
+        shape = RoundedCornerShape(Dimens.cardCorner),
+        elevation = Dimens.cardElevatedElevation
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.sm),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(Dimens.xs)
         ) {
-            Icon(
+            ModernIcon(
                 imageVector = query.icon,
-                contentDescription = "Query Icon",
-                modifier = Modifier.size(32.dp),
-                tint = MaterialTheme.colorScheme.primary
+                contentDescription = null,
+                containerSize = 40.dp,
+                iconSize = 22.dp
             )
-            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = query.title,
-                style = MaterialTheme.typography.titleLarge.copy(fontSize = adaptiveFontSize.sp),
-                textAlign = TextAlign.Center
+                style = MaterialTheme.typography.labelMedium,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -182,7 +291,6 @@ fun PromotionsCarousel(modifier: Modifier = Modifier, viewModel: PromotionsViewM
     val promotions by viewModel.promotions.collectAsStateWithLifecycle()
     val loading by viewModel.loading.collectAsStateWithLifecycle()
     val loadingMore by viewModel.loadingMore.collectAsStateWithLifecycle()
-    val error by viewModel.error.collectAsStateWithLifecycle()
     val lazyListState = rememberLazyListState()
     var isUserInteracting by remember { mutableStateOf(false) }
 
@@ -191,9 +299,8 @@ fun PromotionsCarousel(modifier: Modifier = Modifier, viewModel: PromotionsViewM
         while (true) {
             delay(10000)
             if (!isUserInteracting && !lazyListState.isScrollInProgress) {
-                val currentScrollPosition = lazyListState.firstVisibleItemIndex
-                val nextIndex = (currentScrollPosition + 1) % promotions.size
-                lazyListState.animateScrollToItem(index = nextIndex)
+                val current = lazyListState.firstVisibleItemIndex
+                lazyListState.animateScrollToItem(index = (current + 1) % promotions.size)
             }
         }
     }
@@ -206,14 +313,11 @@ fun PromotionsCarousel(modifier: Modifier = Modifier, viewModel: PromotionsViewM
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .wrapContentHeight() // Adjusted height for the taller card
+            .wrapContentHeight()
             .pullRefresh(pullRefreshState)
     ) {
         if (loading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         } else if (promotions.isNotEmpty()) {
@@ -229,21 +333,17 @@ fun PromotionsCarousel(modifier: Modifier = Modifier, viewModel: PromotionsViewM
                             }
                         }
                     },
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(horizontal = Dimens.md),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.md),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items(promotions) { promotion ->
-                    // Directly use the redesigned PromotionItem
                     PromotionItem(promotion = promotion)
                 }
-                
                 if (loadingMore) {
                     item {
                         Box(
-                            modifier = Modifier
-                                .fillParentMaxWidth()
-                                .height(180.dp) // Keep loader height consistent
+                            modifier = Modifier.fillParentMaxWidth().height(180.dp)
                                 .clip(RoundedCornerShape(16.dp))
                                 .background(MaterialTheme.colorScheme.surface),
                             contentAlignment = Alignment.Center
@@ -253,15 +353,12 @@ fun PromotionsCarousel(modifier: Modifier = Modifier, viewModel: PromotionsViewM
                     }
                 }
             }
-            
             LaunchedEffect(promotions.size) {
                 if (promotions.size >= 7 && !loading && !loadingMore) {
                     viewModel.loadMorePromos()
                 }
             }
         }
-
-
     }
 }
 
@@ -272,107 +369,99 @@ fun PromotionItem(promotion: Promotion) {
     val cardWidth = remember(configuration.screenWidthDp) {
         (configuration.screenWidthDp.dp - 32.dp)
     }
-    val titleFontSize = remember(configuration.screenWidthDp) {
-        min(16f, configuration.screenWidthDp / 22f)
-    }
-    val descriptionFontSize = remember(configuration.screenWidthDp) {
-        min(14f, configuration.screenWidthDp / 26f)
-    }
-    val buttonFontSize = remember(configuration.screenWidthDp) {
-        min(12f, configuration.screenWidthDp / 28f)
-    }
 
-    Card(
+    DatusCard(
         modifier = Modifier
             .width(cardWidth)
-            .aspectRatio(1.8f),
-        shape = RoundedCornerShape(24.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+            .height(260.dp), // ALTURA FIJA PARA UNIFORMIDAD TOTAL
+        elevation = 2.dp
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Background Image
+            // IMAGEN DE FONDO (O COLOR DE FALLBACK)
             if (!promotion.image_url.isNullOrBlank()) {
                 Image(
                     painter = rememberAsyncImagePainter(
                         ImageRequest.Builder(context)
-                            .data(promotion.image_url)
-                            .crossfade(true)
-                            .size(Size(400, 300))
-                            .build()
+                            .data(promotion.image_url).crossfade(true).size(Size(600, 400)).build()
                     ),
                     contentDescription = promotion.title,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
             } else {
-                Box(modifier = Modifier.fillMaxSize().background(Color.Gray))
+                Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant))
             }
 
-            // Scrim
+            // GRADIENTE DE LEGIBILIDAD (Cubre toda la tarjeta para oscurecer suavemente la base)
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f))
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.2f),
+                                Color.Black.copy(alpha = 0.85f)
+                            ),
+                            startY = 100f // Comienza el gradiente un poco mas abajo para no tapar la parte superior de la imagen
+                        )
+                    )
             )
 
-            // Content: Text and Button
+            // CONTENIDO DE TEXTO Y BOTÓN
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(Dimens.md),
+                verticalArrangement = Arrangement.Bottom
             ) {
-                // Text section that takes up available space
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = promotion.title,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = titleFontSize.sp,
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = promotion.description,
-                        fontSize = descriptionFontSize.sp,
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-
-                // Button at the bottom
+                Text(
+                    text = promotion.title,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                
+                Spacer(modifier = Modifier.height(Dimens.xs))
+                
+                Text(
+                    text = promotion.description,
+                    fontSize = 14.sp,
+                    color = Color.White.copy(alpha = 0.9f),
+                    lineHeight = 18.sp,
+                    maxLines = 3, // Limitado para no romper el diseño de altura fija, pero con espacio suficiente
+                    overflow = TextOverflow.Ellipsis
+                )
+                
                 if (!promotion.button_text.isNullOrBlank() && !promotion.action_url.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(Dimens.sm))
                     Button(
                         onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(promotion.action_url))
-                            context.startActivity(intent)
+                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(promotion.action_url)))
                         },
-                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.align(Alignment.End),
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = try {
-                                Color(android.graphics.Color.parseColor(promotion.color ?: "#007bff"))
-                            } catch (_: Exception) {
-                                MaterialTheme.colorScheme.primary
-                            }
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                        contentPadding = PaddingValues(vertical = 6.dp)
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = Color.White
+                        )
                     ) {
                         Text(
                             text = promotion.button_text ?: "",
-                            fontSize = buttonFontSize.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.White
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(
+                            Icons.Outlined.ArrowForward,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
                         )
                     }
+                } else {
+                    Spacer(modifier = Modifier.height(Dimens.sm))
                 }
             }
         }

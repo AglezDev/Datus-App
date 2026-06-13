@@ -42,7 +42,9 @@ import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import datus.app.com.NavRoutes
 import datus.app.com.ui.theme.ThemeViewModel
-import datus.app.com.ui.theme.ThemeViewModelFactory
+import datus.app.com.ui.components.DatusCard
+import datus.app.com.ui.components.ModernIcon
+import datus.app.com.utils.dialUssdCode
 import datus.app.com.utils.playClickSound
 import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalConfiguration
@@ -96,7 +98,7 @@ private enum class ContactTarget {
 @Composable
 fun UtilitiesScreen(
     navController: NavHostController,
-    themeViewModel: ThemeViewModel = viewModel(factory = ThemeViewModelFactory(LocalContext.current))
+    themeViewModel: ThemeViewModel
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -328,76 +330,98 @@ fun UtilitiesScreen(
             }
             // Card para Llamada Privada
             item {
-                UtilityActionCard(
-                    icon = Icons.Outlined.PhoneLocked,
-                    title = "Llamada Privada",
-                    description = "Oculta tu número al llamar.",
-                    fields = listOf {
-                         OutlinedTextField(
-                                value = privateCallNumber,
-                                onValueChange = { privateCallNumber = it },
-                                label = { Text("Número de teléfono") },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                                singleLine = true,
-                                isError = privateCallError && !isValidPrivateNumber(privateCallNumber),
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(24.dp),
-                                trailingIcon = {
-                                    IconButton(onClick = { launchContactPickerWithTarget(ContactTarget.PRIVATE_CALL) }) {
-                                        Icon(Icons.Outlined.Contacts, "Seleccionar Contacto", tint = primaryColor)
-                                    }
-                                }
-                            )
-                    },
-                    onAction = {
+                DatusCard(
+                    onClick = {
                         playClickSound(view)
-                        privateCallError = true
-                        val cleanNumber = privateCallNumber.filter { it.isDigit() }
-                        if (isValidPrivateNumber(cleanNumber)) {
-                            val code = "#31#" + cleanNumber
-                            dialUssdCode(context, code)
-                            privateCallNumber = ""; privateCallError = false
+                        val intent = Intent(Intent.ACTION_DIAL).apply {
+                            data = Uri.parse("tel:*31#")
                         }
+                        context.startActivity(intent)
                     },
-                    actionLabel = "Llamar Privado",
-                    actionEnabled = privateCallNumber.isNotBlank()
-                )
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = 2.dp
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ModernIcon(
+                            imageVector = Icons.Outlined.PhoneLocked,
+                            contentDescription = "Llamada Privada",
+                            containerSize = 48.dp,
+                            iconSize = 28.dp
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Llamada Privada",
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Oculta tu número al llamar (Abre marcador)",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Icon(
+                            Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
+
             // Card para Llamada con Cobro Revertido
             item {
-                UtilityActionCard(
-                    icon = Icons.AutoMirrored.Outlined.CallReceived,
-                    title = "Llamada con Cobro Revertido",
-                    description = "El destinatario paga la llamada.",
-                    fields = listOf {
-                         OutlinedTextField(
-                                value = reverseCallNumber,
-                                onValueChange = { if (it.length <= 8 && it.all(Char::isDigit)) reverseCallNumber = it },
-                                label = { Text("Número de teléfono") },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                singleLine = true,
-                                isError = reverseCallError && reverseCallNumber.length != 8,
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(24.dp),
-                                trailingIcon = {
-                                    IconButton(onClick = { launchContactPickerWithTarget(ContactTarget.REVERSE_CALL) }) {
-                                        Icon(Icons.Outlined.Contacts, "Seleccionar Contacto", tint = primaryColor)
-                                    }
-                                }
-                            )
-                    },
-                    onAction = {
+                DatusCard(
+                    onClick = {
                         playClickSound(view)
-                        reverseCallError = true
-                        if (reverseCallNumber.length == 8) {
-                            val ussd = "*99" + reverseCallNumber
-                            dialUssdCode(context, ussd)
-                            reverseCallNumber = ""; reverseCallError = false
+                        val intent = Intent(Intent.ACTION_DIAL).apply {
+                            data = Uri.parse("tel:*99")
                         }
+                        context.startActivity(intent)
                     },
-                    actionLabel = "Llamar Revertido",
-                    actionEnabled = reverseCallNumber.isNotBlank()
-                )
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = 2.dp
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ModernIcon(
+                            imageVector = Icons.AutoMirrored.Outlined.CallReceived,
+                            contentDescription = "Llamada con Cobro Revertido",
+                            containerSize = 48.dp,
+                            iconSize = 28.dp
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Llamada con Cobro Revertido",
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "El destinatario paga la llamada (Abre marcador)",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Icon(
+                            Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
         }
     }
@@ -527,8 +551,8 @@ private fun UtilityActionCard(
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val configuration = LocalConfiguration.current
-    val adaptiveTitleSize = min(20f, configuration.screenWidthDp / 18f)
-    val adaptiveIconSize = min(40f, configuration.screenWidthDp / 9f)
+    val adaptiveTitleSize = remember(configuration.screenWidthDp) { min(20f, configuration.screenWidthDp / 18f) }
+    val adaptiveIconSize = remember(configuration.screenWidthDp) { min(40f, configuration.screenWidthDp / 9f) }
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
@@ -537,7 +561,7 @@ private fun UtilityActionCard(
     ) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(imageVector = icon, contentDescription = title, tint = primaryColor, modifier = Modifier.size(adaptiveIconSize.dp))
+                ModernIcon(imageVector = icon, contentDescription = title, containerSize = 48.dp, iconSize = 28.dp)
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = title, style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold, fontSize = adaptiveTitleSize.sp))
@@ -568,18 +592,6 @@ private fun isValidPrivateNumber(number: String): Boolean {
     }
 }
 
-private fun dialUssdCode(context: Context, ussdCode: String) {
-    try {
-        val encodedHash = Uri.encode("#")
-        val ussdUri = "tel:${ussdCode.replace("#", encodedHash)}"
-        context.startActivity(Intent(Intent.ACTION_CALL, Uri.parse(ussdUri)))
-    } catch (e: SecurityException) {
-        Toast.makeText(context, "Permiso para llamar denegado", Toast.LENGTH_SHORT).show()
-    } catch (e: Exception) {
-        Toast.makeText(context, "No se pudo iniciar la llamada", Toast.LENGTH_SHORT).show()
-    }
-}
-
 @Composable
 private fun SmallActionCard(
     modifier: Modifier = Modifier,
@@ -593,8 +605,8 @@ private fun SmallActionCard(
     val context = LocalContext.current
     val view = LocalView.current
     val configuration = LocalConfiguration.current
-    val adaptiveFontSize = min(20f, configuration.screenWidthDp / 18f)
-    val adaptiveIconSize = min(40f, configuration.screenWidthDp / 9f)
+    val adaptiveFontSize = remember(configuration.screenWidthDp) { min(20f, configuration.screenWidthDp / 18f) }
+    val adaptiveIconSize = remember(configuration.screenWidthDp) { min(40f, configuration.screenWidthDp / 9f) }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -622,7 +634,7 @@ private fun SmallActionCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (icon != null) {
-                Icon(imageVector = icon, contentDescription = title, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(adaptiveIconSize.dp))
+                ModernIcon(imageVector = icon, contentDescription = title, containerSize = 48.dp, iconSize = 28.dp)
             } else if (painter != null) {
                 Icon(painter = painter, contentDescription = title, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(adaptiveIconSize.dp))
             }
@@ -642,13 +654,10 @@ private fun SmallActionCard(
                 Button(
                     onClick = {
                         showDialog = false
-                        when (PackageManager.PERMISSION_GRANTED) {
-                            ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) -> {
-                                onAction()
-                            }
-                            else -> {
-                                launcher.launch(Manifest.permission.CALL_PHONE)
-                            }
+                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                            onAction()
+                        } else {
+                            launcher.launch(Manifest.permission.CALL_PHONE)
                         }
                     },
                     shape = RoundedCornerShape(8.dp)

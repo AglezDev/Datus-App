@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Paleta Datus Premium - Azul Profundo y Blanco -->
+    <color name="primary_datus">#123A63</color>
+    <color name="primary_container_datus">#F2F5F8</color>
+    <color name="white">#FFFFFF</color>
+    
+    <!-- Widget Colors -->
     <color name="widget_background_color">#FFFFFF</color>
-    <color name="widget_text_color">#000000</color>
-    <color name="widget_refresh_button_color">#E0E0E0</color>
-    <color name="widget_background_light">#F5F5F5</color>
-    <color name="widget_icon_tint_light">#1976D2</color>
+    <color name="widget_text_color">#0B1F3B</color>
+    <color name="widget_refresh_button_color">#F2F5F8</color>
+    <color name="widget_background_light">#FFFFFF</color>
+    <color name="widget_icon_tint_light">#123A63</color>
 </resources>

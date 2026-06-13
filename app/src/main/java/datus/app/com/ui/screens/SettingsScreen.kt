@@ -33,8 +33,10 @@ import androidx.navigation.NavHostController
 import datus.app.com.NavRoutes
 import datus.app.com.R
 import datus.app.com.ui.theme.ThemeViewModel
+import datus.app.com.ui.components.ModernIcon
 import datus.app.com.ui.theme.ThemeViewModelFactory
 import datus.app.com.ui.theme.ThemeOption
+import datus.app.com.ui.components.DatusCard
 import datus.app.com.utils.playClickSound
 
 @Composable
@@ -44,6 +46,7 @@ fun SettingsScreen(
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
     val currentTheme by themeViewModel.theme.collectAsStateWithLifecycle()
+    val currentDynamicColor by themeViewModel.useDynamicColor.collectAsStateWithLifecycle()
     val view = LocalView.current
     val context = LocalContext.current
     var showContactDialog by remember { mutableStateOf(false) }
@@ -65,13 +68,12 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             // Sección de Notificaciones
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { navController.navigate(NavRoutes.NOTIFICATION_SETTINGS) },
+            DatusCard(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { navController.navigate(NavRoutes.NOTIFICATION_SETTINGS) },
                 shape = RoundedCornerShape(24.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                elevation = 4.dp,
+                containerColor = MaterialTheme.colorScheme.surface
             ) {
                 Row(
                     modifier = Modifier
@@ -81,7 +83,7 @@ fun SettingsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Outlined.Notifications, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        ModernIcon(Icons.Outlined.Notifications, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Notificaciones", style = MaterialTheme.typography.titleMedium)
                     }
@@ -89,77 +91,113 @@ fun SettingsScreen(
                 }
             }
 
-            // Sección de Tema dentro de un Card centrado
-            Card(
+            // Sección de Tema
+            DatusCard(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                elevation = 4.dp,
+                containerColor = MaterialTheme.colorScheme.surface
             ) {
                 Column(
                     modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.Start
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Outlined.NightsStay, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        ModernIcon(Icons.Outlined.NightsStay, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Tema", style = MaterialTheme.typography.titleMedium)
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
-                        Box(modifier = Modifier.weight(1f)) {
-                            ThemeIconOption(
-                                Icons.Outlined.WbSunny,
-                                description = "Claro",
-                                selected = currentTheme == ThemeOption.LIGHT,
-                                onClick = { themeViewModel.setTheme(ThemeOption.LIGHT) }
+                        ThemeIconOption(
+                            imageVector = Icons.Outlined.WbSunny,
+                            description = "Claro",
+                            selected = currentTheme == ThemeOption.LIGHT,
+                            onClick = { themeViewModel.setTheme(ThemeOption.LIGHT) },
+                            modifier = Modifier.weight(1f)
+                        )
+                        ThemeIconOption(
+                            imageVector = Icons.Outlined.NightsStay,
+                            description = "Oscuro",
+                            selected = currentTheme == ThemeOption.DARK,
+                            onClick = { themeViewModel.setTheme(ThemeOption.DARK) },
+                            modifier = Modifier.weight(1f)
+                        )
+                        ThemeIconOption(
+                            painter = painterResource(id = R.drawable.auto_mode_24px),
+                            description = "Automático",
+                            selected = currentTheme == ThemeOption.AUTO,
+                            onClick = { themeViewModel.setTheme(ThemeOption.AUTO) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    if (currentTheme == ThemeOption.DARK || currentTheme == ThemeOption.AUTO) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                ModernIcon(Icons.Outlined.DarkMode, contentDescription = null)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("AMOLED true black", style = MaterialTheme.typography.bodyMedium)
+                            }
+                            Switch(
+                                checked = currentTheme == ThemeOption.AMOLED,
+                                onCheckedChange = { checked ->
+                                    themeViewModel.setTheme(if (checked) ThemeOption.AMOLED else currentTheme)
+                                }
                             )
                         }
-                        Box(modifier = Modifier.weight(1f)) {
-                            ThemeIconOption(
-                                Icons.Outlined.NightsStay,
-                                description = "Oscuro",
-                                selected = currentTheme == ThemeOption.DARK,
-                                onClick = { themeViewModel.setTheme(ThemeOption.DARK) }
-                            )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    HorizontalDivider()
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            ModernIcon(Icons.Outlined.Palette, contentDescription = null)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Column {
+                                Text("Color dinámico", style = MaterialTheme.typography.bodyMedium)
+                                Text("Colores del sistema (Android 12+)", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
                         }
-                        Box(modifier = Modifier.weight(1f)) {
-                            ThemeIconOption(
-                                painter = painterResource(id = R.drawable.auto_mode_24px),
-                                description = "Automático",
-                                selected = currentTheme == ThemeOption.AUTO,
-                                onClick = { themeViewModel.setTheme(ThemeOption.AUTO) }
-                            )
-                        }
+                        Switch(
+                            checked = currentDynamicColor,
+                            onCheckedChange = { themeViewModel.setUseDynamicColor(it) }
+                        )
                     }
                 }
             }
 
             // Sección de Actualizaciones (Web)
-            Card(
+            DatusCard(
                 modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    playClickSound(view)
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(datus.app.com.BuildConfig.DOWNLOAD_URL))
+                    context.startActivity(intent)
+                },
                 shape = RoundedCornerShape(24.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                elevation = 4.dp,
+                containerColor = MaterialTheme.colorScheme.surface
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-                            playClickSound(view)
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(datus.app.com.BuildConfig.DOWNLOAD_URL))
-                            context.startActivity(intent)
-                        }
                         .padding(horizontal = 24.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Outlined.SystemUpdate, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        ModernIcon(Icons.Outlined.SystemUpdate, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Actualizaciones", style = MaterialTheme.typography.titleMedium)
                     }
@@ -168,34 +206,34 @@ fun SettingsScreen(
             }
 
             // Sección de Soporte por WhatsApp
-            Card(
+            DatusCard(
                 modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    playClickSound(view)
+                    val numero = "+5359072053"
+                    val mensaje = "Hola, necesito ayuda con Datus App."
+                    val url = "https://wa.me/$numero?text=" + Uri.encode(mensaje)
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    try {
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "No tienes WhatsApp instalado.", Toast.LENGTH_SHORT).show()
+                    }
+                },
                 shape = RoundedCornerShape(24.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                elevation = 4.dp,
+                containerColor = MaterialTheme.colorScheme.surface
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-                            playClickSound(view)
-                            val numero = "+5359072053"
-                            val mensaje = "Hola, necesito ayuda con Datus App."
-                            val url = "https://wa.me/$numero?text=" + Uri.encode(mensaje)
-                            val intent = Intent(Intent.ACTION_VIEW)
-                            intent.data = Uri.parse(url)
-                            try {
-                                context.startActivity(intent)
-                            } catch (e: Exception) {
-                                Toast.makeText(context, "No tienes WhatsApp instalado.", Toast.LENGTH_SHORT).show()
-                            }
-                        }
                         .padding(horizontal = 24.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Outlined.Whatsapp, contentDescription = null, tint = Color(0xFF25D366))
+                        ModernIcon(Icons.Outlined.Whatsapp, contentDescription = null, containerColor = Color(0xFF25D366).copy(alpha = 0.15f), tint = Color(0xFF25D366))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Soporte por WhatsApp", style = MaterialTheme.typography.titleMedium)
                     }
@@ -221,19 +259,20 @@ fun ThemeIconOption(
     painter: Painter? = null,
     description: String,
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val iconTint = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
     val view = LocalView.current
-    Card(
-        modifier = Modifier.fillMaxWidth().aspectRatio(1.5f),
-        shape = RoundedCornerShape(24.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface),
+    DatusCard(
+        modifier = modifier.aspectRatio(1.5f),
         onClick = {
             playClickSound(view)
             onClick()
-        }
+        },
+        shape = RoundedCornerShape(24.dp),
+        elevation = 2.dp,
+        containerColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),

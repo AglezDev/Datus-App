@@ -40,8 +40,16 @@ class ThemeViewModel(private val context: Context) : ViewModel() {
     private val _selectedBank = MutableStateFlow<Bank?>(null)
     val selectedBank: StateFlow<Bank?> = _selectedBank.asStateFlow()
 
+    private val _useDynamicColor = MutableStateFlow(sharedPreferences.getBoolean("dynamic_color", false))
+    val useDynamicColor: StateFlow<Boolean> = _useDynamicColor.asStateFlow()
+
     private val _notificationsEnabled = MutableStateFlow(sharedPreferences.getBoolean("notifications_enabled", true))
     val notificationsEnabled: StateFlow<Boolean> = _notificationsEnabled.asStateFlow()
+
+    fun setUseDynamicColor(enabled: Boolean) {
+        _useDynamicColor.value = enabled
+        sharedPreferences.edit().putBoolean("dynamic_color", enabled).apply()
+    }
 
     fun setNotificationsEnabled(enabled: Boolean) {
         _notificationsEnabled.value = enabled

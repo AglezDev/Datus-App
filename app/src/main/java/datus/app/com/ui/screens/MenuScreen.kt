@@ -31,6 +31,8 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import datus.app.com.NavRoutes
 import datus.app.com.ui.theme.ThemeViewModel
+import datus.app.com.ui.components.DatusCard
+import datus.app.com.ui.components.ModernIcon
 import datus.app.com.utils.dialUssdCode
 import datus.app.com.utils.playClickSound
 
@@ -128,16 +130,13 @@ fun MenuScreen(navController: NavHostController, themeViewModel: ThemeViewModel)
 @Composable
 fun MenuCard(icon: ImageVector, title: String, subtitle: String, onClick: () -> Unit) {
     val view = LocalView.current
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { 
-                playClickSound(view)
-                onClick() 
-            },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        ),
+    DatusCard(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { 
+            playClickSound(view)
+            onClick() 
+        },
+        containerColor = MaterialTheme.colorScheme.surfaceVariant,
         shape = RoundedCornerShape(24.dp)
     ) {
         Row(
@@ -146,11 +145,11 @@ fun MenuCard(icon: ImageVector, title: String, subtitle: String, onClick: () -> 
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                icon, 
-                contentDescription = title, 
-                modifier = Modifier.size(32.dp), 
-                tint = MaterialTheme.colorScheme.primary
+            ModernIcon(
+                imageVector = icon,
+                contentDescription = title,
+                containerSize = 40.dp,
+                iconSize = 22.dp
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {

@@ -40,6 +40,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import datus.app.com.ui.theme.Bank
 import datus.app.com.ui.theme.ThemeViewModel
+import datus.app.com.ui.components.ModernIcon
 import datus.app.com.utils.dialUssdCode
 import datus.app.com.utils.playClickSound
 import kotlin.math.min
@@ -107,11 +108,11 @@ fun TarjetaScreen(navController: NavHostController, themeViewModel: ThemeViewMod
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Icon(
+                        ModernIcon(
                             imageVector = Icons.Outlined.Person,
                             contentDescription = "Autenticarse",
-                            modifier = Modifier.size(adaptiveIconSize.dp),
-                            tint = MaterialTheme.colorScheme.primary
+                            containerSize = 48.dp,
+                            iconSize = 28.dp
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text("Autenticarse", style = MaterialTheme.typography.titleLarge.copy(fontSize = adaptiveFontSize.sp), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
@@ -125,13 +126,10 @@ fun TarjetaScreen(navController: NavHostController, themeViewModel: ThemeViewMod
                         .aspectRatio(1.5f)
                         .clickable {
                             playClickSound(view)
-                            when (PackageManager.PERMISSION_GRANTED) {
-                                ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) -> {
-                                    dialUssdCode(context, "*444*70#")
-                                }
-                                else -> {
-                                    launcher.launch(Manifest.permission.CALL_PHONE)
-                                }
+                            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                dialUssdCode(context, "*444*70#")
+                            } else {
+                                launcher.launch(Manifest.permission.CALL_PHONE)
                             }
                         },
                     shape = RoundedCornerShape(12.dp),
@@ -143,11 +141,11 @@ fun TarjetaScreen(navController: NavHostController, themeViewModel: ThemeViewMod
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Icon(
+                        ModernIcon(
                             imageVector = Icons.Outlined.PowerOff,
                             contentDescription = "Desconectar",
-                            modifier = Modifier.size(adaptiveIconSize.dp),
-                            tint = MaterialTheme.colorScheme.primary
+                            containerSize = 48.dp,
+                            iconSize = 28.dp
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text("Desconectar", style = MaterialTheme.typography.titleLarge.copy(fontSize = adaptiveFontSize.sp), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
@@ -161,13 +159,10 @@ fun TarjetaScreen(navController: NavHostController, themeViewModel: ThemeViewMod
                         .aspectRatio(3f)
                         .clickable {
                             playClickSound(view)
-                            when (PackageManager.PERMISSION_GRANTED) {
-                                ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) -> {
-                                    dialUssdCode(context, "*444*46#")
-                                }
-                                else -> {
-                                    launcher.launch(Manifest.permission.CALL_PHONE)
-                                }
+                            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                dialUssdCode(context, "*444*46#")
+                            } else {
+                                launcher.launch(Manifest.permission.CALL_PHONE)
                             }
                         },
                     shape = RoundedCornerShape(12.dp),
@@ -179,11 +174,11 @@ fun TarjetaScreen(navController: NavHostController, themeViewModel: ThemeViewMod
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
                     ) {
-                        Icon(
+                        ModernIcon(
                             imageVector = Icons.Outlined.AccountBalanceWallet,
                             contentDescription = "Consultar Saldo de Tarjeta",
-                            modifier = Modifier.size(adaptiveIconSize.dp),
-                            tint = MaterialTheme.colorScheme.primary
+                            containerSize = 48.dp,
+                            iconSize = 28.dp
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text("Consultar de Saldo de Tarjeta", style = MaterialTheme.typography.titleLarge.copy(fontSize = adaptiveFontSize.sp))
@@ -197,13 +192,10 @@ fun TarjetaScreen(navController: NavHostController, themeViewModel: ThemeViewMod
                         .aspectRatio(3f)
                         .clickable {
                             playClickSound(view)
-                            when (PackageManager.PERMISSION_GRANTED) {
-                                ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) -> {
-                                    dialUssdCode(context, "*444*54#")
-                                }
-                                else -> {
-                                    launcher.launch(Manifest.permission.CALL_PHONE)
-                                }
+                            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                dialUssdCode(context, "*444*54#")
+                            } else {
+                                launcher.launch(Manifest.permission.CALL_PHONE)
                             }
                         },
                     shape = RoundedCornerShape(12.dp),
@@ -215,11 +207,11 @@ fun TarjetaScreen(navController: NavHostController, themeViewModel: ThemeViewMod
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
                     ) {
-                        Icon(
+                        ModernIcon(
                             imageVector = Icons.Outlined.PhoneAndroid,
                             contentDescription = "Recargar Saldo Movil",
-                            modifier = Modifier.size(adaptiveIconSize.dp),
-                            tint = MaterialTheme.colorScheme.primary
+                            containerSize = 48.dp,
+                            iconSize = 28.dp
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text("Recargar Saldo Movil", style = MaterialTheme.typography.titleLarge.copy(fontSize = adaptiveFontSize.sp))
@@ -243,14 +235,10 @@ fun TarjetaScreen(navController: NavHostController, themeViewModel: ThemeViewMod
                             onClick = {
                                 showBankSelectionDialog.value = false
                                 playClickSound(view)
-                                // Execute USSD for BANDEC
-                                when (PackageManager.PERMISSION_GRANTED) {
-                                    ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) -> {
-                                        dialUssdCode(context, "*444*40*02#")
-                                    }
-                                    else -> {
-                                        launcher.launch(Manifest.permission.CALL_PHONE)
-                                    }
+                                if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                    dialUssdCode(context, "*444*40*02#")
+                                } else {
+                                    launcher.launch(Manifest.permission.CALL_PHONE)
                                 }
                             },
                             modifier = Modifier.fillMaxWidth().height(48.dp),
@@ -263,14 +251,10 @@ fun TarjetaScreen(navController: NavHostController, themeViewModel: ThemeViewMod
                             onClick = {
                                 showBankSelectionDialog.value = false
                                 playClickSound(view)
-                                // Execute USSD for BPA
-                                when (PackageManager.PERMISSION_GRANTED) {
-                                    ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) -> {
-                                        dialUssdCode(context, "*444*40*01#")
-                                    }
-                                    else -> {
-                                        launcher.launch(Manifest.permission.CALL_PHONE)
-                                    }
+                                if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                    dialUssdCode(context, "*444*40*01#")
+                                } else {
+                                    launcher.launch(Manifest.permission.CALL_PHONE)
                                 }
                             },
                             modifier = Modifier.fillMaxWidth().height(48.dp),
@@ -283,14 +267,10 @@ fun TarjetaScreen(navController: NavHostController, themeViewModel: ThemeViewMod
                             onClick = {
                                 showBankSelectionDialog.value = false
                                 playClickSound(view)
-                                // Execute USSD for BANMET
-                                when (PackageManager.PERMISSION_GRANTED) {
-                                    ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) -> {
-                                        dialUssdCode(context, "*444*40*03#")
-                                    }
-                                    else -> {
-                                        launcher.launch(Manifest.permission.CALL_PHONE)
-                                    }
+                                if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                    dialUssdCode(context, "*444*40*03#")
+                                } else {
+                                    launcher.launch(Manifest.permission.CALL_PHONE)
                                 }
                             },
                             modifier = Modifier.fillMaxWidth().height(48.dp),

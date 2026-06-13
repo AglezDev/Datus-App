@@ -1,0 +1,21 @@
+Cambios aplicados el 12 de junio de 2026 a las 20:50:
+
+- app/src/main/java/datus/app/com/ui/components/ModernIcon.kt:
+    - Se agregó soporte para el parámetro 'painter' además de 'imageVector'.
+    - Se importó correctamente 'datus.app.com.ui.theme.Dimens'.
+    - Se importó 'androidx.compose.ui.graphics.painter.Painter'.
+
+- app/src/main/java/datus/app/com/ui/screens/MenuScreen.kt:
+    - Se añadió el import explícito de 'datus.app.com.ui.components.DatusCard'.
+
+- app/src/main/java/datus/app/com/ui/screens/NautaLoginScreen.kt:
+    - Se añadió el import explícito de 'datus.app.com.ui.components.DatusCard'.
+    - Revisión de ámbitos Composable para asegurar la correcta ejecución de efectos secundarios y componentes.
+
+- app/src/main/java/datus/app/com/ui/screens/PlansScreen.kt:
+    - Se añadieron los imports de 'datus.app.com.ui.components.DatusCard' y 'datus.app.com.ui.theme.Dimens'.
+    - Se habilitó el uso de 'painter' en las llamadas a 'ModernIcon'.
+
+- app/src/main/java/datus/app/com/ui/screens/QueriesScreen.kt:
+    - Se añadió el import de 'datus.app.com.ui.components.DatusCard'.
+    - Se corrigieron los imports de iconos para usar 'Icons.AutoMirrored.Outlined.*', permitiendo el acceso a 'Call' y 'Send'.

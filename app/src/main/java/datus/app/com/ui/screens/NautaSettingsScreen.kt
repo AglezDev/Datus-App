@@ -28,6 +28,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import datus.app.com.data.local.DataStoreManager
 import datus.app.com.data.local.NautaUser
 import datus.app.com.ui.theme.ThemeViewModel
+import datus.app.com.ui.components.ModernIcon
 import datus.app.com.utils.playClickSound
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,6 +37,9 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import javax.inject.Inject
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class NautaSettingsUiState(
     val autoConnect: Boolean = false,
     val rememberWifi: Boolean = false,
@@ -222,11 +226,12 @@ fun NautaSettingsScreen(
                         playClickSound(view)
                         showAddUserDialog = true
                     }) {
-                        Icon(
-                            Icons.Outlined.AddCircle,
-                            contentDescription = "Agregar usuario",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                ModernIcon(
+                    imageVector = Icons.Outlined.AddCircle,
+                    contentDescription = "Agregar usuario",
+                    containerSize = 32.dp,
+                    iconSize = 20.dp
+                )
                     }
                 }
             }
@@ -259,11 +264,12 @@ fun NautaSettingsScreen(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                Icons.Outlined.PersonOff,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                        ModernIcon(
+                            imageVector = Icons.Outlined.PersonOff,
+                            contentDescription = null,
+                            containerSize = 40.dp,
+                            iconSize = 22.dp
+                        )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
                                 text = "No hay usuarios guardados. Agrega uno para comenzar.",
@@ -329,11 +335,11 @@ private fun SettingsCard(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
+                ModernIcon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(28.dp)
+                    containerSize = 40.dp,
+                    iconSize = 22.dp
                 )
                 Column {
                     Text(
@@ -433,11 +439,12 @@ private fun AddUserDialog(
         containerColor = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(28.dp),
         icon = {
-            Icon(
-                Icons.Outlined.PersonAdd,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
+                ModernIcon(
+                    imageVector = Icons.Outlined.PersonAdd,
+                    contentDescription = null,
+                    containerSize = 48.dp,
+                    iconSize = 28.dp
+                )
         },
         title = {
             Text(

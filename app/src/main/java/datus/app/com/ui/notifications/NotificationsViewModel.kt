@@ -1,6 +1,7 @@
 package datus.app.com.ui.notifications
 
 import android.util.Log
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -86,6 +87,7 @@ class NotificationsViewModel @Inject constructor(
     }
 }
 
+@Immutable
 data class NotificationUiState(
     val notifications: List<Notification> = emptyList(),
     val latestUnreadNotification: Notification? = null,

@@ -1,122 +1,85 @@
 # Datus - Resumen de Sesiones
 
-## Estado Actual (30 Marzo 2026)
+## Estado Actual (12 Junio 2026)
 
 ### App Android
-- **Versión**: 2.1.5
+- **Versión**: 2.2.0
 - **Repo**: https://github.com/ADNova-Design/Datus-App
-- **APK**: https://github.com/ADNova-Design/Datus-App/releases/latest/download/Datus-v2.1.5.apk
-
-### Landing Page
-- **URL**: https://datus.pages.dev
-- **Deploy**: Cloudflare Pages
+- **APK**: build/outputs/apk/debug/app-debug.apk
 
 ---
 
 ## Cambios Realizados
 
-### Sesión: Fixes y Mejoras de la App
+### Sesión: Modernización UI Completa + Iconos + Fixes
 
-1. **Notificaciones**
-   - Fixed: Las notificaciones ahora abren Mercado cuando se tocan
-   - Set default notification a 8:00 AM habilitada
+#### 1. NautaAuthService (sesiones anteriores)
+- Servicio completo de autenticación al portal `secure.etecsa.net:8443`
+- Login/logout/refresh con cookie management
+- SSL bypass para certificado autofirmado
 
-2. **Exchange Rates**
-   - Replaced API con web scraping de eltoque.com
-   - Agregados fallback rates: USD 515, EUR 580, MLC 400, CAD 337.65, MXN 26.74, CLA 503.55
-   - Fixed: Validación para evitar mostrar 1=1 (VPN issue)
-   - Fixed: Ahora detecta cualquier tipo de internet, no solo mobile data
+#### 2. Sistema de Tema
+- **Dimens.kt**: sistema de espaciado unificado (xs/4dp a xxl/48dp)
+- **Theme.kt**: soporte `dynamicColorScheme` (Android 12+) + `AmoledDarkColorScheme` (true black)
+- **ThemeOption.kt**: nuevo modo `AMOLED`
+- **SettingsScreen.kt**: toggle AMOLED + Dynamic Color
 
-3. **Mercado Screen**
-   - Ahora muestra datos cacheados cuando está offline
+#### 3. Componentes UI
+- **ModernIcon.kt**: icono con contenedor redondeado (default 40dp container, 22dp icon, 12dp radius)
+- **DatusCard.kt**: card unificado ElevatedCard/Card
+- **NavBar**: esquinas superiores planas, transiciones `AnimatedContent`
+- **Surface** con bottom rounded corners sobre NavBar (efecto flotante)
 
-4. **UI/UX**
-   - Trend indicators en las cards comparando con tasas anteriores
+#### 4. Pantalla de Consultas (QueriesScreen)
+- **Fix**: PromotionsCarousel ahora condicional — solo renderiza cuando hay promos o está cargando
+- **Fix**: Restaurados los 6 items originales en la grilla (Saldo Principal, Límite, Vigencia Datos, Bonos, Vigencia Voz, Vigencia SMS)
+- Dashboard con 3 SummaryCards (Saldo/Datos/Bono) + grilla compacta 3-columnas
+- Sin tasas de cambio
 
----
+#### 5. Modernización de Iconos (NUEVO en esta sesión)
+Reemplazados ~30 `Icon()` planos por `ModernIcon()` con contenedor `primaryContainer` en:
 
-### Sesión: Landing Page (v1)
+| Pantalla | Cantidad | Ubicaciones |
+|---|---|---|
+| **MenuScreen** | 3 | MenuCard (Settings, WhatsApp, Share) |
+| **QueriesScreen** | 6 | CompactQueryCard de la grilla |
+| **SettingsScreen** | 6 | Notificaciones, Tema, AMOLED, Color dinámico, Actualizaciones, WhatsApp |
+| **UserSettingsScreen** | 2 | Datos para operaciones, PIN de transferencia |
+| **UtilitiesScreen** | 2 | UtilityActionCard, SmallActionCard (ImageVector) |
+| **TarjetaScreen** | 4 | Autenticarse, Desconectar, Saldo de Tarjeta, Recargar |
+| **PlansScreen** | 4 | PlanCard (Icons.Filled.*) — Bolsa Diaria, Plan ToDus, DataUsage, MoreHoriz |
+| **NautaSettingsScreen** | 5 | 3 SettingsCards + PersonOff + PersonAdd + AddCircle |
+| **NautaLoginScreen** | 1 | LoggedInContent (wifi, ya existente) |
+| **SharedUI** | 2 | ConfirmationDialog, SettingsDialog (ya existente) |
 
-1. **Creación inicial**
-   - Landing page moderno con Tailwind CSS + Bootstrap Icons
-   - Fuente: Outfit para títulos, Inter para texto
-   - Secciones: Hero, Funciones, Tasas, Descargar, WhatsApp
+Tamaños usados:
+- Default: 40dp container / 22dp icon
+- Cards principales: 48dp container / 28dp icon
+- Icono WhatsApp: `containerColor = Color(0xFF25D366).copy(alpha = 0.15f)`, `tint = Color(0xFF25D366)`
 
-2. **Problemas corregidos**
-   - Icono `bi-keyboard` (no `bi-keypad`)
-   - Removed GitHub link del footer
-   - Fallback SVG para el logo
-
----
-
-### Sesión: Mejoras de Diseño
-
-1. **Mobile Responsiveness**
-   - Enhanced CSS para móviles
-   - Agregado mobile header
-   - Improved rates grid
-
-2. **Fix tasas de cambio**
-   - Mejorada lógica: intenta API → scrape → fallback
-   - Validación de valores (> 1)
-
----
-
-### Sesión: Rediseño Profesional
-
-1. **Diseño limpio profesional**
-   - Cards con border-radius apropiado (1rem-1.5rem)
-   - Colores consistentes por categoría:
-     - Azul: SIM, Tasas
-     - Emerald: Transferencias
-     - Purple: Bonos
-     - Amber: Notificaciones
-   - Animaciones suaves fade-in-up
-
-2. **Iconos corregidos**
-   - `bi-keyboard` (no `bi-keypad`)
+#### 6. Fixes
+- `NautaLoginScreen.kt`: import `RoundedCornerShape` faltante
+- `SettingsScreen.kt`: parámetro `iconTint` corregido a `tint`
+- `ADB_VENDOR_KEYS`: configurado `$env:ADB_VENDOR_KEYS = "$env:USERPROFILE\.android"` para autorizar dispositivo
 
 ---
 
-### Sesión: Header y Menú
+### Sesiones Anteriores (Landing Page + Tasas + Notificaciones)
 
-1. **Header unificado**
-   - Funciona en todas las pantallas
-   - Fixed position con backdrop blur
-   - Effecto scrolled (se oscurece al hacer scroll)
-
-2. **Menú Hamburguesa (Mobile)**
-   - Click abre slide panel desde la derecha
-   - Animación X para el hamburger
-   - Overlay oscuro
-   - Links: Funciones, Tasas, Descargar, WhatsApp
-
----
-
-### Sesión: Deploy Cloudflare
-
-1. **Creado proyecto**: `datus` en Cloudflare Pages
-2. **Desplegado a**: https://datus.pages.dev
-3. **Wrangler configurado** con OAuth
-
----
-
-## Pendientes / Mejoras Futuras
-
-- [ ] Testing en dispositivo real desde Cuba (VPN-less)
-- [ ] Agregar más currencies a las tasas
-- [ ] Widget de tasas para Android
-- [ ] Notificaciones push
-- [ ] Analytics en el landing page
+1. **Notificaciones**: abren Mercado al tocarlas, default 8:00 AM
+2. **Exchange Rates**: web scraping eltoque.com + fallback rates, validación VPN
+3. **Mercado Screen**: datos cacheados offline
+4. **Landing Page**: Cloudflare Pages, Tailwind CSS, diseño responsive
+5. **Rediseño Profesional**: cards con colores por categoría, animaciones fade-in-up
 
 ---
 
 ## Tech Stack
 
-- **Android**: Kotlin, Jetpack Compose, ViewModel, Web Scraping
-- **Landing Page**: HTML, Tailwind CSS, Bootstrap Icons
-- **Hosting**: Cloudflare Pages
-- **APK Hosting**: GitHub Releases
+- **Android**: Kotlin, Jetpack Compose, Hilt, ViewModel, Coil, DataStore
+- **Backend**: Supabase (Postgres, Auth, Edge Functions)
+- **Landing Page**: HTML, Tailwind CSS, Bootstrap Icons, Cloudflare Pages
+- **Autenticación Nauta**: HTTPS propio con SSL bypass
 
 ---
 

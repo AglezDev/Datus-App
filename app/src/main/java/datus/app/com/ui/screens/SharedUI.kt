@@ -3,14 +3,7 @@ package datus.app.com.ui.screens
 
 import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
@@ -18,23 +11,22 @@ import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.*
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import datus.app.com.NavRoutes
+import datus.app.com.ui.components.ModernIcon
 import datus.app.com.ui.notifications.NotificationsViewModel
-
 import datus.app.com.utils.playClickSound
 
 @Composable
@@ -51,7 +43,6 @@ fun DatusTopAppBar(
     val view = LocalView.current
     var showMenu by remember { mutableStateOf(false) }
 
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,7 +55,7 @@ fun DatusTopAppBar(
             Spacer(modifier = Modifier.width(4.dp))
         }
         Text(
-            text = title, 
+            text = title,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.weight(1f).padding(horizontal = 8.dp)
         )
@@ -105,7 +96,6 @@ fun DatusTopAppBar(
                                 navController.navigate(NavRoutes.SETTINGS)
                             }
                         )
-
                         DropdownMenuItem(
                             text = { Text("Compartir App") },
                             leadingIcon = { Icon(Icons.Outlined.Share, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
@@ -123,12 +113,10 @@ fun DatusTopAppBar(
                     }
                 }
             } else {
-                Spacer(modifier = Modifier.width(48.dp)) // Ocupa el espacio del ícono de menú
+                Spacer(modifier = Modifier.width(48.dp))
             }
         }
     }
-
-
 }
 
 @Composable
@@ -136,41 +124,70 @@ fun ConfirmationDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
     title: String,
-    message: String
+    message: String,
+    icon: ImageVector? = null,
+    confirmText: String = "Confirmar",
+    dismissText: String = "Cancelar"
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(28.dp),
-        title = { 
-            Text(
-                title, 
-                style = MaterialTheme.typography.headlineSmall 
-            ) 
+        tonalElevation = 6.dp,
+        icon = {
+            if (icon != null) {
+                ModernIcon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    containerSize = 48.dp,
+                    iconSize = 24.dp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         },
-        text = { 
+        title = {
             Text(
-                message, 
+                text = title,
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        text = {
+            Text(
+                text = message,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            ) 
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
         },
         confirmButton = {
-            Button(
-                onClick = onConfirm,
-                shape = RoundedCornerShape(50)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text("Confirmar")
+                OutlinedButton(
+                    onClick = onDismiss,
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier.weight(1f).height(48.dp)
+                ) {
+                    Text(dismissText)
+                }
+                Button(
+                    onClick = onConfirm,
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier.weight(1f).height(48.dp)
+                ) {
+                    Text(confirmText, fontWeight = FontWeight.SemiBold)
+                }
             }
         },
-        dismissButton = {
-            TextButton(
-                onClick = onDismiss,
-                shape = RoundedCornerShape(50)
-            ) {
-                Text("Cancelar")
-            }
-        }
+        dismissButton = null, // Usamos la Row dentro de confirmButton para control total de la disposición
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        modifier = Modifier.padding(horizontal = 24.dp)
     )
 }
 
@@ -179,25 +196,43 @@ fun SettingsDialog(onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = MaterialTheme.colorScheme.surface,
-        title = { Text("Configuración") },
-        text = { Text("Aquí podrás cambiar el tema y la pantalla de inicio. (Funcionalidad en desarrollo)") },
+        shape = RoundedCornerShape(28.dp),
+        tonalElevation = 6.dp,
+        icon = {
+            ModernIcon(
+                imageVector = Icons.Outlined.Settings,
+                contentDescription = null,
+                containerSize = 48.dp,
+                iconSize = 24.dp
+            )
+        },
+        title = {
+            Text(
+                text = "Configuración",
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        text = {
+            Text(
+                text = "Aquí podrás cambiar el tema y la pantalla de inicio. (Funcionalidad en desarrollo)",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
         confirmButton = {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.Center
+            Button(
+                onClick = onDismiss,
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).height(48.dp)
             ) {
-                Button(
-                    onClick = onDismiss,
-                    shape = RoundedCornerShape(8.dp) // Rectangular with rounded corners
-                ) { 
-                    Text("Cerrar") 
-                }
+                Text("Cerrar", fontWeight = FontWeight.SemiBold)
             }
         },
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        modifier = Modifier.padding(horizontal = 16.dp)
+        modifier = Modifier.padding(horizontal = 24.dp)
     )
 }
-
-
-

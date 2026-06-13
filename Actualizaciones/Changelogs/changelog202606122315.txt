@@ -1,0 +1,30 @@
+Cambios aplicados el 12 de junio de 2026 a las 23:15:
+
+Fase 1 y 2 de Modernización UI/UX - Overhaul Material Design 3
+
+### Arquitectura y Rendimiento
+- **Optimización de Compose**: Se agregaron anotaciones `@Immutable` a las clases de estado clave (`NautaLoginUiState`, `NotificationUiState`, `NautaSettingsUiState`) para reducir recomposiciones innecesarias.
+- **Navegación Fluida**: Se mejoraron las transiciones entre pantallas en `MainActivity.kt` utilizando curvas de animación `spring` (muelle) para un efecto más orgánico y premium.
+- **Sistema de Animaciones**: Se creó `Animations.kt` con el modificador `bounceClick`, proporcionando un feedback táctil de escala sutil en todos los componentes interactivos.
+
+### Componentes Base (UI System)
+- **Refactorización de DatusCard**: Ahora basado en `Surface` con elevación tonal en lugar de bordes duros, integrando automáticamente el efecto `bounceClick`.
+- **Evolución de ModernIcon**: Diseño más suave con contenedores tonales de baja opacidad y esquinas redondeadas coherentes con el sistema de diseño.
+- **Paleta de Colores**: Se ajustaron los tokens de `surfaceVariant` y `outline` en `Color.kt` para reducir el ruido visual y potenciar el minimalismo.
+
+### Pantallas y Experiencia de Usuario
+- **Nauta Hogar**: 
+    - Rediseño completo de `LoginContent` y `LoggedInContent`.
+    - Integración de `DatusTopAppBar` unificada.
+    - Icono de WiFi modernizado con estados dinámicos y tamaño optimizado.
+- **Consultas (QueriesScreen)**:
+    - `SummaryCard` y `CompactQueryCard` migrados al sistema `DatusCard`.
+    - Rediseño de `PromotionItem` con gradientes verticales elegantes y botones de acción integrados.
+- **Planes (PlansScreen)**:
+    - Tarjetas de planes actualizadas con `ModernIcon` y `DatusCard`.
+    - `PriceTag` refinado con diseño de superficie y bordes suaves.
+- **General**: Actualización masiva de iconos a sus versiones `AutoMirrored` para cumplir con los estándares modernos de Android.
+
+### Correcciones (Bug Fixes)
+- Corregidos errores de sintaxis y llaves huérfanas en `QueriesScreen.kt`.
+- Limpieza de imports duplicados y referencias obsoletas en múltiples archivos de la capa UI.

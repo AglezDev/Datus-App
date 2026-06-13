@@ -8,7 +8,6 @@ object NavRoutes {
     const val MENU = "menu"
     const val SETTINGS = "settings"
     const val NOTIFICATION_SETTINGS = "notification_settings"
-    const val MERCADO = "mercado"
     const val NOTIFICATIONS = "notifications"
     const val USER_SETTINGS = "user_settings?focusPhoneNumber={focusPhoneNumber}"
     const val CARD = "card"

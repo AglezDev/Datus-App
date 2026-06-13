@@ -1,180 +1,285 @@
 package datus.app.com.services
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
-import io.ktor.http.parameters
-import io.ktor.http.userAgent
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.regex.Pattern
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.CookieHandler
+import java.net.CookieManager
+import java.net.CookiePolicy
+import java.net.URL
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Singleton
+import javax.net.ssl.HostnameVerifier
+import javax.net.ssl.HttpsURLConnection
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 data class NautaLoginResponse(
-    val success: Boolean,
     val message: String,
-    val username: String = "",
-    val timeUsed: String = "",
-    val timeAvailable: String = "",
-    val csrfHw: String = "",
-    val attributeUuid: String = "",
-    val wlanUserIp: String = "",
-    val ssid: String = "",
-    val loggerId: String = "",
-    val wlanAcName: String = "",
-    val wlanMac: String = ""
+    val username: String,
+    val timeUsed: String?,
+    val timeAvailable: String?
 )
 
-data class NautaSession(
-    val username: String = "",
-    val csrfHw: String = "",
-    val attributeUuid: String = "",
-    val wlanUserIp: String = "",
-    val ssid: String = "nauta_hogar",
-    val loggerId: String = "",
-    val wlanAcName: String = "",
-    val wlanMac: String = ""
-) {
-    val isValid: Boolean
-        get() = csrfHw.isNotEmpty() && attributeUuid.isNotEmpty() && username.isNotEmpty()
-}
-
-class NautaAuthService @Inject constructor(
-    private val httpClient: HttpClient
-) {
-    private var currentSession: NautaSession? = null
+@Singleton
+class NautaAuthService @Inject constructor() {
 
     companion object {
+        private const val TAG = "NautaAuthService"
         private const val BASE_URL = "https://secure.etecsa.net:8443"
         private const val LOGIN_URL = "$BASE_URL/LoginServlet"
         private const val LOGOUT_URL = "$BASE_URL/LogoutServlet"
         private const val QUERY_URL = "$BASE_URL/EtecsaQueryServlet"
-        private const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+        private const val USER_AGENT = "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
     }
 
-    suspend fun login(username: String, password: String): Result<NautaLoginResponse> = withContext(Dispatchers.IO) {
-        try {
-            val formData = parameters {
-                append("username", username)
-                append("password", password)
-                append("CSRFHW", "")
-                append("wlanuserip", "")
-                append("wlanacname", "")
-                append("wlanmac", "")
-            }
+    private var currentSession: NautaSession? = null
+    private var lastTimeUsed: String? = null
 
-            val response = httpClient.post(LOGIN_URL) {
-                contentType(ContentType.Application.FormUrlEncoded)
-                setBody(formData)
-                userAgent(USER_AGENT)
-                header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-                header("Accept-Language", "es-ES,es;q=0.9,en;q=0.8")
-                header("Referer", "$BASE_URL/")
-                header("Origin", BASE_URL)
-            }
+    init {
+        val cookieManager = CookieManager()
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+        CookieHandler.setDefault(cookieManager)
+    }
 
-            val responseText = response.body<String>()
+    data class NautaSession(
+        val username: String,
+        val csrfHw: String = "",
+        val attributeUuid: String = "",
+        val wlanUserIp: String = "",
+        val ssid: String = "nauta_hogar",
+        val loggerId: String = "",
+        val wlanAcName: String = "",
+        val wlanMac: String = ""
+    )
 
-            // Verificar errores primero
-            val error = detectError(responseText)
-            if (error != null) {
-                Result.failure(Exception(error))
-            } else if (responseText.contains("ATTRIBUTE_UUID") && responseText.contains("CSRFHW")) {
-                // Login exitoso
-                val sessionInfo = extractSessionInfo(responseText, username)
-                currentSession = sessionInfo
+    private val trustAllSslFactory by lazy {
+        val trustAllManager = object : X509TrustManager {
+            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+            override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+        }
+        val sslContext = SSLContext.getInstance("TLS")
+        sslContext.init(null, arrayOf<TrustManager>(trustAllManager), SecureRandom())
+        sslContext.socketFactory
+    }
 
-                val timeInfo = extractTimeInfo(responseText)
-                
-                Result.success(
-                    NautaLoginResponse(
-                        success = true,
-                        message = "Conexión exitosa",
-                        username = username,
-                        timeUsed = timeInfo.first,
-                        timeAvailable = timeInfo.second,
-                        csrfHw = sessionInfo.csrfHw,
-                        attributeUuid = sessionInfo.attributeUuid,
-                        wlanUserIp = sessionInfo.wlanUserIp,
-                        ssid = sessionInfo.ssid,
-                        loggerId = sessionInfo.loggerId,
-                        wlanAcName = sessionInfo.wlanAcName,
-                        wlanMac = sessionInfo.wlanMac
-                    )
+    private val hostnameVerifier = HostnameVerifier { _, _ -> true }
+
+    suspend fun login(username: String, password: String): Result<NautaLoginResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                doGet(BASE_URL)
+                val params = mapOf(
+                    "username" to username,
+                    "password" to password,
+                    "CSRFHW" to "",
+                    "wlanuserip" to "",
+                    "wlanacname" to "",
+                    "wlanmac" to ""
                 )
-            } else {
-                Result.failure(Exception("Error de conexión. Verifique sus credenciales e intente nuevamente."))
+                val responseBody = doPost(LOGIN_URL, params)
+                if (hasLoginError(responseBody)) {
+                    val errorMsg = extractErrorMessage(responseBody)
+                    return@withContext Result.failure(NautaAuthException(errorMsg))
+                }
+                val session = parseSessionInfo(responseBody, username)
+                currentSession = session
+                val (timeUsed, timeAvailable) = parseTimeFromResponse(responseBody)
+                lastTimeUsed = timeUsed
+
+                Result.success(NautaLoginResponse(
+                    message = "Inicio de sesión exitoso",
+                    username = username,
+                    timeUsed = timeUsed,
+                    timeAvailable = timeAvailable
+                ))
+            } catch (e: Exception) {
+                Log.e(TAG, "Login failed", e)
+                val msg = when {
+                    e.message?.contains("Unable to resolve host") == true -> "No hay conexión a internet. Conéctese a una red ETECSA."
+                    e.message?.contains("timeout") == true -> "Tiempo de espera agotado. Verifique su conexión."
+                    e.message?.contains("Connection refused") == true -> "No está conectado a una red ETECSA."
+                    else -> "Error de conexión: ${e.message}"
+                }
+                Result.failure(NautaAuthException(msg))
+            }
+        }
+    }
+
+    suspend fun refreshAccountInfo(): Result<NautaLoginResponse>? {
+        val session = currentSession ?: return null
+        return withContext(Dispatchers.IO) {
+            try {
+                val params = mapOf(
+                    "op" to "getLeftTime",
+                    "ATTRIBUTE_UUID" to session.attributeUuid,
+                    "CSRFHW" to session.csrfHw,
+                    "wlanuserip" to session.wlanUserIp,
+                    "ssid" to session.ssid,
+                    "loggerId" to session.loggerId,
+                    "domain" to "",
+                    "username" to session.username,
+                    "wlanacname" to session.wlanAcName,
+                    "wlanmac" to session.wlanMac
+                )
+                val responseBody = doPost(QUERY_URL, params).trim()
+                if (responseBody.contains("errorop", ignoreCase = true)) {
+                    Result.failure(NautaAuthException("Error al consultar tiempo"))
+                } else {
+                    Result.success(NautaLoginResponse(
+                        message = "Tiempo actualizado",
+                        username = session.username,
+                        timeUsed = lastTimeUsed,
+                        timeAvailable = responseBody
+                    ))
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Refresh failed", e)
+                Result.failure(NautaAuthException("Error al consultar tiempo: ${e.message}"))
+            }
+        }
+    }
+
+    suspend fun logout() {
+        withContext(Dispatchers.IO) {
+            try {
+                val session = currentSession ?: return@withContext
+                val params = mapOf(
+                    "ATTRIBUTE_UUID" to session.attributeUuid,
+                    "CSRFHW" to session.csrfHw,
+                    "wlanuserip" to session.wlanUserIp,
+                    "ssid" to session.ssid,
+                    "loggerId" to session.loggerId,
+                    "domain" to "",
+                    "username" to session.username,
+                    "wlanacname" to "",
+                    "wlanmac" to "",
+                    "remove" to "1"
+                )
+                try {
+                    doPost(LOGOUT_URL, params)
+                } catch (_: Exception) {
+                    try {
+                        doGet(LOGOUT_URL)
+                    } catch (_: Exception) {}
+                }
+            } catch (_: Exception) {
+            } finally {
+                currentSession = null
+                lastTimeUsed = null
+            }
+        }
+    }
+
+    fun isSessionActive(): Boolean = currentSession != null
+
+    private fun doPost(url: String, params: Map<String, String>): String {
+        val connection = URL(url).openConnection() as HttpsURLConnection
+        try {
+            connection.apply {
+                requestMethod = "POST"
+                sslSocketFactory = trustAllSslFactory
+                hostnameVerifier = this@NautaAuthService.hostnameVerifier
+                setRequestProperty("User-Agent", USER_AGENT)
+                setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                setRequestProperty("Accept-Language", "es-ES,es;q=0.9,en;q=0.8")
+                setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+                setRequestProperty("Referer", BASE_URL)
+                setRequestProperty("Origin", BASE_URL)
+                doInput = true
+                doOutput = true
+                connectTimeout = 45_000
+                readTimeout = 30_000
+                instanceFollowRedirects = true
+            }
+            val body = params.entries.joinToString("&") { (key, value) ->
+                "${key}=${java.net.URLEncoder.encode(value, "UTF-8")}"
+            }
+            connection.outputStream.use { os ->
+                os.write(body.toByteArray())
+                os.flush()
+            }
+            return readResponse(connection)
+        } finally {
+            connection.disconnect()
+        }
+    }
+
+    private fun doGet(url: String): String {
+        val connection = URL(url).openConnection() as HttpsURLConnection
+        try {
+            connection.apply {
+                requestMethod = "GET"
+                sslSocketFactory = trustAllSslFactory
+                hostnameVerifier = this@NautaAuthService.hostnameVerifier
+                setRequestProperty("User-Agent", USER_AGENT)
+                setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                doInput = true
+                connectTimeout = 30_000
+                readTimeout = 30_000
+            }
+            return readResponse(connection)
+        } finally {
+            connection.disconnect()
+        }
+    }
+
+    private fun readResponse(connection: HttpsURLConnection): String {
+        return try {
+            connection.inputStream.use { stream ->
+                BufferedReader(InputStreamReader(stream, "UTF-8")).readText()
             }
         } catch (e: Exception) {
-            val message = when {
-                e.message?.contains("timeout", ignoreCase = true) == true -> 
-                    "Tiempo de espera agotado. Verifique la conexión WiFi Nauta."
-                e.message?.contains("connection", ignoreCase = true) == true -> 
-                    "No se pudo conectar al portal Nauta. Verifique la red WiFi."
-                else -> "Error de conexión: ${e.message}"
-            }
-            Result.failure(Exception(message))
+            connection.errorStream?.use { stream ->
+                BufferedReader(InputStreamReader(stream, "UTF-8")).readText()
+            } ?: ""
         }
     }
 
-    private fun detectError(html: String): String? {
-        // Verificar alert() con mensaje de error
-        val alertPattern = Pattern.compile("alert\\s*\\(\\s*['\"]([^'\"]+)['\"]\\s*\\)")
-        val alertMatcher = alertPattern.matcher(html)
-        if (alertMatcher.find()) {
-            return alertMatcher.group(1)
-        }
-
-        // Verificar mensajes específicos de error
-        when {
-            html.contains("Usuario o Contraseña", ignoreCase = true) || 
-            html.contains("incorrecta", ignoreCase = true) ||
-            html.contains("password no válida", ignoreCase = true) -> 
-                return "Usuario o contraseña incorrectos"
-            
-            html.contains("bloqueada", ignoreCase = true) || 
-            html.contains("bloqueado", ignoreCase = true) -> 
-                return "Cuenta bloqueada. Contacte a ETECSA."
-            
-            html.contains("expirada", ignoreCase = true) || 
-            html.contains("caducada", ignoreCase = true) -> 
-                return "Contraseña expirada. Cámbiela en el portal."
-            
-            html.contains("saldo insuficiente", ignoreCase = true) || 
-            html.contains("no tiene crédito", ignoreCase = true) -> 
-                return "Saldo insuficiente. Recargue su cuenta."
-            
-            html.contains("0:00:00") || html.contains("00:00:00") -> 
-                return "No tiene tiempo disponible"
-            
-            // Verificar si contiene el formulario de login nuevamente (sin loginSuccess)
-            !html.contains("loginSuccess") && 
-            !html.contains("loginformok") &&
-            !html.contains("/user/balance") &&
-            !html.contains("EtecsaQueryServlet") -> 
-                return "Error de autenticación. Verifique sus credenciales."
-        }
-
-        return null
+    private fun hasLoginError(html: String): Boolean {
+        if (html.contains("loginSuccess = true", ignoreCase = true)) return false
+        if (html.contains("success", ignoreCase = true) &&
+            html.contains("ATTRIBUTE_UUID") &&
+            html.contains("CSRFHW")) return false
+        val errorPatterns = listOf(
+            "alert(", "Usuario o Contraseña", "incorrecta", "password no valida",
+            "bloqueada", "bloqueado", "expirada", "caducada",
+            "saldo insuficiente", "no tiene credito",
+            "Lamentablemente", "no puede navegar"
+        )
+        return errorPatterns.any { html.contains(it, ignoreCase = true) }
     }
 
-    private fun extractSessionInfo(html: String, username: String): NautaSession {
-        val csrfHw = extractPattern(html, """CSRFHW\s*[=:]\s*["']?([a-fA-F0-9]+)["']?""") ?: ""
-        val attributeUuid = extractPattern(html, """ATTRIBUTE_UUID\s*[=:]\s*["']?([a-fA-F0-9]+)["']?""") ?: ""
-        val wlanUserIp = extractPattern(html, """wlanuserip\s*[=:]\s*["']?(\d+\.\d+\.\d+\.\d+)["']?""") ?: ""
-        val ssid = extractPattern(html, """ssid\s*[=:]\s*["']?([^"'&]+)["']?""") ?: "nauta_hogar"
-        val wlanAcName = extractPattern(html, """wlanacname\s*[=:]\s*["']?([^"'&]+)["']?""") ?: ""
-        val wlanMac = extractPattern(html, """wlanmac\s*[=:]\s*["']?([^"'&]+)["']?""") ?: ""
-        
-        var loggerId = extractPattern(html, """loggerId\s*[=:]\s*["']?([^"'&]+)["']?""") ?: ""
-        if (loggerId.isEmpty()) {
-            loggerId = "${System.currentTimeMillis()}+${username}"
+    private fun extractErrorMessage(html: String): String {
+        val alertRegex = """alert\(['"]([^'"]+)['"]\)""".toRegex()
+        alertRegex.find(html)?.let {
+            return it.groupValues[1]
         }
+        val errorRegex = """(?:Error|error|ERROR)\s*[:]\s*([^<.]+)""".toRegex()
+        errorRegex.find(html)?.let {
+            return it.groupValues[1].trim()
+        }
+        return "Usuario o contraseña incorrectos"
+    }
+
+    private fun parseSessionInfo(html: String, username: String): NautaSession {
+        val csrfHw = extractValue(html, """CSRF[Hh][Ww]\s*[=:]\s*['"]?([a-fA-F0-9]+)['"]?""")
+        val attributeUuid = extractValue(html, """ATTRIBUTE_UUID\s*[=:]\s*['"]?([a-fA-F0-9\-]+)['"]?""")
+        val wlanUserIp = extractValue(html, """wlanuserip\s*[=:]\s*['"]?(\d+\.\d+\.\d+\.\d+)['"]?""")
+        val ssid = extractValue(html, """ssid\s*[=:]\s*['"]?([^'\"&]+)['"]?""") ?: "nauta_hogar"
+        val loggerId = extractValue(html, """loggerId\s*[=:]\s*['"]?([^'\"&]+)['"]?""")
+            ?: "${timestamp()}+${username.substringBefore("@")}@nautaplus"
+        val wlanAcName = extractValue(html, """wlanacname\s*[=:]\s*['"]?([^'\"&]+)['"]?""") ?: ""
+        val wlanMac = extractValue(html, """wlanmac\s*[=:]\s*['"]?([^'\"&]+)['"]?""") ?: ""
 
         return NautaSession(
             username = username,
@@ -188,144 +293,28 @@ class NautaAuthService @Inject constructor(
         )
     }
 
-    private fun extractTimeInfo(html: String): Pair<String, String> {
-        // Intentar extraer tiempo usado y disponible del HTML
-        val timeUsedPattern = Pattern.compile("""tiempo[^"]*consumido[^"]*["']?(\d+:\d+:\d+)["']?""", Pattern.CASE_INSENSITIVE)
-        val timeAvailablePattern = Pattern.compile("""tiempo[^"]*restante[^"]*["']?(\d+:\d+:\d+)["']?""", Pattern.CASE_INSENSITIVE)
-        
-        val usedMatcher = timeUsedPattern.matcher(html)
-        val availableMatcher = timeAvailablePattern.matcher(html)
-        
-        val timeUsed = if (usedMatcher.find()) usedMatcher.group(1) else "00:00:00"
-        val timeAvailable = if (availableMatcher.find()) availableMatcher.group(1) else "00:00:00"
-        
+    private fun parseTimeFromResponse(html: String): Pair<String?, String?> {
+        var timeUsed: String? = null
+        var timeAvailable: String? = null
+
+        val usedRegex = """(?:Tiempo\s*consumido|Tiempo\s*usado|Time\s*used)\s*[:=]?\s*([\d:]+)""".toRegex(RegexOption.IGNORE_CASE)
+        usedRegex.find(html)?.let { timeUsed = it.groupValues[1].trim() }
+
+        val availRegex = """(?:Tiempo\s*disponible|Tiempo\s*restante|Time\s*available|Time\s*left)\s*[:=]?\s*([\d:]+)""".toRegex(RegexOption.IGNORE_CASE)
+        availRegex.find(html)?.let { timeAvailable = it.groupValues[1].trim() }
+
         return Pair(timeUsed, timeAvailable)
     }
 
-    private fun extractPattern(html: String, regex: String): String? {
-        val pattern = Pattern.compile(regex)
-        val matcher = pattern.matcher(html)
-        return if (matcher.find()) matcher.group(1) else null
+    private fun extractValue(html: String, regex: String): String {
+        return try {
+            Regex(regex, RegexOption.IGNORE_CASE).find(html)?.groupValues?.getOrNull(1) ?: ""
+        } catch (_: Exception) { "" }
     }
 
-    suspend fun getRemainingTime(): Result<String> = withContext(Dispatchers.IO) {
-        val session = currentSession
-        if (session == null || !session.isValid) {
-            return@withContext Result.failure(Exception("No hay sesión activa"))
-        }
-
-        try {
-            val formData = parameters {
-                append("op", "getLeftTime")
-                append("ATTRIBUTE_UUID", session.attributeUuid)
-                append("CSRFHW", session.csrfHw)
-                append("wlanuserip", session.wlanUserIp)
-                append("ssid", session.ssid)
-                append("loggerId", session.loggerId)
-                append("domain", "")
-                append("username", session.username)
-                append("wlanacname", session.wlanAcName)
-                append("wlanmac", session.wlanMac)
-            }
-
-            val response = httpClient.post(QUERY_URL) {
-                contentType(ContentType.Application.FormUrlEncoded)
-                setBody(formData)
-                userAgent(USER_AGENT)
-                header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-                header("Accept-Language", "es-ES,es;q=0.9,en;q=0.8")
-                header("Referer", "$BASE_URL/")
-            }
-
-            val responseText = response.body<String>()
-            
-            if (responseText.contains("errorop", ignoreCase = true)) {
-                Result.failure(Exception("Error al consultar tiempo restante"))
-            } else {
-                Result.success(responseText.trim())
-            }
-        } catch (e: Exception) {
-            Result.failure(Exception("Error de conexión: ${e.message}"))
-        }
+    private fun timestamp(): String {
+        return SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault()).format(Date())
     }
-
-    suspend fun refreshAccountInfo(): Result<NautaLoginResponse>? {
-        val session = currentSession ?: return null
-        
-        val timeResult = getRemainingTime()
-        return if (timeResult.isSuccess) {
-            Result.success(
-                NautaLoginResponse(
-                    success = true,
-                    message = "Información actualizada",
-                    username = session.username,
-                    timeUsed = "00:00:00", // Se puede mejorar extrayendo del HTML
-                    timeAvailable = timeResult.getOrNull() ?: "00:00:00",
-                    csrfHw = session.csrfHw,
-                    attributeUuid = session.attributeUuid,
-                    wlanUserIp = session.wlanUserIp,
-                    ssid = session.ssid,
-                    loggerId = session.loggerId,
-                    wlanAcName = session.wlanAcName,
-                    wlanMac = session.wlanMac
-                )
-            )
-        } else {
-            Result.failure(timeResult.exceptionOrNull() ?: Exception("Error desconocido"))
-        }
-    }
-
-    suspend fun logout(): Result<String> = withContext(Dispatchers.IO) {
-        val session = currentSession
-        if (session == null) {
-            return@withContext Result.failure(Exception("No hay sesión activa"))
-        }
-
-        try {
-            // Intentar POST primero
-            val formData = parameters {
-                append("ATTRIBUTE_UUID", session.attributeUuid)
-                append("CSRFHW", session.csrfHw)
-                append("wlanuserip", session.wlanUserIp)
-                append("ssid", session.ssid)
-                append("loggerId", session.loggerId)
-                append("domain", "")
-                append("username", session.username)
-                append("wlanacname", "")
-                append("wlanmac", "")
-                append("remove", "1")
-            }
-
-            val response = httpClient.post(LOGOUT_URL) {
-                contentType(ContentType.Application.FormUrlEncoded)
-                setBody(formData)
-                userAgent(USER_AGENT)
-                header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-                header("Accept-Language", "es-ES,es;q=0.9,en;q=0.8")
-                header("Referer", "$BASE_URL/")
-            }
-
-            val responseText = response.body<String>()
-            
-            if (responseText.contains("SUCCESS", ignoreCase = true) || 
-                responseText.contains("REMOVE_AUTHINFO_SUCCESS", ignoreCase = true)) {
-                currentSession = null
-                return@withContext Result.success("Sesión cerrada correctamente")
-            }
-
-            // Fallback a GET
-            val getResponse = httpClient.get(LOGOUT_URL) {
-                userAgent(USER_AGENT)
-                header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-            }
-
-            currentSession = null
-            Result.success("Sesión cerrada correctamente")
-        } catch (e: Exception) {
-            currentSession = null
-            Result.failure(Exception("Error al cerrar sesión: ${e.message}"))
-        }
-    }
-
-    fun getCurrentSession(): NautaSession? = currentSession
 }
+
+class NautaAuthException(message: String) : Exception(message)

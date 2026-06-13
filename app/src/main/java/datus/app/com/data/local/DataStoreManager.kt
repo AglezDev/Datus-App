@@ -28,6 +28,7 @@ class DataStoreManager @Inject constructor(private val context: Context) {
 
     // Nauta settings
     private val NAUTA_USERNAME_KEY = stringPreferencesKey("nauta_username")
+    private val NAUTA_PASSWORD_KEY = stringPreferencesKey("nauta_password")
     private val NAUTA_REMEMBER_ME_KEY = stringPreferencesKey("nauta_remember_me")
     private val NAUTA_AUTO_CONNECT_KEY = stringPreferencesKey("nauta_auto_connect")
     private val NAUTA_REMEMBER_WIFI_KEY = stringPreferencesKey("nauta_remember_wifi")
@@ -94,10 +95,21 @@ class DataStoreManager @Inject constructor(private val context: Context) {
             preferences[NAUTA_USERNAME_KEY] = username
         }
     }
-    
+
     suspend fun loadNautaUsername(): String? {
         val preferences = context.dataStore.data.first()
         return preferences[NAUTA_USERNAME_KEY]
+    }
+
+    suspend fun saveNautaPassword(password: String) {
+        context.dataStore.edit { preferences ->
+            preferences[NAUTA_PASSWORD_KEY] = password
+        }
+    }
+
+    suspend fun loadNautaPassword(): String? {
+        val preferences = context.dataStore.data.first()
+        return preferences[NAUTA_PASSWORD_KEY]
     }
 
     suspend fun saveNautaRememberMe(remember: Boolean) {
@@ -114,6 +126,7 @@ class DataStoreManager @Inject constructor(private val context: Context) {
     suspend fun clearNautaCredentials() {
         context.dataStore.edit { preferences ->
             preferences.remove(NAUTA_USERNAME_KEY)
+            preferences.remove(NAUTA_PASSWORD_KEY)
             preferences.remove(NAUTA_REMEMBER_ME_KEY)
         }
     }

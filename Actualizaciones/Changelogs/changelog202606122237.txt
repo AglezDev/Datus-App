@@ -1,0 +1,6 @@
+Cambios aplicados el 12 de junio de 2026 a las 22:37:
+- Actualización de iconos a su versión 'AutoMirrored' para mejorar el soporte RTL y la consistencia visual en SettingsScreen.kt, MenuScreen.kt y QueriesScreen.kt.
+- Reemplazo de componentes 'Card' y 'ElevatedCard' por 'DatusCard' para asegurar un diseño minimalista y unificado.
+- Implementación del efecto 'bounce' (rebote) en las tarjetas interactivas mediante la integración de 'DatusCard' y el traslado de la lógica de clic al parámetro 'onClick'.
+- Específicamente se actualizaron iconos como ArrowBack, ArrowForwardIos, KeyboardArrowRight, Call y Send a sus variantes AutoMirrored.
+- Se aseguró la correcta importación de los nuevos componentes y variantes de iconos en los archivos modificados.
