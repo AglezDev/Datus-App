@@ -1,4 +1,0 @@
-Fecha: 30 de agosto de 2025, 10:45
-
-Cambios aplicados:
-- Se disminuyó la altura de las tarjetas en `TarjetaScreen.kt`.

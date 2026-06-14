@@ -1,1 +1,0 @@
-Fecha: 2025-11-20 15:35:41`n`nCambios aplicados:`n- Se ha reducido el tamaño de las tarjetas en la pantalla de Consultas (`QueriesScreen.kt`) cambiando su `aspectRatio` de `1.1f` a `0.9f` para que sean menos altas.

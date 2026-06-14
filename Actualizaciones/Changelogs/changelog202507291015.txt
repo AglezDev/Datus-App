@@ -1,7 +1,0 @@
-Fecha y Hora: 2025-07-29 10:15
-
-Cambios aplicados:
-
-- Corregido el comportamiento de la recarga por deslizamiento en la pantalla de Notificaciones.
-- Ahora se muestra un indicador de carga mientras se obtienen las notificaciones.
-- La vista de "Sin notificaciones" solo se muestra si la carga finaliza y no hay notificaciones.

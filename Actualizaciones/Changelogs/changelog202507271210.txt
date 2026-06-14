@@ -1,4 +1,0 @@
-Cambios aplicados: 27 de julio de 2025, 12:10
-
-- Se corrigieron los errores de referencia no resuelta en `MainActivity.kt` y `NotificationsScreen.kt` añadiendo las importaciones faltantes.
-- Se corrigieron los errores de referencia no resuelta y de invocación `@Composable` en `CustomNotificationDisplay.kt` añadiendo las importaciones faltantes y asegurando el contexto correcto.

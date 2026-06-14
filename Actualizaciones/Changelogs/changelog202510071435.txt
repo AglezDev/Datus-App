@@ -1,6 +1,0 @@
-Fecha y Hora: 2025-10-07 14:35
-
-Cambios aplicados:
-- Se ajustó el preloader de esqueleto (`ExchangeRatesSectionSkeleton`) en la pantalla de Mercado.
-- Ahora se muestran 4 tarjetas "fantasma" en cada sección (Divisas Principales y Criptomonedas) durante el estado de carga inicial.
-- Este cambio hace que la pantalla de carga represente de forma más precisa el contenido que se mostrará finalmente.

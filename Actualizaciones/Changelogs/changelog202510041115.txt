@@ -1,9 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 11:15
-
-Se ha añadido logging detallado a `ExchangeRatesViewModel.kt` para depurar el error '404 Not Found'. Ahora se registrará en Logcat:
-- La URL completa de la solicitud.
-- El código de estado de la respuesta HTTP.
-- El cuerpo de la respuesta en caso de que el estado no sea 200 (OK).
-- Detalles de cualquier excepción que ocurra durante la llamada a la API.
-
-**Por favor, reconstruye y reinstala la aplicación, y luego proporciona los logs de Logcat cuando intentes cargar la pantalla de Mercados. Esto nos ayudará a identificar la URL real que se está utilizando y la respuesta exacta del servidor.**

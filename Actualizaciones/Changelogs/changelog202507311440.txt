@@ -1,4 +1,0 @@
-Cambios aplicados:
-- Se corrigió el error "Unresolved reference: io" en app/build.gradle.kts reordenando las importaciones y el bloque 'plugins'.
-- Se eliminaron las importaciones duplicadas y mal ubicadas.
-- Se aseguraron las importaciones correctas de 'java.util.Properties' y 'java.io.FileInputStream'.

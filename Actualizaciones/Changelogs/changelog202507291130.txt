@@ -1,5 +1,0 @@
-Fecha y Hora: 2025-07-29 11:30
-
-Cambios aplicados:
-
-- Corregido un error de compilación en `SettingsScreen.kt` debido a una importación faltante.

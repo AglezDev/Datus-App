@@ -1,5 +1,0 @@
-Fecha y Hora: 2025-07-29 11:00
-
-Cambios aplicados:
-
-- Modificado el campo de entrada del PIN en la tarjeta "Transferir Saldo" para que se comporte como un campo de contraseña.

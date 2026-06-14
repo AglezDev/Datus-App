@@ -1,7 +1,0 @@
-Fecha y Hora: 2025-10-10 09:23
-
-Cambios aplicados:
-- Se modificó el estilo de los indicadores de tendencia en el widget de tasas de cambio.
-- Se reemplazaron los iconos de flechas por iconos de puntos, utilizando los recursos del sistema Android (`presence_online` para el punto verde y `presence_busy` para el punto rojo).
-- Este cambio se realizó directamente en el archivo de diseño `exchange_rates_widget.xml`, actualizando el atributo `src` de los `ImageView` correspondientes.
-- La lógica para mostrar y ocultar los indicadores no requirió cambios.

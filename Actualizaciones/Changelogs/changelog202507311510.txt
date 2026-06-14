@@ -1,2 +1,0 @@
-Cambios aplicados:
-- Se realizó una verificación final del archivo app/build.gradle.kts. Se confirmó que el applicationId, versionCode y versionName son correctos. Se reiteró al usuario la necesidad de desinstalar cualquier versión previa de la aplicación en el dispositivo para resolver conflictos de paquetes.

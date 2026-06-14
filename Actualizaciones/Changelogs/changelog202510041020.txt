@@ -1,3 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 10:20
-
-Se ha creado el archivo `Actualizaciones/explicacion_api_details.txt` con una explicación detallada sobre cómo obtener el endpoint de una API y la estructura de su respuesta JSON, para asistir al usuario en la provisión de esta información.

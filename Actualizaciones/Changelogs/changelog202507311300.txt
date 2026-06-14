@@ -1,2 +1,0 @@
-Cambios aplicados:
-- Se corrigió el error de sintaxis 'Expecting '}'' en `SettingsScreen.kt` añadiendo la llave de cierre faltante para el `Column` principal.

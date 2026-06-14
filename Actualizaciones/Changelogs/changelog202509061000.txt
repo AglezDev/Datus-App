@@ -1,7 +1,0 @@
-Fecha: 2025-09-06 10:00
-
-Cambios aplicados:
-- Se eliminó la dependencia 'com.google.accompanist:accompanist-swiperefresh', que estaba obsoleta.
-- Se reemplazó el componente `SwipeRefresh` por el modificador `pullRefresh` en las pantallas de Promociones y Notificaciones.
-- Se actualizó el código para usar la implementación oficial de `PullRefresh` de Material Design.
-- Esta modificación soluciona un problema que impedía la instalación de la aplicación en dispositivos con Android 7.

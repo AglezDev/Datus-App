@@ -1,3 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 11:55
-
-Se ha añadido la llave de cierre (`}`) faltante para el `LazyColumn` en `MercadoScreen.kt` para corregir el error de compilación 'Expecting }'. Esto asegura que la estructura del `LazyColumn` esté correctamente definida.

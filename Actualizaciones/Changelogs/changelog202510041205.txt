@@ -1,5 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 12:05
-
-Se han realizado las siguientes mejoras en `MercadoScreen.kt`:
-- Se ha eliminado un `CircularProgressIndicator` redundante, dejando solo el `PullRefreshIndicator` para indicar el estado de carga.
-- Se ha quitado la palabra "Tasa:" de las tarjetas de divisas, mostrando directamente el valor de la tasa.

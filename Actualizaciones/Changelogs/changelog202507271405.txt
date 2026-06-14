@@ -1,5 +1,0 @@
-
-Fecha y Hora: 27 de julio de 2025, 14:05
-
-Cambios aplicados:
-- Se ha corregido la alineación del contenido en la tarjeta "No hay notificaciones" para que el icono y el texto estén centrados.

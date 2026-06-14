@@ -1,2 +1,0 @@
-Cambios aplicados:
-- Se ajustó el margen superior de la tarjeta 'Transferir Saldo' en la pantalla de Útiles para que sea igual al inferior, eliminando un Spacer adicional.

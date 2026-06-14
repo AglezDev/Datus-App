@@ -1,8 +1,0 @@
-Fecha y Hora: 2025-10-09 16:20
-
-Cambios aplicados:
-- Se añadieron indicadores de tendencia (flechas de subida/bajada) al widget de tasas de cambio.
-- Se modificó el `DataStoreManager` para permitir guardar y cargar el mapa de tendencias.
-- El `ExchangeRatesViewModel` ahora guarda las tendencias calculadas para que el widget pueda acceder a ellas.
-- Se actualizó el diseño `exchange_rates_widget.xml` para incluir los `ImageView` de las flechas, ocultos por defecto.
-- Se modificó `ExchangeRatesWidgetProvider` para que lea las tendencias guardadas y muestre la flecha de subida (verde) o bajada (roja) correspondiente a cada divisa, si y solo si la tendencia no es 'SAME' o 'NONE'.

@@ -1,5 +1,0 @@
-Fecha y Hora: 2025-07-30 10:15
-
-Cambios aplicados:
-- Modificado `NotificationsViewModel.kt` para mostrar la notificación no leída más antigua al iniciar la aplicación en lugar de la más reciente.
-- La lista de notificaciones en la pantalla de notificaciones mantiene su orden descendente (de más nueva a más antigua).

@@ -1,7 +1,0 @@
-Fecha y Hora: 2025-10-08 00:39
-
-Cambios aplicados:
-- Se corrigió un error de compilación en `NotificationsViewModel.kt` (`No parameter with name '...' found`).
-- El error fue causado por la eliminación prematura de propiedades en `NotificationUiState` durante una refactorización anterior.
-- Se restauraron las propiedades `latestUnreadNotification`, `initialNotification` y `lastShownNotificationId` a la clase de datos `NotificationUiState`.
-- Se restauró la lógica dentro de la función `loadNotifications` para calcular y actualizar correctamente estas propiedades, que son necesarias para la funcionalidad de la notificación emergente.

@@ -1,5 +1,0 @@
-
-Fecha y Hora: 27 de julio de 2025, 13:50
-
-Cambios aplicados:
-- Se ha eliminado el `AlertDialog` de la pantalla de "Notificaciones" para evitar que se muestre innecesariamente.

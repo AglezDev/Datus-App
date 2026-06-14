@@ -1,3 +1,0 @@
-Cambios aplicados:
-
-- Se refactorizó la función `PlanCard` en `PlansScreen.kt` para mover la lógica de `triggerAction` directamente al `onClick` del `Card`. Esto se hizo para intentar resolver el error `invocations can only happen from the context of a @Composable function` que aparecía en `ComposableSingletons$PlansScreenKt.dex`, ya que a veces este tipo de errores pueden estar relacionados con la forma en que el compilador de Compose maneja las funciones anidadas o la actualización del estado.

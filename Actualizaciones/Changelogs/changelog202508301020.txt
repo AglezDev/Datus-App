@@ -1,5 +1,0 @@
-Fecha: 30 de agosto de 2025, 10:20
-
-Cambios aplicados:
-- Se corrigió un error de "Unresolved reference" en `TarjetaScreen.kt`.
-- Se añadió la importación para `remember`.

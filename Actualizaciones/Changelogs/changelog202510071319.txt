@@ -1,6 +1,0 @@
-Fecha y Hora: 2025-10-07 13:19
-
-Cambios aplicados:
-- Se añadió un registro de errores más detallado en el bloque `catch` de la función `loadExchangeRates` en `ExchangeRatesViewModel.kt`.
-- El objetivo es capturar la traza de la pila completa de la excepción que causa el "Error de conexión".
-- Este es un paso de diagnóstico para identificar la causa raíz del problema y no una solución en sí misma.

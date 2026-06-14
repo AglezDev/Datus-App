@@ -1,3 +1,0 @@
-Cambios aplicados:
-
-- Se actualizó la versión del plugin de serialización de Kotlin en `app/build.gradle.kts` de `1.9.0` a `2.0.21` para que coincida con la versión de Kotlin utilizada en el proyecto. Esta incompatibilidad de versiones podría ser la causa del error `Composable invocations can only happen from the context of a @Composable function`.

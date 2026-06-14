@@ -1,5 +1,0 @@
-Fecha y Hora: 2025-07-29 10:45
-
-Cambios aplicados:
-
-- Ocultado el botón "Detalles" en el `AlertDialog` de la notificación inicial si la notificación no tiene una URL.

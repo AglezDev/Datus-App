@@ -1,6 +1,0 @@
-Fecha: 2025-09-06 10:15
-
-Cambios aplicados:
-- Se agregó la dependencia `androidx.compose.material` para solucionar errores de referencia no resuelta relacionados con `pullRefresh`.
-- Se actualizó el archivo `libs.versions.toml` para incluir la nueva dependencia.
-- Esta corrección asegura que la funcionalidad de "tirar para actualizar" compile correctamente.

@@ -1,2 +1,0 @@
-Cambios aplicados:
-- Se verificó que las pantallas 'Configuraciones' (SettingsScreen.kt) y 'Configuración de Usuario' (UserSettingsScreen.kt) ya no muestran el botón de menú de 3 puntos y ya incluyen un botón de retroceso. No se requirieron modificaciones en el código para esta solicitud.

@@ -1,5 +1,0 @@
-Fecha: 30 de agosto de 2025, 10:15
-
-Cambios aplicados:
-- Se corrigió un error de sintaxis en `TarjetaScreen.kt`.
-- Se eliminó una llave de cierre extra en la tarjeta "Desconectar".

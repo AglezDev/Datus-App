@@ -1,3 +1,0 @@
-Cambios aplicados:
-- Se corrigieron los errores de referencia no resuelta en app/build.gradle.kts asegurando que las variables 'localProperties' y 'keystoreProperties' estén declaradas correctamente y que 'java.io.FileInputStream' se use explícitamente.
-- Se actualizó la versión de la aplicación: versionCode a 2 y versionName a "0.0.2".

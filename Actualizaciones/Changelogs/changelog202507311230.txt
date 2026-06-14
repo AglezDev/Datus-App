@@ -1,3 +1,0 @@
-Cambios aplicados:
-- Se habilitó el botón de Facebook en el diálogo de 'Contáctanos' en `SettingsScreen.kt`.
-- Al hacer clic en el botón de Facebook, se abrirá un enlace a la página de Facebook de Datus App (se usó un enlace de ejemplo).

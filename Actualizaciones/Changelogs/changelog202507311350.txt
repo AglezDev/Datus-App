@@ -1,2 +1,0 @@
-Cambios aplicados:
-- Se movió el texto "Toca una notificación para marcar como leída" a la parte superior de la pantalla de Notificaciones (NotificationsScreen.kt) para que sea visible siempre, independientemente de si hay notificaciones o no.

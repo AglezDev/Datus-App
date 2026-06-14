@@ -62,6 +62,12 @@ Tamaños usados:
 - `SettingsScreen.kt`: parámetro `iconTint` corregido a `tint`
 - `ADB_VENDOR_KEYS`: configurado `$env:ADB_VENDOR_KEYS = "$env:USERPROFILE\.android"` para autorizar dispositivo
 
+#### 7. Limpieza del Repositorio
+- **GitHub Release v2.2.0**: APK subido a Releases
+- **Repo limpiado**: eliminado todo el código fuente (`app/`, `gradle/`, etc.) del tracking
+- **Repo ahora contiene solo**: landing page (`index.html`, `landing-deploy/`, `public/`, `images/`), `docs/`, `README.md` para usuarios finales, `wrangler.toml`
+- El código fuente se mantiene **solo localmente** para desarrollo futuro
+
 ---
 
 ### Sesiones Anteriores (Landing Page + Tasas + Notificaciones)

@@ -1,8 +1,0 @@
-Fecha y Hora: 2025-07-29 10:30
-
-Cambios aplicados:
-
-- Modificado `NotificationRepository` para comprobar el estado de la red en tiempo real.
-- Eliminada la dependencia de `isNetworkAvailable` en `NotificationRepository`.
-- Inyectado `Context` en `NotificationRepository` para acceder al `ConnectivityManager`.
-- Actualizado `NotificationModule` para proporcionar el `Context` a `NotificationRepository`.

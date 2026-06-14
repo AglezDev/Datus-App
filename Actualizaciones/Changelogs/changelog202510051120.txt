@@ -1,5 +1,0 @@
-Fecha: 2025-10-05 11:20
-Cambios aplicados:
-- Se han actualizado los iconos de las tarjetas en la pestaña "Otros" de la pantalla de Planes.
-- "Bolsa Diaria" ahora usa el icono `Today`.
-- "Plan ToDus" ahora usa el icono `Redeem`.

@@ -1,3 +1,0 @@
-Cambios aplicados el 25 de noviembre de 2025 a las 12:30:
-- Se reescribió 'app/src/main/java/datus/app/com/ui/screens/MercadoScreen.kt' para eliminar la función de extensión 'ExchangeRatesSection' y mover su lógica directamente dentro del 'LazyVerticalGrid'.
-- Esta corrección se realizó para solucionar un error persistente de 'Unresolved reference' que impedía la compilación.

@@ -1,4 +1,0 @@
-Cambios aplicados: 27 de julio de 2025, 12:20
-
-- Se corrigieron los errores de referencia no resuelta y de invocación `@Composable` en `MainActivity.kt` moviendo el `AlertDialog` de la última notificación no leída a la función `@Composable` `MainScreen`.
-- Se eliminaron las importaciones redundantes en `SharedUI.kt`.

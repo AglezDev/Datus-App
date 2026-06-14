@@ -1,5 +1,0 @@
-Fecha: 30 de agosto de 2025, 10:40
-
-Cambios aplicados:
-- Se añadieron márgenes exteriores a las tarjetas en `TarjetaScreen.kt`.
-- Se modificó el layout de la tarjeta "Recargar Movil" para que el icono y el texto estén en una fila.

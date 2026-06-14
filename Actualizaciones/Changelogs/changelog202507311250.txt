@@ -1,4 +1,0 @@
-Cambios aplicados:
-- Se reemplazó la tarjeta 'Redes Sociales' por 'Canal de Telegram' en `SettingsScreen.kt`.
-- La nueva tarjeta 'Canal de Telegram' abre directamente el canal de Telegram al hacer clic.
-- Se eliminó el `ContactDialog` ya que no es necesario.

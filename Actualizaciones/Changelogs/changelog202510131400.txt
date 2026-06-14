@@ -1,7 +1,0 @@
-Fecha: 2025-10-13 14:00
-
-Cambios aplicados (Corrección de UI):
-- Corregido un problema en la pantalla de "Consultas" donde las imágenes de las tarjetas de promociones se mostraban borrosas.
-- Modificada la petición de carga de imágenes de la biblioteca Coil en el composable `PromotionItem`.
-- Se ha añadido `.size(coil.size.Size.ORIGINAL)` y `.precision(coil.request.Precision.EXACT)` a la `ImageRequest`.
-- Este cambio fuerza a Coil a cargar las imágenes en su resolución original, evitando el submuestreo que causaba la pérdida de calidad y la apariencia borrosa, asegurando que las imágenes ahora se muestren nítidas.

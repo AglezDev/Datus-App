@@ -1,2 +1,0 @@
-Cambios aplicados:
-- Se corrigió el error ';' expected en BuildConfig.java eliminando las comillas dobles escapadas de las definiciones de SUPABASE_URL y SUPABASE_KEY en app/build.gradle.kts.

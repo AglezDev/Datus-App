@@ -1,3 +1,0 @@
-Cambios aplicados:
-- Se añadió una nueva tarjeta 'Actualizaciones' en la pantalla de Configuraciones (`SettingsScreen.kt`).
-- Al hacer clic en esta tarjeta, se abrirá la URL `https://datus.netlify.app/` en el navegador.

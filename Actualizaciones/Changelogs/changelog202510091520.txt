@@ -1,7 +1,0 @@
-Fecha y Hora: 2025-10-09 15:20
-
-Cambios aplicados:
-- Se mejoró la fidelidad visual del esqueleto de carga (skeleton loader) en la pantalla de Mercado.
-- Se ajustaron los tamaños y la disposición de los elementos del esqueleto para que coincidan de forma más precisa con el diseño de las tarjetas de datos reales.
-- Esto crea una transición más suave y coherente entre el estado de carga y el contenido final.
-- Se mantuvo la lógica de mostrar el esqueleto solo en la carga inicial, y el indicador de recarga superior para las actualizaciones manuales.

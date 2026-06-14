@@ -1,6 +1,0 @@
-Fecha y Hora: 2025-10-08 00:12
-
-Cambios aplicados:
-- Se modificó el diseño de la barra de progreso en el widget de tasas de cambio.
-- Se ajustó el atributo `layout_height` de la `ProgressBar` a `match_parent`.
-- Este cambio hace que la barra de progreso ocupe toda la altura del widget cuando está visible durante una actualización, en lugar de ser una línea delgada.

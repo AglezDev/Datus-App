@@ -1,6 +1,0 @@
-Fecha: 2025-10-05 11:00
-Cambios aplicados:
-- Se ha añadido una nueva pestaña "Otros" en la pantalla de Planes.
-- Se ha cambiado el nombre de la pestaña "Llamadas" a "Voz".
-- Se ha cambiado el nombre de la pestaña "Mensajes" a "SMS".
-- Se han añadido dos nuevos planes en la pestaña "Otros": "Bolsa Diaria" y "Plan ToDus".

@@ -1,2 +1,0 @@
-Cambios aplicados:
-- Se movió la declaración de `notificationsEnabled` al inicio de la función `SettingsScreen` en `SettingsScreen.kt` para resolver el error de referencia.

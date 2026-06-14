@@ -1,7 +1,0 @@
-Fecha y Hora: 2025-10-07 15:31
-
-Cambios aplicados:
-- Se ajustaron los colores de los indicadores de tendencia (flechas de alza/baja) en la pantalla de Mercado para mejorar su visibilidad.
-- El color para la tendencia "UP" (alza) ahora es un verde más notable (0xFF2E7D32).
-- El color para la tendencia "DOWN" (baja) ahora es un rojo más claro y definido (0xFFC62828).
-- Este cambio mejora la legibilidad de la tendencia de un vistazo sin ser colores excesivamente brillantes.

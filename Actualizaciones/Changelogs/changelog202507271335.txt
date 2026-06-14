@@ -1,5 +1,0 @@
-
-Fecha y Hora: 27 de julio de 2025, 13:35
-
-Cambios aplicados:
-- Se ha añadido un registro en el `Logcat` para verificar la recarga periódica de notificaciones.

@@ -1,5 +1,0 @@
-Fecha: 30 de agosto de 2025, 11:00
-
-Cambios aplicados:
-- Se ajustó la alineación del contenido en las tarjetas de "Consultar Saldo" y "Recargar Movil" en `TarjetaScreen.kt`.
-- El contenido de estas tarjetas ahora está justificado a la izquierda.

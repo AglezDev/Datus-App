@@ -1,4 +1,0 @@
-Fecha y Hora: 2025-07-31 12:15
-
-Cambios aplicados:
-- Se actualizó el icono de Telegram en el diálogo de contacto de la pantalla de Configuraciones para usar el recurso drawable 'telegram.svg'.

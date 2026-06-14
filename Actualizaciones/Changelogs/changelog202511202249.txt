@@ -1,1 +1,0 @@
-Fecha: 2025-11-20 22:49:09`n`nCambios aplicados:`n- Se corrigió un error en la pantalla de `Consultas` que provocaba que las tarjetas de consulta no se mostraran.`n- El problema se solucionó añadiendo `Modifier.fillMaxSize()` al `LazyVerticalGrid` para que ocupe correctamente el espacio asignado por su contenedor padre.

@@ -1,3 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 10:55
-
-Se ha verificado que la `BASE_URL` en `ExchangeRatesViewModel.kt` está correctamente establecida a `https://api.eltoque.com`. El error '404 Not Found' que se sigue reportando desde `https://eltoque.com/v1/trmi` sugiere que la aplicación no ha sido reconstruida o redeployada con los últimos cambios. Por favor, asegúrate de reconstruir y redeployar la aplicación para que los cambios en la URL base surtan efecto. También, recuerda que el `AUTHORIZATION_TOKEN` debe ser el token real de elToque y estar configurado correctamente.

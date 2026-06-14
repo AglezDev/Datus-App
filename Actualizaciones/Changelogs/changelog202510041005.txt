@@ -1,3 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 10:05
-
-Se ha corregido el error de referencia no resuelta 'CreditCard' en `MainActivity.kt` añadiendo la importación `import androidx.compose.material.icons.filled.CreditCard`.

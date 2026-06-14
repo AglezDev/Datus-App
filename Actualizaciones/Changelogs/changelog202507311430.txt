@@ -1,2 +1,0 @@
-Cambios aplicados:
-- Se corrigió el error "Unresolved reference: Properties" en app/build.gradle.kts reinsertando la importación de 'java.util.Properties'.

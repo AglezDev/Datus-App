@@ -1,4 +1,0 @@
-Cambios aplicados: 27 de julio de 2025, 11:55
-
-- Se corrigió el error 'No parameter with name 'showNotificationsIcon' found' en `NotificationsScreen.kt`.
-- Se eliminó el argumento `showNotificationsIcon = false` de la llamada a `DatusTopAppBar` en `NotificationsScreen.kt`, ya que este parámetro fue eliminado de la definición de `DatusTopAppBar`.

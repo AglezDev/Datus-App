@@ -1,5 +1,0 @@
-Fecha: 2025-10-05 11:35
-Cambios aplicados:
-- Se ha corregido un error de compilación en la pantalla de Planes.
-- Se ha mejorado la adaptabilidad de las tarjetas en las pantallas de Consultas, Tarjeta, Planes y Configuraciones, ajustando su tamaño y proporción para un diseño más minimalista.
-- Se ha mejorado la adaptabilidad de los iconos y fuentes en varias pantallas.

@@ -1,7 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 11:45
-
-Se ha mejorado el estilo de las tarjetas de divisa en `MercadoScreen.kt` para que coincida con el estilo de `PlanCard` en `PlansScreen.kt`. Además, se ha unificado el icono para todas las divisas, utilizando `Icons.Default.MonetizationOn`. Los cambios incluyen:
-- Eliminación de la función `getCurrencyIcon`.
-- Actualización de las importaciones de iconos.
-- Ajuste de las propiedades `shape`, `elevation` y `colors` de las `Card`s.
-- Modificación del layout interno de las `Card`s para incluir un `Icon` único, un `Spacer` y una `Column` para el nombre y la tasa de la divisa, con estilos de texto similares a los de `PlanCard`.

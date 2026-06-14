@@ -1,4 +1,0 @@
-Fecha: 30 de agosto de 2025, 11:05
-
-Cambios aplicados:
-- Se ajustó la altura de las tarjetas en `QueriesScreen.kt` para que coincida con las de `TarjetaScreen.kt`.

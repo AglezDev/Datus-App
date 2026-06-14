@@ -1,3 +1,0 @@
-Fecha: 2025-10-05 11:30
-Cambios aplicados:
-- Se ha actualizado el nombre del widget "Consultar Saldo" para que utilice un recurso de cadena, que es la forma recomendada en Android.

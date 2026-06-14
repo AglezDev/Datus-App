@@ -1,6 +1,0 @@
-Fecha y Hora: 2025-10-09 15:48
-
-Cambios aplicados:
-- Se corrigió un error de compilación (`Unresolved reference: CircleShape`) en `MercadoScreen.kt`.
-- El error se solucionó añadiendo la importación necesaria (`androidx.compose.foundation.shape.CircleShape`) que se había omitido al refactorizar el esqueleto de carga.
-- Este cambio permite que el esqueleto de carga se renderice correctamente.

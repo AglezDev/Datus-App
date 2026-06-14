@@ -1,5 +1,0 @@
-
-Fecha y Hora: 27 de julio de 2025, 12:50
-
-Cambios aplicados:
-- Se han corregido las importaciones y la implementación de la funcionalidad "deslizar para recargar" en la pantalla de notificaciones.

@@ -1,5 +1,0 @@
-Fecha: 30 de agosto de 2025, 10:35
-
-Cambios aplicados:
-- Se añadió una nueva tarjeta "Recargar Movil" en `TarjetaScreen.kt`.
-- La nueva tarjeta ocupa el ancho de las dos columnas.

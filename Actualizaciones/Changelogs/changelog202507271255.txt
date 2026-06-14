@@ -1,5 +1,0 @@
-
-Fecha y Hora: 27 de julio de 2025, 12:55
-
-Cambios aplicados:
-- Se ha corregido un error que provocaba que la notificación emergente se cerrara automáticamente.

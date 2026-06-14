@@ -1,8 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 12:20
-
-Se han implementado las siguientes mejoras en `MercadoScreen.kt`:
-- **Funcionalidad de copiar al portapapeles:** Al mantener presionado sobre una tarjeta de divisa, se copia al portapapeles el texto "Tasa del (Moneda/Divisa) hoy: (valor de la tasa)".
-- **Manejo de errores/conexión con caché local:**
-  - Si no hay conexión y hay datos guardados localmente, se muestran los datos cacheados con su hora real de recepción.
-  - Si no hay conexión y no hay datos cacheados, se muestra un spinner hasta que haya conexión.
-  - Se ha ajustado la lógica de visualización de carga y error para que el `CircularProgressIndicator` solo se muestre si está cargando y no hay datos cacheados, y el mensaje de error solo se muestre si hay un error y no hay datos cacheados.

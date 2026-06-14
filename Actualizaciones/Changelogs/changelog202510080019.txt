@@ -1,8 +1,0 @@
-Fecha y Hora: 2025-10-08 00:19
-
-Cambios aplicados:
-- Se modificó nuevamente el indicador de carga del widget de tasas de cambio según la última decisión.
-- Se eliminó la `ProgressBar` del diseño del widget.
-- Se añadió un `TextView` con el texto "Actualizando..." que se muestra durante el proceso de recarga.
-- Se actualizó la lógica en `ExchangeRatesWidgetProvider.kt` para ocultar las tasas y mostrar este texto al recargar, y viceversa cuando los datos están listos.
-- Este es el comportamiento final acordado para el indicador de carga del widget.

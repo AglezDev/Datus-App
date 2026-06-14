@@ -1,4 +1,0 @@
-Cambios aplicados:
-- Se renombró la tarjeta 'Contáctanos' a 'Redes Sociales' en `SettingsScreen.kt`.
-- Se cambió el icono de la tarjeta 'Redes Sociales' al icono de Telegram.
-- Se modificó el `ContactDialog` para que solo muestre la opción de Telegram con su icono y se eliminó la opción de Facebook.

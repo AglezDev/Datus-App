@@ -1,1 +1,0 @@
-Fecha: 2025-11-20 22:25:54`n`nCambios aplicados:`n- Se corrigió un problema de superposición de layout en la pantalla de Consultas.`n- Se ha añadido un `Spacer` de altura fija en la parte inferior de la pantalla para elevar el carrusel de promociones, asegurando que no tape el contenido superior y que tenga una separación visual de la barra de navegación inferior.

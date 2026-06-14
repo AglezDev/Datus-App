@@ -1,3 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 11:30
-
-Se han añadido las llaves de cierre (`}`) faltantes en `MercadoScreen.kt` para corregir el error de compilación 'Expecting }'. Esto asegura que la estructura de los bloques `Column` y `Box` esté correctamente definida.

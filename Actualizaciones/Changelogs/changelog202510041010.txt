@@ -1,6 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 10:10
-
-Se ha modificado `QueriesScreen.kt` para:
-- Asegurar que las promociones se recarguen cada vez que se accede a la pantalla de Consultas, añadiendo un `LaunchedEffect(Unit)` en `PromotionsCarousel` que llama a `viewModel.loadPromos()`.
-- Mejorar el manejo de errores de conexión en `PromotionsCarousel`, mostrando un mensaje más informativo y un botón de "Reintentar" cuando ocurre un error.
-- Mostrar un mensaje cuando no hay promociones disponibles.

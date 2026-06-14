@@ -1,6 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 12:00
-
-Se ha mejorado la pantalla `MercadoScreen.kt` para:
-- Mostrar las tarjetas de divisas en 2 columnas utilizando `LazyVerticalGrid` con `GridCells.Fixed(2)`.
-- Corregir la visualización de la divisa "ECU" a "EUR" en las tarjetas.
-- Ajustar el layout de los elementos dentro de la cuadrícula, incluyendo los textos de "Última actualización" y "Tasas de Cambio (elTOQUE)" para que abarquen todo el ancho de la cuadrícula.

@@ -1,4 +1,0 @@
-Cambios aplicados: 27 de julio de 2025, 12:25
-
-- Se corrigió el error 'No parameter with name 'notificationsViewModel' found' en `MainActivity.kt`.
-- Se eliminó el parámetro `notificationsViewModel` de la llamada a `MainScreen` en `DefaultPreview`, ya que `notificationsViewModel` ahora se inicializa dentro de `MainScreen`.

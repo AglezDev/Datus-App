@@ -1,4 +1,0 @@
-Cambios aplicados: 27 de julio de 2025, 11:15
-
-- Se corrigió el error de declaración duplicada de `uiState` en `app/src/main/java/datus/app/com/MainActivity.kt`.
-- Se eliminó la segunda declaración de `uiState` en la función `MainScreen`.

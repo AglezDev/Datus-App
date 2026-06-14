@@ -1,5 +1,0 @@
-Fecha y Hora: 2025-07-30 10:45
-
-Cambios aplicados:
-- Corregido un error en `NotificationsViewModel.kt` que provocaba que el contador de notificaciones no leídas no se actualizara correctamente al marcar una notificación como leída.
-- Se ha asegurado que la lista de notificaciones mantiene su orden correcto después de marcar una notificación como leída.

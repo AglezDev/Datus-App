@@ -1,3 +1,0 @@
-Cambios aplicados: 27 de julio de 2025, 11:45
-
-- Se eliminó el icono de la campana de notificaciones de la barra superior en `PlansScreen.kt` y `NotificationsScreen.kt` estableciendo `showNotificationsIcon = false` en la llamada a `DatusTopAppBar`.

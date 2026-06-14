@@ -1,6 +1,0 @@
-Fecha y Hora: 2025-10-05 10:00
-
-Cambios aplicados:
-- Se corrigió un error de sintaxis en `ExchangeRatesViewModel.kt` donde una comilla doble estaba mal colocada al final de la cadena en la asignación de `_error.value` dentro del bloque `catch` de `loadExchangeRates()`.
-- Se corrigió un error de sintaxis similar en `ExchangeRatesViewModel.kt` donde una comilla doble estaba mal colocada al final de la cadena en la llamada a `Log.e` dentro del bloque `catch` de `loadExchangeRates()`.
-- Estas correcciones resuelven los errores de compilación relacionados con "Unexpected tokens", "Expecting ','", "Expecting '"'" y "Expecting ')'" y "Missing '}'" en el archivo.

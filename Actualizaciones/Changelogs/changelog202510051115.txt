@@ -1,3 +1,0 @@
-Fecha: 2025-10-05 11:15
-Cambios aplicados:
-- Se ha actualizado la pantalla de Configuraciones para mostrar la versión de la aplicación dinámicamente desde `BuildConfig.VERSION_NAME`.

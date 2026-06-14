@@ -1,5 +1,0 @@
-Fecha y Hora: 2025-07-30 11:00
-
-Cambios aplicados:
-- Corregido un problema de la interfaz de usuario en las pantallas de "Consultas" y "Promociones" que provocaba que el borde inferior de la última tarjeta se cortara en el modo claro.
-- Se ha añadido un `contentPadding` a los `LazyColumn` en `QueriesScreen.kt` y `PromotionsScreen.kt` para solucionar el problema.

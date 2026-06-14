@@ -1,4 +1,0 @@
-Fecha y Hora: 2025-07-31 11:30
-
-Cambios aplicados:
-- Se agregó la importación que faltaba para `ThemeViewModel` en `UserSettingsScreen.kt`.

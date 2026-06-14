@@ -1,3 +1,0 @@
-Cambios aplicados:
-
-- Se sugirió al usuario invalidar las cachés y reiniciar Android Studio, seguido de un "Clean Project" y "Rebuild Project". Esta acción se propone como una solución para el error persistente `Composable invocations can only happen from the context of a @Composable function` que apunta a archivos generados por el compilador de Compose, lo que sugiere una posible corrupción de la caché del IDE.

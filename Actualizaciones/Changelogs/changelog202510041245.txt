@@ -1,6 +1,0 @@
-Fecha: 2025-10-04 12:45
-
-Cambios aplicados:
-- Realizados ajustes finales de diseño en la pantalla de `Consultas`.
-- Se ha unificado el radio de las esquinas de las tarjetas de promoción a 12.dp para que coincida con las tarjetas de consulta.
-- Se ha aumentado el padding inferior del carrusel de promociones para elevarlo ligeramente en la pantalla.

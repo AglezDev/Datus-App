@@ -1,3 +1,0 @@
-Cambios aplicados el 25 de noviembre de 2025 a las 12:15:
-- Se reescribió completamente el archivo 'app/src/main/java/datus/app/com/ui/screens/MercadoScreen.kt' para corregir errores de compilación persistentes relacionados con la estructura de la función y las importaciones.
-- Se simplificó la firma de la 'ExchangeRateCard' para eliminar los parámetros de tamaño de fuente adaptables.

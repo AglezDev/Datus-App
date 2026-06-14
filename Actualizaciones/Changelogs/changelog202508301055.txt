@@ -1,5 +1,0 @@
-Fecha: 30 de agosto de 2025, 10:55
-
-Cambios aplicados:
-- Se añadió una nueva tarjeta "Consultar Saldo de Tarjeta" en `TarjetaScreen.kt`.
-- Se añadieron bordes a todas las tarjetas para mejorar la visibilidad.

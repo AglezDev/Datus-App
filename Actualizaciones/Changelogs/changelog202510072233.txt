@@ -1,7 +1,0 @@
-Fecha y Hora: 2025-10-07 22:33
-
-Cambios aplicados:
-- Se corrigió un error de compilación de Gradle (`Plugin not found`) relacionado con KSP.
-- El problema fue causado por una versión incorrecta del plugin KSP especificada en `libs.versions.toml`.
-- Se actualizó la versión de KSP a `2.0.0-1.0.21`, una versión estable y compatible con la configuración del proyecto.
-- Este cambio permite que Gradle resuelva y descargue el plugin correctamente, desbloqueando el proceso de compilación.

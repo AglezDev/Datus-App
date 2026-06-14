@@ -1,7 +1,0 @@
-Fecha y Hora: 2025-10-06 04:34
-
-Cambios aplicados:
-- Se corrigió un error de compilación en `ExchangeRatesViewModel.kt`.
-- El error 'Unresolved reference 'rate'' fue solucionado reemplazando el acceso a la propiedad incorrecta `.rate` por `.value` en las instancias de la clase `HistoricalRate`.
-- La corrección se aplicó en la lógica que previene la duplicación de datos en el historial y en la función `calculateTrends` al obtener el valor histórico para la comparación.
-- El código ahora debería compilar y ejecutarse correctamente con la lógica de comparación de 24 horas implementada previamente.

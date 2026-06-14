@@ -1,2 +1,0 @@
-Cambios aplicados:
-- Se corrigió el error de sintaxis 'Expecting an element' en `SettingsScreen.kt` añadiendo el paréntesis de apertura para la llamada a `Scaffold`.

@@ -1,5 +1,0 @@
-
-Fecha y Hora: 27 de julio de 2025, 13:45
-
-Cambios aplicados:
-- Se ha verificado y confirmado que la lógica para la recarga periódica del indicador de notificaciones está correctamente implementada y se ejecuta cada minuto.

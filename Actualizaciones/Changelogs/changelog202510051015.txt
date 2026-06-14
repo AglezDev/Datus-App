@@ -1,7 +1,0 @@
-Fecha y Hora: 2025-10-05 10:15
-
-Cambios aplicados:
-- Se eliminó la opción "Acerca de" del menú principal en `MenuScreen.kt`.
-- Se eliminó la opción "Acerca de" del menú de tres puntos (DropdownMenu) en `SharedUI.kt`.
-- Se eliminaron las variables de estado `showAboutDialog` y las llamadas a `AboutDialog` asociadas en ambos archivos.
-- Se eliminó la definición de la función `AboutDialog` de `SharedUI.kt`.

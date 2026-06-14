@@ -1,5 +1,0 @@
-
-Fecha y Hora: 27 de julio de 2025, 14:10
-
-Cambios aplicados:
-- Se ha actualizado el estilo de la tarjeta "No hay notificaciones" para que coincida con el de la pantalla de "Promociones".

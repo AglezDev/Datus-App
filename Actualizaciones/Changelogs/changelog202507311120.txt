@@ -1,7 +1,0 @@
-Fecha y Hora: 2025-07-31 11:20
-
-Cambios aplicados:
-- Se creó una nueva pantalla "Configuraciones de Usuario".
-- Se movieron las opciones "Datos para operaciones" y "Pin de Transferencias De Saldo" a la nueva pantalla.
-- Se agregó una nueva opción "Configuraciones de Usuario" en la pantalla de Configuraciones.
-- Se actualizó el gráfico de navegación para incluir la nueva pantalla.

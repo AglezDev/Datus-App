@@ -1,3 +1,0 @@
-Cambios aplicados:
-- Se reescribió completamente el archivo app/build.gradle.kts para asegurar la correcta estructura, importaciones y declaración de variables, resolviendo errores previos de compilación.
-- Se verificó que la versión de la aplicación sea versionCode = 2 y versionName = "0.0.2".

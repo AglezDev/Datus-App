@@ -1,7 +1,0 @@
-Cambios aplicados el sábado, 4 de octubre de 2025 a las 10:40
-
-Se ha renombrado la pantalla `P2PScreen` a `MercadoScreen` y se han actualizado todas las referencias en el proyecto:
-- El archivo `P2PScreen.kt` fue renombrado a `MercadoScreen.kt`.
-- La función Composable `P2PScreen` dentro del archivo fue renombrada a `MercadoScreen`.
-- En `MainActivity.kt`, la importación de `P2PScreen` fue actualizada a `MercadoScreen`.
-- En `MainActivity.kt`, la llamada a la función `composable` que utilizaba `P2PScreen` fue actualizada para usar `MercadoScreen`.

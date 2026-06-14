@@ -1,1 +1,0 @@
-Fecha: 2025-11-20 22:23:57`n`nCambios aplicados:`n- Se reestructuró el layout de la pantalla de Consultas para lograr un posicionamiento vertical intermedio del carrusel de promociones.`n- Se utilizó un `Spacer` con peso en la parte inferior de la pantalla para crear un espacio vacío debajo del carrusel, elevándolo y balanceando el diseño visual.

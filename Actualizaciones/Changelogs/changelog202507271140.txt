@@ -1,8 +1,0 @@
-Cambios aplicados: 27 de julio de 2025, 11:40
-
-- Se movió el icono de notificaciones de la barra superior a la barra de navegación inferior, a la derecha del botón 'Útiles'.
-- Se añadió la propiedad `isRead` a la clase `Notification` en `datus.app.com.data.remote.Notification.kt`.
-- Se modificó `NotificationCard.kt` para aplicar diferentes estilos (color de fondo, color de texto, negrita) según el estado de lectura (`isRead`) y para que la tarjeta tenga una apariencia similar a `PlanCard`.
-- Se modificó `NotificationsViewModel.kt` para que `loadNotifications` inicialice la propiedad `isRead` de las notificaciones y `markAsRead` actualice esta propiedad en el objeto `Notification` correspondiente.
-- Se actualizó `NotificationsScreen.kt` para usar `DatusTopAppBar`.
-- Se confirmó que el indicador de notificaciones no leídas se muestra correctamente en el nuevo icono de notificaciones en la barra inferior.

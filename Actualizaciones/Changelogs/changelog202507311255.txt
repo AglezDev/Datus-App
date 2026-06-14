@@ -1,2 +1,0 @@
-Cambios aplicados:
-- Se corrigió el error de sintaxis 'Expecting '}'' en `SettingsScreen.kt` eliminando la llamada al `ContactDialog` que ya no existe.

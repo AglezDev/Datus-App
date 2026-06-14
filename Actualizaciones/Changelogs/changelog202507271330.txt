@@ -1,5 +1,0 @@
-
-Fecha y Hora: 27 de julio de 2025, 13:30
-
-Cambios aplicados:
-- Se ha corregido un problema de visualización en la barra de navegación inferior que provocaba que el texto de las etiquetas se dividiera.

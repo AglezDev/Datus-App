@@ -1,2 +1,0 @@
-Cambios aplicados:
-- Se eliminaron los iconos de Facebook y Telegram en el modal de 'Contáctanos' en `SettingsScreen.kt`, dejando solo el texto en los botones.

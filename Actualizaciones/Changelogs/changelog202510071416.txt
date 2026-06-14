@@ -1,8 +1,0 @@
-Fecha y Hora: 2025-10-07 14:16
-
-Cambios aplicados:
-- Se corrigió un error de compilación de Kapt (`error: incompatible types: NonExistentClass cannot be converted to Annotation`).
-- El error fue causado por un conflicto entre las anotaciones de Hilt y de Kotlinx Serialization en el mismo archivo (`DataStoreManager.kt`).
-- Se solucionó moviendo la clase de datos `@Serializable data class HistoricalRate` a su propio archivo (`app/src/main/java/datus/app/com/data/local/HistoricalRate.kt`).
-- Se eliminó la definición de la clase `HistoricalRate` del archivo `DataStoreManager.kt` para resolver el conflicto.
-- Esta separación de responsabilidades permite que las herramientas de compilación procesen los archivos correctamente sin interferir entre sí.

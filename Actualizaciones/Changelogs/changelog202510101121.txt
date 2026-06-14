@@ -1,7 +1,0 @@
-Fecha y Hora: 2025-10-10 11:21
-
-Cambios aplicados:
-- Se mejoró la visualización del estado de error en la pantalla de Mercado.
-- Se reemplazó el texto de error de color rojo por un diseño más amigable.
-- Ahora se muestra un icono de "sin conexión" (`CloudOff`) junto con un mensaje de texto más sutil y descriptivo.
-- Este cambio proporciona una experiencia de usuario menos agresiva cuando ocurren errores de red.

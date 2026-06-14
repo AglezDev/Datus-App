@@ -1,7 +1,0 @@
-Fecha y Hora: 2025-07-29 11:50
-
-Cambios aplicados:
-
-- Se ha implementado la funcionalidad para que el PIN de transferencia guardado en la pantalla de Configuraciones aparezca automáticamente en el campo de PIN de la sección de Transferencia de Saldo en la pantalla de Útiles.
-- En `UtilitiesScreen.kt`, se ha añadido la recolección del estado `transferPin` del `ThemeViewModel`.
-- Se ha utilizado `LaunchedEffect` para actualizar el estado del PIN en `UtilitiesScreen` cada vez que el PIN guardado en la configuración cambie.
