@@ -12,8 +12,6 @@ Datus es una herramienta que unifica en una sola app los servicios más usados d
 - **Planes** — Activa planes de datos, voz y SMS (ETECSA)
 - **Nauta** — Inicia sesión, consulta tiempo restante y desconéctate del portal `secure.etecsa.net:8443`
 - **Utilidades** — Transferencias, llamada privada, reverso de llamada, códigos QR, escáner
-- **Tarjeta bancaria** — Consulta de saldo y recarga (BANDEC, BPA, BANMET)
-- **Tasas de cambio** — Consulta tasas actualizadas del CUP/USD/EUR/MLC
 - **Notificaciones** — Recibe recordatorios y alertas programadas
 
 ---
