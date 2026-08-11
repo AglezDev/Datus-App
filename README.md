@@ -28,7 +28,7 @@ Datus es una herramienta que unifica en una sola app los servicios más usados d
 
 - Android 7.0 (API 24) o superior
 - Permiso de llamadas para códigos USSD
-- Conexión a internet (para Nauta y tasas de cambio)
+- Conexión a Wifi solo para opción de Nauta Hogar (para Nauta)
 
 ---
 
