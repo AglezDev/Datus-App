@@ -22,7 +22,7 @@ Datus es una herramienta que unifica en una sola app los servicios más usados d
 
 Última versión: **v2.2.0**
 
-👉 [Descargar APK](https://github.com/ADNova-Design/Datus-App/releases/latest)
+👉 [Descargar APK](https://github.com/AglezDev/Datus-App/releases/download/v2.2.0/Datus_v2.2.0.apk)
 
 ---
 
